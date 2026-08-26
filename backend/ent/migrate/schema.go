@@ -1093,6 +1093,112 @@ var (
 			},
 		},
 	}
+	// ModelBalancesColumns holds the columns for the "model_balances" table.
+	ModelBalancesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "user_id", Type: field.TypeInt64},
+		{Name: "tokens_purchased", Type: field.TypeInt64, Default: 0},
+		{Name: "tokens_consumed", Type: field.TypeInt64, Default: 0},
+		{Name: "balance", Type: field.TypeInt64, Default: 0},
+		{Name: "usage_percent", Type: field.TypeFloat64, Default: 0, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "status", Type: field.TypeString, Size: 20, Default: "active"},
+		{Name: "version", Type: field.TypeInt64, Default: 1},
+		{Name: "model_id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+	}
+	// ModelBalancesTable holds the schema information for the "model_balances" table.
+	ModelBalancesTable = &schema.Table{
+		Name:       "model_balances",
+		Columns:    ModelBalancesColumns,
+		PrimaryKey: []*schema.Column{ModelBalancesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "model_balances_model_catalog_balances",
+				Columns:    []*schema.Column{ModelBalancesColumns[10]},
+				RefColumns: []*schema.Column{ModelCatalogColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "modelbalance_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{ModelBalancesColumns[3]},
+			},
+			{
+				Name:    "modelbalance_status",
+				Unique:  false,
+				Columns: []*schema.Column{ModelBalancesColumns[8]},
+			},
+			{
+				Name:    "modelbalance_user_id_model_id",
+				Unique:  true,
+				Columns: []*schema.Column{ModelBalancesColumns[3], ModelBalancesColumns[10]},
+			},
+		},
+	}
+	// ModelCatalogColumns holds the columns for the "model_catalog" table.
+	ModelCatalogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "canonical_name", Type: field.TypeString, Unique: true, Size: 100},
+		{Name: "public_name", Type: field.TypeString, Size: 200},
+		{Name: "context_window", Type: field.TypeInt64, Nullable: true},
+		{Name: "source_suppliers", Type: field.TypeJSON, Nullable: true, SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "status", Type: field.TypeString, Size: 20, Default: "active"},
+	}
+	// ModelCatalogTable holds the schema information for the "model_catalog" table.
+	ModelCatalogTable = &schema.Table{
+		Name:       "model_catalog",
+		Columns:    ModelCatalogColumns,
+		PrimaryKey: []*schema.Column{ModelCatalogColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "modelcatalog_status",
+				Unique:  false,
+				Columns: []*schema.Column{ModelCatalogColumns[7]},
+			},
+		},
+	}
+	// ModelPricingColumns holds the columns for the "model_pricing" table.
+	ModelPricingColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "version", Type: field.TypeInt},
+		{Name: "input_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "output_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_read_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_write_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "context_tier", Type: field.TypeString, Nullable: true, Size: 20},
+		{Name: "tokens_per_dollar", Type: field.TypeInt64, Nullable: true},
+		{Name: "pct_per_1m_tokens", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(10,6)"}},
+		{Name: "effective_from", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "effective_to", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "source_ref", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "model_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+	}
+	// ModelPricingTable holds the schema information for the "model_pricing" table.
+	ModelPricingTable = &schema.Table{
+		Name:       "model_pricing",
+		Columns:    ModelPricingColumns,
+		PrimaryKey: []*schema.Column{ModelPricingColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "model_pricing_model_catalog_pricing",
+				Columns:    []*schema.Column{ModelPricingColumns[12]},
+				RefColumns: []*schema.Column{ModelCatalogColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "modelpricing_model_id_version",
+				Unique:  true,
+				Columns: []*schema.Column{ModelPricingColumns[12], ModelPricingColumns[1]},
+			},
+		},
+	}
 	// PaymentAuditLogsColumns holds the columns for the "payment_audit_logs" table.
 	PaymentAuditLogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
@@ -1151,16 +1257,6 @@ var (
 		{Name: "completed_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "failed_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "failed_reason", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "text"}},
-		{Name: "payment_method", Type: field.TypeString, Size: 20, Default: "qris"},
-		{Name: "qris_payment_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
-		{Name: "qris_payment_ref", Type: field.TypeString, Nullable: true, Size: 100},
-		{Name: "qris_expires_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
-		{Name: "qris_status", Type: field.TypeString, Size: 20, Default: "pending"},
-		{Name: "plan_id_uuid", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
-		{Name: "amount_idr", Type: field.TypeInt64, Nullable: true},
-		{Name: "idempotency_key", Type: field.TypeString, Nullable: true, Size: 100},
-		{Name: "asset", Type: field.TypeString, Size: 20, Default: "IDR"},
-		{Name: "network", Type: field.TypeString, Size: 20, Default: "QRIS"},
 		{Name: "client_ip", Type: field.TypeString, Size: 50},
 		{Name: "src_host", Type: field.TypeString, Size: 255},
 		{Name: "src_url", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "text"}},
@@ -1177,13 +1273,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "payment_orders_qris_payments_payment_orders",
-				Columns:    []*schema.Column{PaymentOrdersColumns[49]},
+				Columns:    []*schema.Column{PaymentOrdersColumns[39]},
 				RefColumns: []*schema.Column{QrisPaymentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "payment_orders_users_payment_orders",
-				Columns:    []*schema.Column{PaymentOrdersColumns[50]},
+				Columns:    []*schema.Column{PaymentOrdersColumns[40]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -1200,7 +1296,7 @@ var (
 			{
 				Name:    "paymentorder_user_id",
 				Unique:  false,
-				Columns: []*schema.Column{PaymentOrdersColumns[50]},
+				Columns: []*schema.Column{PaymentOrdersColumns[40]},
 			},
 			{
 				Name:    "paymentorder_status",
@@ -1215,7 +1311,7 @@ var (
 			{
 				Name:    "paymentorder_created_at",
 				Unique:  false,
-				Columns: []*schema.Column{PaymentOrdersColumns[47]},
+				Columns: []*schema.Column{PaymentOrdersColumns[37]},
 			},
 			{
 				Name:    "paymentorder_paid_at",
@@ -1619,6 +1715,43 @@ var (
 				Name:    "subscriptionplan_for_sale",
 				Unique:  false,
 				Columns: []*schema.Column{SubscriptionPlansColumns[11]},
+			},
+		},
+	}
+	// SupplierPricingColumns holds the columns for the "supplier_pricing" table.
+	SupplierPricingColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "supplier_code", Type: field.TypeString, Size: 20},
+		{Name: "version", Type: field.TypeInt},
+		{Name: "tier_label", Type: field.TypeString, Nullable: true, Size: 50},
+		{Name: "availability", Type: field.TypeString, Nullable: true, Size: 20},
+		{Name: "input_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "output_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_read_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_write_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cache_capabilities", Type: field.TypeJSON, Nullable: true, SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "effective_from", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "effective_to", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "model_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+	}
+	// SupplierPricingTable holds the schema information for the "supplier_pricing" table.
+	SupplierPricingTable = &schema.Table{
+		Name:       "supplier_pricing",
+		Columns:    SupplierPricingColumns,
+		PrimaryKey: []*schema.Column{SupplierPricingColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "supplier_pricing_model_catalog_supplier_pricing",
+				Columns:    []*schema.Column{SupplierPricingColumns[12]},
+				RefColumns: []*schema.Column{ModelCatalogColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "supplierpricing_model_id_supplier_code_version_tier_label",
+				Unique:  true,
+				Columns: []*schema.Column{SupplierPricingColumns[12], SupplierPricingColumns[1], SupplierPricingColumns[2], SupplierPricingColumns[3]},
 			},
 		},
 	}
@@ -2162,6 +2295,9 @@ var (
 		GroupsTable,
 		IdempotencyRecordsTable,
 		IdentityAdoptionDecisionsTable,
+		ModelBalancesTable,
+		ModelCatalogTable,
+		ModelPricingTable,
 		PaymentAuditLogsTable,
 		PaymentOrdersTable,
 		PaymentProviderInstancesTable,
@@ -2174,6 +2310,7 @@ var (
 		SecuritySecretsTable,
 		SettingsTable,
 		SubscriptionPlansTable,
+		SupplierPricingTable,
 		TLSFingerprintProfilesTable,
 		UsageCleanupTasksTable,
 		UsageLogsTable,
@@ -2260,6 +2397,17 @@ func init() {
 	IdentityAdoptionDecisionsTable.Annotation = &entsql.Annotation{
 		Table: "identity_adoption_decisions",
 	}
+	ModelBalancesTable.ForeignKeys[0].RefTable = ModelCatalogTable
+	ModelBalancesTable.Annotation = &entsql.Annotation{
+		Table: "model_balances",
+	}
+	ModelCatalogTable.Annotation = &entsql.Annotation{
+		Table: "model_catalog",
+	}
+	ModelPricingTable.ForeignKeys[0].RefTable = ModelCatalogTable
+	ModelPricingTable.Annotation = &entsql.Annotation{
+		Table: "model_pricing",
+	}
 	PaymentAuditLogsTable.Annotation = &entsql.Annotation{
 		Table: "payment_audit_logs",
 	}
@@ -2303,6 +2451,10 @@ func init() {
 	}
 	SubscriptionPlansTable.Annotation = &entsql.Annotation{
 		Table: "subscription_plans",
+	}
+	SupplierPricingTable.ForeignKeys[0].RefTable = ModelCatalogTable
+	SupplierPricingTable.Annotation = &entsql.Annotation{
+		Table: "supplier_pricing",
 	}
 	TLSFingerprintProfilesTable.Annotation = &entsql.Annotation{
 		Table: "tls_fingerprint_profiles",

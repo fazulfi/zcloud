@@ -151,43 +151,6 @@ func (PaymentOrder) Fields() []ent.Field {
 			Nillable().
 			SchemaType(map[string]string{dialect.Postgres: "text"}),
 
-		// zcloud QRIS (gomerch) fields
-		field.String("payment_method").
-			MaxLen(20).
-			Default("qris"),
-		field.String("qris_payment_id").
-			Optional().
-			Nillable().
-			SchemaType(map[string]string{dialect.Postgres: "uuid"}),
-		field.String("qris_payment_ref").
-			Optional().
-			Nillable().
-			MaxLen(100),
-		field.Time("qris_expires_at").
-			Optional().
-			Nillable().
-			SchemaType(map[string]string{dialect.Postgres: "timestamptz"}),
-		field.String("qris_status").
-			MaxLen(20).
-			Default("pending"),
-		field.String("plan_id_uuid").
-			Optional().
-			Nillable().
-			SchemaType(map[string]string{dialect.Postgres: "uuid"}),
-		field.Int64("amount_idr").
-			Optional().
-			Nillable(),
-		field.String("idempotency_key").
-			Optional().
-			Nillable().
-			MaxLen(100),
-		field.String("asset").
-			MaxLen(20).
-			Default("IDR"),
-		field.String("network").
-			MaxLen(20).
-			Default("QRIS"),
-
 		// 来源信息
 		field.String("client_ip").
 			MaxLen(50),

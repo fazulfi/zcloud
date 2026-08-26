@@ -67,6 +67,7 @@ const DefaultModelsListReadMaxBytes int64 = 8 * 1024 * 1024
 
 type Config struct {
 	Server                  ServerConfig                  `mapstructure:"server"`
+	Observability           ObservabilityConfig           `mapstructure:"observability"`
 	Log                     LogConfig                     `mapstructure:"log"`
 	CORS                    CORSConfig                    `mapstructure:"cors"`
 	Security                SecurityConfig                `mapstructure:"security"`
@@ -671,6 +672,12 @@ type PricingConfig struct {
 	UpdateIntervalHours int `mapstructure:"update_interval_hours"`
 	// 哈希校验间隔（分钟）
 	HashCheckIntervalMinutes int `mapstructure:"hash_check_interval_minutes"`
+}
+
+type ObservabilityConfig struct {
+	MetricsEnabled            bool   `mapstructure:"metrics_enabled"`
+	MetricsPath               string `mapstructure:"metrics_path"`
+	HealthReadyTimeoutSeconds int    `mapstructure:"health_ready_timeout_seconds"`
 }
 
 type ServerConfig struct {
@@ -2004,6 +2011,11 @@ func setDefaults() {
 	viper.SetDefault("server.h2c.max_read_frame_size", 1<<20)              // 1MB（够用）
 	viper.SetDefault("server.h2c.max_upload_buffer_per_connection", 2<<20) // 2MB
 	viper.SetDefault("server.h2c.max_upload_buffer_per_stream", 512<<10)   // 512KB
+
+	// Observability
+	viper.SetDefault("observability.metrics_enabled", true)
+	viper.SetDefault("observability.metrics_path", "/metrics")
+	viper.SetDefault("observability.health_ready_timeout_seconds", 5)
 
 	// Log
 	viper.SetDefault("log.level", "info")

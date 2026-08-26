@@ -82,26 +82,6 @@ const (
 	FieldFailedAt = "failed_at"
 	// FieldFailedReason holds the string denoting the failed_reason field in the database.
 	FieldFailedReason = "failed_reason"
-	// FieldPaymentMethod holds the string denoting the payment_method field in the database.
-	FieldPaymentMethod = "payment_method"
-	// FieldQrisPaymentID holds the string denoting the qris_payment_id field in the database.
-	FieldQrisPaymentID = "qris_payment_id"
-	// FieldQrisPaymentRef holds the string denoting the qris_payment_ref field in the database.
-	FieldQrisPaymentRef = "qris_payment_ref"
-	// FieldQrisExpiresAt holds the string denoting the qris_expires_at field in the database.
-	FieldQrisExpiresAt = "qris_expires_at"
-	// FieldQrisStatus holds the string denoting the qris_status field in the database.
-	FieldQrisStatus = "qris_status"
-	// FieldPlanIDUUID holds the string denoting the plan_id_uuid field in the database.
-	FieldPlanIDUUID = "plan_id_uuid"
-	// FieldAmountIdr holds the string denoting the amount_idr field in the database.
-	FieldAmountIdr = "amount_idr"
-	// FieldIdempotencyKey holds the string denoting the idempotency_key field in the database.
-	FieldIdempotencyKey = "idempotency_key"
-	// FieldAsset holds the string denoting the asset field in the database.
-	FieldAsset = "asset"
-	// FieldNetwork holds the string denoting the network field in the database.
-	FieldNetwork = "network"
 	// FieldClientIP holds the string denoting the client_ip field in the database.
 	FieldClientIP = "client_ip"
 	// FieldSrcHost holds the string denoting the src_host field in the database.
@@ -162,16 +142,6 @@ var Columns = []string{
 	FieldCompletedAt,
 	FieldFailedAt,
 	FieldFailedReason,
-	FieldPaymentMethod,
-	FieldQrisPaymentID,
-	FieldQrisPaymentRef,
-	FieldQrisExpiresAt,
-	FieldQrisStatus,
-	FieldPlanIDUUID,
-	FieldAmountIdr,
-	FieldIdempotencyKey,
-	FieldAsset,
-	FieldNetwork,
 	FieldClientIP,
 	FieldSrcHost,
 	FieldSrcURL,
@@ -235,26 +205,6 @@ var (
 	DefaultForceRefund bool
 	// RefundRequestedByValidator is a validator for the "refund_requested_by" field. It is called by the builders before save.
 	RefundRequestedByValidator func(string) error
-	// DefaultPaymentMethod holds the default value on creation for the "payment_method" field.
-	DefaultPaymentMethod string
-	// PaymentMethodValidator is a validator for the "payment_method" field. It is called by the builders before save.
-	PaymentMethodValidator func(string) error
-	// QrisPaymentRefValidator is a validator for the "qris_payment_ref" field. It is called by the builders before save.
-	QrisPaymentRefValidator func(string) error
-	// DefaultQrisStatus holds the default value on creation for the "qris_status" field.
-	DefaultQrisStatus string
-	// QrisStatusValidator is a validator for the "qris_status" field. It is called by the builders before save.
-	QrisStatusValidator func(string) error
-	// IdempotencyKeyValidator is a validator for the "idempotency_key" field. It is called by the builders before save.
-	IdempotencyKeyValidator func(string) error
-	// DefaultAsset holds the default value on creation for the "asset" field.
-	DefaultAsset string
-	// AssetValidator is a validator for the "asset" field. It is called by the builders before save.
-	AssetValidator func(string) error
-	// DefaultNetwork holds the default value on creation for the "network" field.
-	DefaultNetwork string
-	// NetworkValidator is a validator for the "network" field. It is called by the builders before save.
-	NetworkValidator func(string) error
 	// ClientIPValidator is a validator for the "client_ip" field. It is called by the builders before save.
 	ClientIPValidator func(string) error
 	// SrcHostValidator is a validator for the "src_host" field. It is called by the builders before save.
@@ -438,56 +388,6 @@ func ByFailedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByFailedReason orders the results by the failed_reason field.
 func ByFailedReason(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldFailedReason, opts...).ToFunc()
-}
-
-// ByPaymentMethod orders the results by the payment_method field.
-func ByPaymentMethod(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPaymentMethod, opts...).ToFunc()
-}
-
-// ByQrisPaymentID orders the results by the qris_payment_id field.
-func ByQrisPaymentID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldQrisPaymentID, opts...).ToFunc()
-}
-
-// ByQrisPaymentRef orders the results by the qris_payment_ref field.
-func ByQrisPaymentRef(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldQrisPaymentRef, opts...).ToFunc()
-}
-
-// ByQrisExpiresAt orders the results by the qris_expires_at field.
-func ByQrisExpiresAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldQrisExpiresAt, opts...).ToFunc()
-}
-
-// ByQrisStatus orders the results by the qris_status field.
-func ByQrisStatus(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldQrisStatus, opts...).ToFunc()
-}
-
-// ByPlanIDUUID orders the results by the plan_id_uuid field.
-func ByPlanIDUUID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPlanIDUUID, opts...).ToFunc()
-}
-
-// ByAmountIdr orders the results by the amount_idr field.
-func ByAmountIdr(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAmountIdr, opts...).ToFunc()
-}
-
-// ByIdempotencyKey orders the results by the idempotency_key field.
-func ByIdempotencyKey(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIdempotencyKey, opts...).ToFunc()
-}
-
-// ByAsset orders the results by the asset field.
-func ByAsset(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAsset, opts...).ToFunc()
-}
-
-// ByNetwork orders the results by the network field.
-func ByNetwork(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNetwork, opts...).ToFunc()
 }
 
 // ByClientIP orders the results by the client_ip field.

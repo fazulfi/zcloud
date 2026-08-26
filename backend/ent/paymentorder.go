@@ -87,26 +87,6 @@ type PaymentOrder struct {
 	FailedAt *time.Time `json:"failed_at,omitempty"`
 	// FailedReason holds the value of the "failed_reason" field.
 	FailedReason *string `json:"failed_reason,omitempty"`
-	// PaymentMethod holds the value of the "payment_method" field.
-	PaymentMethod string `json:"payment_method,omitempty"`
-	// QrisPaymentID holds the value of the "qris_payment_id" field.
-	QrisPaymentID *string `json:"qris_payment_id,omitempty"`
-	// QrisPaymentRef holds the value of the "qris_payment_ref" field.
-	QrisPaymentRef *string `json:"qris_payment_ref,omitempty"`
-	// QrisExpiresAt holds the value of the "qris_expires_at" field.
-	QrisExpiresAt *time.Time `json:"qris_expires_at,omitempty"`
-	// QrisStatus holds the value of the "qris_status" field.
-	QrisStatus string `json:"qris_status,omitempty"`
-	// PlanIDUUID holds the value of the "plan_id_uuid" field.
-	PlanIDUUID *string `json:"plan_id_uuid,omitempty"`
-	// AmountIdr holds the value of the "amount_idr" field.
-	AmountIdr *int64 `json:"amount_idr,omitempty"`
-	// IdempotencyKey holds the value of the "idempotency_key" field.
-	IdempotencyKey *string `json:"idempotency_key,omitempty"`
-	// Asset holds the value of the "asset" field.
-	Asset string `json:"asset,omitempty"`
-	// Network holds the value of the "network" field.
-	Network string `json:"network,omitempty"`
 	// ClientIP holds the value of the "client_ip" field.
 	ClientIP string `json:"client_ip,omitempty"`
 	// SrcHost holds the value of the "src_host" field.
@@ -155,11 +135,11 @@ func (*PaymentOrder) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case paymentorder.FieldAmount, paymentorder.FieldPayAmount, paymentorder.FieldFeeRate, paymentorder.FieldRefundAmount:
 			values[i] = new(sql.NullFloat64)
-		case paymentorder.FieldID, paymentorder.FieldUserID, paymentorder.FieldPlanID, paymentorder.FieldSubscriptionGroupID, paymentorder.FieldSubscriptionDays, paymentorder.FieldAmountIdr:
+		case paymentorder.FieldID, paymentorder.FieldUserID, paymentorder.FieldPlanID, paymentorder.FieldSubscriptionGroupID, paymentorder.FieldSubscriptionDays:
 			values[i] = new(sql.NullInt64)
-		case paymentorder.FieldUserEmail, paymentorder.FieldUserName, paymentorder.FieldUserNotes, paymentorder.FieldRechargeCode, paymentorder.FieldOutTradeNo, paymentorder.FieldPaymentType, paymentorder.FieldPaymentTradeNo, paymentorder.FieldPayURL, paymentorder.FieldQrCode, paymentorder.FieldQrCodeImg, paymentorder.FieldOrderType, paymentorder.FieldProviderInstanceID, paymentorder.FieldProviderKey, paymentorder.FieldStatus, paymentorder.FieldRefundReason, paymentorder.FieldRefundRequestReason, paymentorder.FieldRefundRequestedBy, paymentorder.FieldFailedReason, paymentorder.FieldPaymentMethod, paymentorder.FieldQrisPaymentID, paymentorder.FieldQrisPaymentRef, paymentorder.FieldQrisStatus, paymentorder.FieldPlanIDUUID, paymentorder.FieldIdempotencyKey, paymentorder.FieldAsset, paymentorder.FieldNetwork, paymentorder.FieldClientIP, paymentorder.FieldSrcHost, paymentorder.FieldSrcURL:
+		case paymentorder.FieldUserEmail, paymentorder.FieldUserName, paymentorder.FieldUserNotes, paymentorder.FieldRechargeCode, paymentorder.FieldOutTradeNo, paymentorder.FieldPaymentType, paymentorder.FieldPaymentTradeNo, paymentorder.FieldPayURL, paymentorder.FieldQrCode, paymentorder.FieldQrCodeImg, paymentorder.FieldOrderType, paymentorder.FieldProviderInstanceID, paymentorder.FieldProviderKey, paymentorder.FieldStatus, paymentorder.FieldRefundReason, paymentorder.FieldRefundRequestReason, paymentorder.FieldRefundRequestedBy, paymentorder.FieldFailedReason, paymentorder.FieldClientIP, paymentorder.FieldSrcHost, paymentorder.FieldSrcURL:
 			values[i] = new(sql.NullString)
-		case paymentorder.FieldRefundAt, paymentorder.FieldRefundRequestedAt, paymentorder.FieldExpiresAt, paymentorder.FieldPaidAt, paymentorder.FieldCompletedAt, paymentorder.FieldFailedAt, paymentorder.FieldQrisExpiresAt, paymentorder.FieldCreatedAt, paymentorder.FieldUpdatedAt:
+		case paymentorder.FieldRefundAt, paymentorder.FieldRefundRequestedAt, paymentorder.FieldExpiresAt, paymentorder.FieldPaidAt, paymentorder.FieldCompletedAt, paymentorder.FieldFailedAt, paymentorder.FieldCreatedAt, paymentorder.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case paymentorder.ForeignKeys[0]: // qris_payment_payment_orders
 			values[i] = new(sql.NullString)
@@ -408,72 +388,6 @@ func (_m *PaymentOrder) assignValues(columns []string, values []any) error {
 				_m.FailedReason = new(string)
 				*_m.FailedReason = value.String
 			}
-		case paymentorder.FieldPaymentMethod:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field payment_method", values[i])
-			} else if value.Valid {
-				_m.PaymentMethod = value.String
-			}
-		case paymentorder.FieldQrisPaymentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field qris_payment_id", values[i])
-			} else if value.Valid {
-				_m.QrisPaymentID = new(string)
-				*_m.QrisPaymentID = value.String
-			}
-		case paymentorder.FieldQrisPaymentRef:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field qris_payment_ref", values[i])
-			} else if value.Valid {
-				_m.QrisPaymentRef = new(string)
-				*_m.QrisPaymentRef = value.String
-			}
-		case paymentorder.FieldQrisExpiresAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field qris_expires_at", values[i])
-			} else if value.Valid {
-				_m.QrisExpiresAt = new(time.Time)
-				*_m.QrisExpiresAt = value.Time
-			}
-		case paymentorder.FieldQrisStatus:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field qris_status", values[i])
-			} else if value.Valid {
-				_m.QrisStatus = value.String
-			}
-		case paymentorder.FieldPlanIDUUID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field plan_id_uuid", values[i])
-			} else if value.Valid {
-				_m.PlanIDUUID = new(string)
-				*_m.PlanIDUUID = value.String
-			}
-		case paymentorder.FieldAmountIdr:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field amount_idr", values[i])
-			} else if value.Valid {
-				_m.AmountIdr = new(int64)
-				*_m.AmountIdr = value.Int64
-			}
-		case paymentorder.FieldIdempotencyKey:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field idempotency_key", values[i])
-			} else if value.Valid {
-				_m.IdempotencyKey = new(string)
-				*_m.IdempotencyKey = value.String
-			}
-		case paymentorder.FieldAsset:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field asset", values[i])
-			} else if value.Valid {
-				_m.Asset = value.String
-			}
-		case paymentorder.FieldNetwork:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field network", values[i])
-			} else if value.Valid {
-				_m.Network = value.String
-			}
 		case paymentorder.FieldClientIP:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field client_ip", values[i])
@@ -690,48 +604,6 @@ func (_m *PaymentOrder) String() string {
 		builder.WriteString("failed_reason=")
 		builder.WriteString(*v)
 	}
-	builder.WriteString(", ")
-	builder.WriteString("payment_method=")
-	builder.WriteString(_m.PaymentMethod)
-	builder.WriteString(", ")
-	if v := _m.QrisPaymentID; v != nil {
-		builder.WriteString("qris_payment_id=")
-		builder.WriteString(*v)
-	}
-	builder.WriteString(", ")
-	if v := _m.QrisPaymentRef; v != nil {
-		builder.WriteString("qris_payment_ref=")
-		builder.WriteString(*v)
-	}
-	builder.WriteString(", ")
-	if v := _m.QrisExpiresAt; v != nil {
-		builder.WriteString("qris_expires_at=")
-		builder.WriteString(v.Format(time.ANSIC))
-	}
-	builder.WriteString(", ")
-	builder.WriteString("qris_status=")
-	builder.WriteString(_m.QrisStatus)
-	builder.WriteString(", ")
-	if v := _m.PlanIDUUID; v != nil {
-		builder.WriteString("plan_id_uuid=")
-		builder.WriteString(*v)
-	}
-	builder.WriteString(", ")
-	if v := _m.AmountIdr; v != nil {
-		builder.WriteString("amount_idr=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
-	builder.WriteString(", ")
-	if v := _m.IdempotencyKey; v != nil {
-		builder.WriteString("idempotency_key=")
-		builder.WriteString(*v)
-	}
-	builder.WriteString(", ")
-	builder.WriteString("asset=")
-	builder.WriteString(_m.Asset)
-	builder.WriteString(", ")
-	builder.WriteString("network=")
-	builder.WriteString(_m.Network)
 	builder.WriteString(", ")
 	builder.WriteString("client_ip=")
 	builder.WriteString(_m.ClientIP)

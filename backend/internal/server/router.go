@@ -2,7 +2,9 @@ package server
 
 import (
 	"context"
+	"database/sql"
 	"log"
+	"net/http"
 	"sync/atomic"
 	"time"
 
@@ -12,6 +14,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/server/routes"
 	"github.com/Wei-Shaw/sub2api/internal/service"
 	"github.com/Wei-Shaw/sub2api/internal/web"
+	"github.com/Wei-Shaw/sub2api/zcloud/observability"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -35,6 +38,7 @@ func SetupRouter(
 	settingService *service.SettingService,
 	compositeResolver *service.CompositeRouteResolver,
 	cfg *config.Config,
+	db *sql.DB,
 	redisClient *redis.Client,
 ) *gin.Engine {
 	middleware2.SetIngressRejectRecorder(opsService)
@@ -57,6 +61,8 @@ func SetupRouter(
 
 	// 应用中间件
 	r.Use(middleware2.RequestLogger())
+	metrics := observability.NewMetrics()
+	r.Use(observability.MetricsMiddleware(metrics))
 	// 将客户端 IP + UA 注入 request context，供 token 签发/会话绑定/审计日志统一读取。
 	// 解析模式按请求快照：兼容开关开启时信任原始转发头，关闭时使用 server.trusted_proxies。
 	r.Use(middleware2.SessionBindingContext(cfg))
@@ -90,7 +96,7 @@ func SetupRouter(
 	}
 
 	// 注册路由
-	registerRoutes(r, handlers, jwtAuth, optionalJWTAuth, adminAuth, apiKeyAuth, auditLog, stepUpAuth, apiKeyService, subscriptionService, opsService, settingService, compositeResolver, cfg, redisClient)
+	registerRoutes(r, handlers, jwtAuth, optionalJWTAuth, adminAuth, apiKeyAuth, auditLog, stepUpAuth, apiKeyService, subscriptionService, opsService, settingService, compositeResolver, cfg, db, redisClient, metrics)
 
 	return r
 }
@@ -111,10 +117,25 @@ func registerRoutes(
 	settingService *service.SettingService,
 	compositeResolver *service.CompositeRouteResolver,
 	cfg *config.Config,
+	db *sql.DB,
 	redisClient *redis.Client,
+	metrics *observability.Metrics,
 ) {
 	// 通用路由（健康检查、状态等）
-	routes.RegisterCommonRoutes(r)
+	routes.RegisterCommonRoutes(r, routes.CommonRouteOptions{
+		DBPinger:           func(ctx context.Context) error { return db.PingContext(ctx) },
+		RedisPinger:        func(ctx context.Context) error { return redisClient.Ping(ctx).Err() },
+		HealthReadyTimeout: time.Duration(cfg.Observability.HealthReadyTimeoutSeconds) * time.Second,
+	})
+	if cfg.Observability.MetricsEnabled {
+		path := cfg.Observability.MetricsPath
+		if path == "" {
+			path = "/metrics"
+		}
+		r.GET(path, func(c *gin.Context) {
+			c.Data(http.StatusOK, "text/plain; version=0.0.4; charset=utf-8", []byte(metrics.Snapshot()))
+		})
+	}
 
 	// API v1
 	v1 := r.Group("/api/v1")

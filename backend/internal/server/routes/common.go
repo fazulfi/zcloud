@@ -1,13 +1,23 @@
 package routes
 
 import (
+	"context"
 	"net/http"
+	"time"
 
+	"github.com/Wei-Shaw/sub2api/zcloud/observability"
 	"github.com/gin-gonic/gin"
 )
 
+type CommonRouteOptions struct {
+	DBPinger           func(context.Context) error
+	RedisPinger        func(context.Context) error
+	HealthReadyTimeout time.Duration
+}
+
 // RegisterCommonRoutes 注册通用路由（健康检查、状态等）
-func RegisterCommonRoutes(r *gin.Engine) {
+func RegisterCommonRoutes(r *gin.Engine, options CommonRouteOptions) {
+	observability.RegisterHealthRoutes(r, options.DBPinger, options.RedisPinger, options.HealthReadyTimeout)
 	// 健康检查
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
