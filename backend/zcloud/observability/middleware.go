@@ -39,20 +39,3 @@ func MetricsMiddleware(m *Metrics) gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-func statusString(status int) string {
-	if status == 0 {
-		return "200"
-	}
-	return string(rune(0))[:0] + formatStatus(status)
-}
-
-func formatStatus(status int) string {
-	if status < 10 {
-		return string([]byte{'0' + byte(status)})
-	}
-	if status < 100 {
-		return string([]byte{'0' + byte(status/10), '0' + byte(status%10)})
-	}
-	return string([]byte{'0' + byte(status/100), '0' + byte((status/10)%10), '0' + byte(status%10)})
-}
