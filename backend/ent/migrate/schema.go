@@ -1093,6 +1093,67 @@ var (
 			},
 		},
 	}
+	// ModelCatalogColumns holds the columns for the "model_catalog" table.
+	ModelCatalogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "canonical_name", Type: field.TypeString, Unique: true, Size: 100},
+		{Name: "public_name", Type: field.TypeString, Size: 200},
+		{Name: "context_window", Type: field.TypeInt64, Nullable: true},
+		{Name: "source_suppliers", Type: field.TypeJSON, Nullable: true, SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "status", Type: field.TypeString, Size: 20, Default: "active"},
+	}
+	// ModelCatalogTable holds the schema information for the "model_catalog" table.
+	ModelCatalogTable = &schema.Table{
+		Name:       "model_catalog",
+		Columns:    ModelCatalogColumns,
+		PrimaryKey: []*schema.Column{ModelCatalogColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "modelcatalog_status",
+				Unique:  false,
+				Columns: []*schema.Column{ModelCatalogColumns[7]},
+			},
+		},
+	}
+	// ModelPricingColumns holds the columns for the "model_pricing" table.
+	ModelPricingColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "version", Type: field.TypeInt},
+		{Name: "input_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "output_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_read_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_write_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "context_tier", Type: field.TypeString, Nullable: true, Size: 20},
+		{Name: "tokens_per_dollar", Type: field.TypeInt64, Nullable: true},
+		{Name: "pct_per_1m_tokens", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(10,6)"}},
+		{Name: "effective_from", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "effective_to", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "source_ref", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "model_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+	}
+	// ModelPricingTable holds the schema information for the "model_pricing" table.
+	ModelPricingTable = &schema.Table{
+		Name:       "model_pricing",
+		Columns:    ModelPricingColumns,
+		PrimaryKey: []*schema.Column{ModelPricingColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "model_pricing_model_catalog_pricing",
+				Columns:    []*schema.Column{ModelPricingColumns[12]},
+				RefColumns: []*schema.Column{ModelCatalogColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "modelpricing_model_id_version",
+				Unique:  true,
+				Columns: []*schema.Column{ModelPricingColumns[12], ModelPricingColumns[1]},
+			},
+		},
+	}
 	// PaymentAuditLogsColumns holds the columns for the "payment_audit_logs" table.
 	PaymentAuditLogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
@@ -1564,6 +1625,43 @@ var (
 				Name:    "subscriptionplan_for_sale",
 				Unique:  false,
 				Columns: []*schema.Column{SubscriptionPlansColumns[11]},
+			},
+		},
+	}
+	// SupplierPricingColumns holds the columns for the "supplier_pricing" table.
+	SupplierPricingColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "supplier_code", Type: field.TypeString, Size: 20},
+		{Name: "version", Type: field.TypeInt},
+		{Name: "tier_label", Type: field.TypeString, Nullable: true, Size: 50},
+		{Name: "availability", Type: field.TypeString, Nullable: true, Size: 20},
+		{Name: "input_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "output_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_read_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cached_write_rate", Type: field.TypeFloat64, Nullable: true, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "cache_capabilities", Type: field.TypeJSON, Nullable: true, SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "effective_from", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "effective_to", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "model_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+	}
+	// SupplierPricingTable holds the schema information for the "supplier_pricing" table.
+	SupplierPricingTable = &schema.Table{
+		Name:       "supplier_pricing",
+		Columns:    SupplierPricingColumns,
+		PrimaryKey: []*schema.Column{SupplierPricingColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "supplier_pricing_model_catalog_supplier_pricing",
+				Columns:    []*schema.Column{SupplierPricingColumns[12]},
+				RefColumns: []*schema.Column{ModelCatalogColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "supplierpricing_model_id_supplier_code_version_tier_label",
+				Unique:  true,
+				Columns: []*schema.Column{SupplierPricingColumns[12], SupplierPricingColumns[1], SupplierPricingColumns[2], SupplierPricingColumns[3]},
 			},
 		},
 	}
@@ -2102,6 +2200,8 @@ var (
 		GroupsTable,
 		IdempotencyRecordsTable,
 		IdentityAdoptionDecisionsTable,
+		ModelCatalogTable,
+		ModelPricingTable,
 		PaymentAuditLogsTable,
 		PaymentOrdersTable,
 		PaymentProviderInstancesTable,
@@ -2113,6 +2213,7 @@ var (
 		SecuritySecretsTable,
 		SettingsTable,
 		SubscriptionPlansTable,
+		SupplierPricingTable,
 		TLSFingerprintProfilesTable,
 		UsageCleanupTasksTable,
 		UsageLogsTable,
@@ -2199,6 +2300,13 @@ func init() {
 	IdentityAdoptionDecisionsTable.Annotation = &entsql.Annotation{
 		Table: "identity_adoption_decisions",
 	}
+	ModelCatalogTable.Annotation = &entsql.Annotation{
+		Table: "model_catalog",
+	}
+	ModelPricingTable.ForeignKeys[0].RefTable = ModelCatalogTable
+	ModelPricingTable.Annotation = &entsql.Annotation{
+		Table: "model_pricing",
+	}
 	PaymentAuditLogsTable.Annotation = &entsql.Annotation{
 		Table: "payment_audit_logs",
 	}
@@ -2238,6 +2346,10 @@ func init() {
 	}
 	SubscriptionPlansTable.Annotation = &entsql.Annotation{
 		Table: "subscription_plans",
+	}
+	SupplierPricingTable.ForeignKeys[0].RefTable = ModelCatalogTable
+	SupplierPricingTable.Annotation = &entsql.Annotation{
+		Table: "supplier_pricing",
 	}
 	TLSFingerprintProfilesTable.Annotation = &entsql.Annotation{
 		Table: "tls_fingerprint_profiles",

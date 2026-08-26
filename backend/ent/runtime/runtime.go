@@ -24,6 +24,8 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/idempotencyrecord"
 	"github.com/Wei-Shaw/sub2api/ent/identityadoptiondecision"
+	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
+	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/paymentauditlog"
 	"github.com/Wei-Shaw/sub2api/ent/paymentorder"
 	"github.com/Wei-Shaw/sub2api/ent/paymentproviderinstance"
@@ -36,6 +38,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
 	"github.com/Wei-Shaw/sub2api/ent/setting"
 	"github.com/Wei-Shaw/sub2api/ent/subscriptionplan"
+	"github.com/Wei-Shaw/sub2api/ent/supplierpricing"
 	"github.com/Wei-Shaw/sub2api/ent/tlsfingerprintprofile"
 	"github.com/Wei-Shaw/sub2api/ent/usagecleanuptask"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
@@ -1267,6 +1270,81 @@ func init() {
 	identityadoptiondecisionDescDecidedAt := identityadoptiondecisionFields[4].Descriptor()
 	// identityadoptiondecision.DefaultDecidedAt holds the default value on creation for the decided_at field.
 	identityadoptiondecision.DefaultDecidedAt = identityadoptiondecisionDescDecidedAt.Default.(func() time.Time)
+	modelcatalogMixin := schema.ModelCatalog{}.Mixin()
+	modelcatalogMixinFields0 := modelcatalogMixin[0].Fields()
+	_ = modelcatalogMixinFields0
+	modelcatalogFields := schema.ModelCatalog{}.Fields()
+	_ = modelcatalogFields
+	// modelcatalogDescCreatedAt is the schema descriptor for created_at field.
+	modelcatalogDescCreatedAt := modelcatalogMixinFields0[0].Descriptor()
+	// modelcatalog.DefaultCreatedAt holds the default value on creation for the created_at field.
+	modelcatalog.DefaultCreatedAt = modelcatalogDescCreatedAt.Default.(func() time.Time)
+	// modelcatalogDescUpdatedAt is the schema descriptor for updated_at field.
+	modelcatalogDescUpdatedAt := modelcatalogMixinFields0[1].Descriptor()
+	// modelcatalog.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	modelcatalog.DefaultUpdatedAt = modelcatalogDescUpdatedAt.Default.(func() time.Time)
+	// modelcatalog.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	modelcatalog.UpdateDefaultUpdatedAt = modelcatalogDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// modelcatalogDescCanonicalName is the schema descriptor for canonical_name field.
+	modelcatalogDescCanonicalName := modelcatalogFields[1].Descriptor()
+	// modelcatalog.CanonicalNameValidator is a validator for the "canonical_name" field. It is called by the builders before save.
+	modelcatalog.CanonicalNameValidator = func() func(string) error {
+		validators := modelcatalogDescCanonicalName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(canonical_name string) error {
+			for _, fn := range fns {
+				if err := fn(canonical_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// modelcatalogDescPublicName is the schema descriptor for public_name field.
+	modelcatalogDescPublicName := modelcatalogFields[2].Descriptor()
+	// modelcatalog.PublicNameValidator is a validator for the "public_name" field. It is called by the builders before save.
+	modelcatalog.PublicNameValidator = func() func(string) error {
+		validators := modelcatalogDescPublicName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(public_name string) error {
+			for _, fn := range fns {
+				if err := fn(public_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// modelcatalogDescStatus is the schema descriptor for status field.
+	modelcatalogDescStatus := modelcatalogFields[5].Descriptor()
+	// modelcatalog.DefaultStatus holds the default value on creation for the status field.
+	modelcatalog.DefaultStatus = modelcatalogDescStatus.Default.(string)
+	// modelcatalog.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	modelcatalog.StatusValidator = modelcatalogDescStatus.Validators[0].(func(string) error)
+	// modelcatalogDescID is the schema descriptor for id field.
+	modelcatalogDescID := modelcatalogFields[0].Descriptor()
+	// modelcatalog.DefaultID holds the default value on creation for the id field.
+	modelcatalog.DefaultID = modelcatalogDescID.Default.(func() string)
+	modelpricingFields := schema.ModelPricing{}.Fields()
+	_ = modelpricingFields
+	// modelpricingDescContextTier is the schema descriptor for context_tier field.
+	modelpricingDescContextTier := modelpricingFields[7].Descriptor()
+	// modelpricing.ContextTierValidator is a validator for the "context_tier" field. It is called by the builders before save.
+	modelpricing.ContextTierValidator = modelpricingDescContextTier.Validators[0].(func(string) error)
+	// modelpricingDescSourceRef is the schema descriptor for source_ref field.
+	modelpricingDescSourceRef := modelpricingFields[12].Descriptor()
+	// modelpricing.SourceRefValidator is a validator for the "source_ref" field. It is called by the builders before save.
+	modelpricing.SourceRefValidator = modelpricingDescSourceRef.Validators[0].(func(string) error)
+	// modelpricingDescID is the schema descriptor for id field.
+	modelpricingDescID := modelpricingFields[0].Descriptor()
+	// modelpricing.DefaultID holds the default value on creation for the id field.
+	modelpricing.DefaultID = modelpricingDescID.Default.(func() string)
 	paymentauditlogFields := schema.PaymentAuditLog{}.Fields()
 	_ = paymentauditlogFields
 	// paymentauditlogDescOrderID is the schema descriptor for order_id field.
@@ -1874,6 +1952,38 @@ func init() {
 	subscriptionplan.DefaultUpdatedAt = subscriptionplanDescUpdatedAt.Default.(func() time.Time)
 	// subscriptionplan.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	subscriptionplan.UpdateDefaultUpdatedAt = subscriptionplanDescUpdatedAt.UpdateDefault.(func() time.Time)
+	supplierpricingFields := schema.SupplierPricing{}.Fields()
+	_ = supplierpricingFields
+	// supplierpricingDescSupplierCode is the schema descriptor for supplier_code field.
+	supplierpricingDescSupplierCode := supplierpricingFields[2].Descriptor()
+	// supplierpricing.SupplierCodeValidator is a validator for the "supplier_code" field. It is called by the builders before save.
+	supplierpricing.SupplierCodeValidator = func() func(string) error {
+		validators := supplierpricingDescSupplierCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(supplier_code string) error {
+			for _, fn := range fns {
+				if err := fn(supplier_code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// supplierpricingDescTierLabel is the schema descriptor for tier_label field.
+	supplierpricingDescTierLabel := supplierpricingFields[4].Descriptor()
+	// supplierpricing.TierLabelValidator is a validator for the "tier_label" field. It is called by the builders before save.
+	supplierpricing.TierLabelValidator = supplierpricingDescTierLabel.Validators[0].(func(string) error)
+	// supplierpricingDescAvailability is the schema descriptor for availability field.
+	supplierpricingDescAvailability := supplierpricingFields[5].Descriptor()
+	// supplierpricing.AvailabilityValidator is a validator for the "availability" field. It is called by the builders before save.
+	supplierpricing.AvailabilityValidator = supplierpricingDescAvailability.Validators[0].(func(string) error)
+	// supplierpricingDescID is the schema descriptor for id field.
+	supplierpricingDescID := supplierpricingFields[0].Descriptor()
+	// supplierpricing.DefaultID holds the default value on creation for the id field.
+	supplierpricing.DefaultID = supplierpricingDescID.Default.(func() string)
 	tlsfingerprintprofileMixin := schema.TLSFingerprintProfile{}.Mixin()
 	tlsfingerprintprofileMixinFields0 := tlsfingerprintprofileMixin[0].Fields()
 	_ = tlsfingerprintprofileMixinFields0
