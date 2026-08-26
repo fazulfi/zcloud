@@ -88,18 +88,18 @@ func (m *Metrics) Snapshot() string {
 	m.mu.Unlock()
 
 	var b strings.Builder
-	b.WriteString("# HELP zcloud_http_requests_total Total HTTP requests.\n# TYPE zcloud_http_requests_total counter\n")
+	_, _ = b.WriteString("# HELP zcloud_http_requests_total Total HTTP requests.\n# TYPE zcloud_http_requests_total counter\n")
 	keys := sortedKeys(statuses)
 	for _, k := range keys {
 		fmt.Fprintf(&b, "zcloud_http_requests_total{status=\"%s\"} %d\n", escape(k), statuses[k])
 	}
-	b.WriteString("# HELP zcloud_http_requests_in_flight Current HTTP requests in flight.\n# TYPE zcloud_http_requests_in_flight gauge\n")
+	_, _ = b.WriteString("# HELP zcloud_http_requests_in_flight Current HTTP requests in flight.\n# TYPE zcloud_http_requests_in_flight gauge\n")
 	fmt.Fprintf(&b, "zcloud_http_requests_in_flight %d\n", m.inFlight.Load())
-	b.WriteString("# HELP zcloud_http_requests_by_model_total Total HTTP requests by model.\n# TYPE zcloud_http_requests_by_model_total counter\n")
+	_, _ = b.WriteString("# HELP zcloud_http_requests_by_model_total Total HTTP requests by model.\n# TYPE zcloud_http_requests_by_model_total counter\n")
 	for _, k := range sortedKeys(models) {
 		fmt.Fprintf(&b, "zcloud_http_requests_by_model_total{model=\"%s\"} %d\n", escape(k), models[k])
 	}
-	b.WriteString("# HELP zcloud_http_request_duration_ms Request duration in milliseconds.\n# TYPE zcloud_http_request_duration_ms histogram\n")
+	_, _ = b.WriteString("# HELP zcloud_http_request_duration_ms Request duration in milliseconds.\n# TYPE zcloud_http_request_duration_ms histogram\n")
 	for i, bound := range latencyBuckets {
 		fmt.Fprintf(&b, "zcloud_http_request_duration_ms_bucket{le=\"%d\"} %d\n", bound, buckets[i])
 	}

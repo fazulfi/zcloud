@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type ModelCatalog struct { ent.Schema }
+type ModelCatalog struct{ ent.Schema }
 
 func (ModelCatalog) Annotations() []schema.Annotation {
 	return []schema.Annotation{entsql.Annotation{Table: "model_catalog"}}

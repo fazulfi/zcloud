@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type SupplierPricing struct { ent.Schema }
+type SupplierPricing struct{ ent.Schema }
 
 func (SupplierPricing) Annotations() []schema.Annotation {
 	return []schema.Annotation{entsql.Annotation{Table: "supplier_pricing"}}

@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type ModelPricing struct { ent.Schema }
+type ModelPricing struct{ ent.Schema }
 
 func (ModelPricing) Annotations() []schema.Annotation {
 	return []schema.Annotation{entsql.Annotation{Table: "model_pricing"}}
@@ -42,4 +42,3 @@ func (ModelPricing) Edges() []ent.Edge {
 func (ModelPricing) Indexes() []ent.Index {
 	return []ent.Index{index.Fields("model_id", "version").Unique()}
 }
-
