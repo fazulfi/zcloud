@@ -1,7 +1,9 @@
+# ZCloud security scan — govulncheck + pnpm audit on PR, push, and weekly schedule.
 name: Security Scan
 
 on:
   push:
+    branches: [main]
   pull_request:
   schedule:
     - cron: '0 3 * * 1'
