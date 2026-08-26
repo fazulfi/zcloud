@@ -44,6 +44,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/promocode"
 	"github.com/Wei-Shaw/sub2api/ent/promocodeusage"
 	"github.com/Wei-Shaw/sub2api/ent/proxy"
+	"github.com/Wei-Shaw/sub2api/ent/qrispayment"
 	"github.com/Wei-Shaw/sub2api/ent/redeemcode"
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
 	"github.com/Wei-Shaw/sub2api/ent/setting"
@@ -125,6 +126,8 @@ type Client struct {
 	PromoCodeUsage *PromoCodeUsageClient
 	// Proxy is the client for interacting with the Proxy builders.
 	Proxy *ProxyClient
+	// QrisPayment is the client for interacting with the QrisPayment builders.
+	QrisPayment *QrisPaymentClient
 	// RedeemCode is the client for interacting with the RedeemCode builders.
 	RedeemCode *RedeemCodeClient
 	// SecuritySecret is the client for interacting with the SecuritySecret builders.
@@ -193,6 +196,7 @@ func (c *Client) init() {
 	c.PromoCode = NewPromoCodeClient(c.config)
 	c.PromoCodeUsage = NewPromoCodeUsageClient(c.config)
 	c.Proxy = NewProxyClient(c.config)
+	c.QrisPayment = NewQrisPaymentClient(c.config)
 	c.RedeemCode = NewRedeemCodeClient(c.config)
 	c.SecuritySecret = NewSecuritySecretClient(c.config)
 	c.Setting = NewSettingClient(c.config)
@@ -328,6 +332,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		PromoCode:                     NewPromoCodeClient(cfg),
 		PromoCodeUsage:                NewPromoCodeUsageClient(cfg),
 		Proxy:                         NewProxyClient(cfg),
+		QrisPayment:                   NewQrisPaymentClient(cfg),
 		RedeemCode:                    NewRedeemCodeClient(cfg),
 		SecuritySecret:                NewSecuritySecretClient(cfg),
 		Setting:                       NewSettingClient(cfg),
@@ -390,6 +395,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		PromoCode:                     NewPromoCodeClient(cfg),
 		PromoCodeUsage:                NewPromoCodeUsageClient(cfg),
 		Proxy:                         NewProxyClient(cfg),
+		QrisPayment:                   NewQrisPaymentClient(cfg),
 		RedeemCode:                    NewRedeemCodeClient(cfg),
 		SecuritySecret:                NewSecuritySecretClient(cfg),
 		Setting:                       NewSettingClient(cfg),
@@ -440,10 +446,10 @@ func (c *Client) Use(hooks ...Hook) {
 		c.CompositeModelRoute, c.ErrorPassthroughRule, c.Group, c.IdempotencyRecord,
 		c.IdentityAdoptionDecision, c.ModelBalance, c.ModelCatalog, c.ModelPricing,
 		c.PaymentAuditLog, c.PaymentOrder, c.PaymentProviderInstance,
-		c.PendingAuthSession, c.PromoCode, c.PromoCodeUsage, c.Proxy, c.RedeemCode,
-		c.SecuritySecret, c.Setting, c.SubscriptionPlan, c.SupplierPricing,
-		c.TLSFingerprintProfile, c.UsageCleanupTask, c.UsageLog, c.User,
-		c.UserAllowedGroup, c.UserAttributeDefinition, c.UserAttributeValue,
+		c.PendingAuthSession, c.PromoCode, c.PromoCodeUsage, c.Proxy, c.QrisPayment,
+		c.RedeemCode, c.SecuritySecret, c.Setting, c.SubscriptionPlan,
+		c.SupplierPricing, c.TLSFingerprintProfile, c.UsageCleanupTask, c.UsageLog,
+		c.User, c.UserAllowedGroup, c.UserAttributeDefinition, c.UserAttributeValue,
 		c.UserPlatformQuota, c.UserSubscription,
 	} {
 		n.Use(hooks...)
@@ -461,10 +467,10 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 		c.CompositeModelRoute, c.ErrorPassthroughRule, c.Group, c.IdempotencyRecord,
 		c.IdentityAdoptionDecision, c.ModelBalance, c.ModelCatalog, c.ModelPricing,
 		c.PaymentAuditLog, c.PaymentOrder, c.PaymentProviderInstance,
-		c.PendingAuthSession, c.PromoCode, c.PromoCodeUsage, c.Proxy, c.RedeemCode,
-		c.SecuritySecret, c.Setting, c.SubscriptionPlan, c.SupplierPricing,
-		c.TLSFingerprintProfile, c.UsageCleanupTask, c.UsageLog, c.User,
-		c.UserAllowedGroup, c.UserAttributeDefinition, c.UserAttributeValue,
+		c.PendingAuthSession, c.PromoCode, c.PromoCodeUsage, c.Proxy, c.QrisPayment,
+		c.RedeemCode, c.SecuritySecret, c.Setting, c.SubscriptionPlan,
+		c.SupplierPricing, c.TLSFingerprintProfile, c.UsageCleanupTask, c.UsageLog,
+		c.User, c.UserAllowedGroup, c.UserAttributeDefinition, c.UserAttributeValue,
 		c.UserPlatformQuota, c.UserSubscription,
 	} {
 		n.Intercept(interceptors...)
@@ -532,6 +538,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.PromoCodeUsage.mutate(ctx, m)
 	case *ProxyMutation:
 		return c.Proxy.mutate(ctx, m)
+	case *QrisPaymentMutation:
+		return c.QrisPayment.mutate(ctx, m)
 	case *RedeemCodeMutation:
 		return c.RedeemCode.mutate(ctx, m)
 	case *SecuritySecretMutation:
@@ -5151,6 +5159,155 @@ func (c *ProxyClient) mutate(ctx context.Context, m *ProxyMutation) (Value, erro
 	}
 }
 
+// QrisPaymentClient is a client for the QrisPayment schema.
+type QrisPaymentClient struct {
+	config
+}
+
+// NewQrisPaymentClient returns a client for the QrisPayment from the given config.
+func NewQrisPaymentClient(c config) *QrisPaymentClient {
+	return &QrisPaymentClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `qrispayment.Hooks(f(g(h())))`.
+func (c *QrisPaymentClient) Use(hooks ...Hook) {
+	c.hooks.QrisPayment = append(c.hooks.QrisPayment, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `qrispayment.Intercept(f(g(h())))`.
+func (c *QrisPaymentClient) Intercept(interceptors ...Interceptor) {
+	c.inters.QrisPayment = append(c.inters.QrisPayment, interceptors...)
+}
+
+// Create returns a builder for creating a QrisPayment entity.
+func (c *QrisPaymentClient) Create() *QrisPaymentCreate {
+	mutation := newQrisPaymentMutation(c.config, OpCreate)
+	return &QrisPaymentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of QrisPayment entities.
+func (c *QrisPaymentClient) CreateBulk(builders ...*QrisPaymentCreate) *QrisPaymentCreateBulk {
+	return &QrisPaymentCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *QrisPaymentClient) MapCreateBulk(slice any, setFunc func(*QrisPaymentCreate, int)) *QrisPaymentCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &QrisPaymentCreateBulk{err: fmt.Errorf("calling to QrisPaymentClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*QrisPaymentCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &QrisPaymentCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for QrisPayment.
+func (c *QrisPaymentClient) Update() *QrisPaymentUpdate {
+	mutation := newQrisPaymentMutation(c.config, OpUpdate)
+	return &QrisPaymentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *QrisPaymentClient) UpdateOne(_m *QrisPayment) *QrisPaymentUpdateOne {
+	mutation := newQrisPaymentMutation(c.config, OpUpdateOne, withQrisPayment(_m))
+	return &QrisPaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *QrisPaymentClient) UpdateOneID(id string) *QrisPaymentUpdateOne {
+	mutation := newQrisPaymentMutation(c.config, OpUpdateOne, withQrisPaymentID(id))
+	return &QrisPaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for QrisPayment.
+func (c *QrisPaymentClient) Delete() *QrisPaymentDelete {
+	mutation := newQrisPaymentMutation(c.config, OpDelete)
+	return &QrisPaymentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *QrisPaymentClient) DeleteOne(_m *QrisPayment) *QrisPaymentDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *QrisPaymentClient) DeleteOneID(id string) *QrisPaymentDeleteOne {
+	builder := c.Delete().Where(qrispayment.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &QrisPaymentDeleteOne{builder}
+}
+
+// Query returns a query builder for QrisPayment.
+func (c *QrisPaymentClient) Query() *QrisPaymentQuery {
+	return &QrisPaymentQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeQrisPayment},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a QrisPayment entity by its id.
+func (c *QrisPaymentClient) Get(ctx context.Context, id string) (*QrisPayment, error) {
+	return c.Query().Where(qrispayment.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *QrisPaymentClient) GetX(ctx context.Context, id string) *QrisPayment {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryPaymentOrders queries the payment_orders edge of a QrisPayment.
+func (c *QrisPaymentClient) QueryPaymentOrders(_m *QrisPayment) *PaymentOrderQuery {
+	query := (&PaymentOrderClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(qrispayment.Table, qrispayment.FieldID, id),
+			sqlgraph.To(paymentorder.Table, paymentorder.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, qrispayment.PaymentOrdersTable, qrispayment.PaymentOrdersColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *QrisPaymentClient) Hooks() []Hook {
+	return c.hooks.QrisPayment
+}
+
+// Interceptors returns the client interceptors.
+func (c *QrisPaymentClient) Interceptors() []Interceptor {
+	return c.inters.QrisPayment
+}
+
+func (c *QrisPaymentClient) mutate(ctx context.Context, m *QrisPaymentMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&QrisPaymentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&QrisPaymentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&QrisPaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&QrisPaymentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown QrisPayment mutation op: %q", m.Op())
+	}
+}
+
 // RedeemCodeClient is a client for the RedeemCode schema.
 type RedeemCodeClient struct {
 	config
@@ -7493,7 +7650,7 @@ type (
 		ChannelMonitorRequestTemplate, CompositeModelRoute, ErrorPassthroughRule,
 		Group, IdempotencyRecord, IdentityAdoptionDecision, ModelBalance, ModelCatalog,
 		ModelPricing, PaymentAuditLog, PaymentOrder, PaymentProviderInstance,
-		PendingAuthSession, PromoCode, PromoCodeUsage, Proxy, RedeemCode,
+		PendingAuthSession, PromoCode, PromoCodeUsage, Proxy, QrisPayment, RedeemCode,
 		SecuritySecret, Setting, SubscriptionPlan, SupplierPricing,
 		TLSFingerprintProfile, UsageCleanupTask, UsageLog, User, UserAllowedGroup,
 		UserAttributeDefinition, UserAttributeValue, UserPlatformQuota,
@@ -7506,7 +7663,7 @@ type (
 		ChannelMonitorRequestTemplate, CompositeModelRoute, ErrorPassthroughRule,
 		Group, IdempotencyRecord, IdentityAdoptionDecision, ModelBalance, ModelCatalog,
 		ModelPricing, PaymentAuditLog, PaymentOrder, PaymentProviderInstance,
-		PendingAuthSession, PromoCode, PromoCodeUsage, Proxy, RedeemCode,
+		PendingAuthSession, PromoCode, PromoCodeUsage, Proxy, QrisPayment, RedeemCode,
 		SecuritySecret, Setting, SubscriptionPlan, SupplierPricing,
 		TLSFingerprintProfile, UsageCleanupTask, UsageLog, User, UserAllowedGroup,
 		UserAttributeDefinition, UserAttributeValue, UserPlatformQuota,

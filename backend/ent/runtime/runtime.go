@@ -34,6 +34,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/promocode"
 	"github.com/Wei-Shaw/sub2api/ent/promocodeusage"
 	"github.com/Wei-Shaw/sub2api/ent/proxy"
+	"github.com/Wei-Shaw/sub2api/ent/qrispayment"
 	"github.com/Wei-Shaw/sub2api/ent/redeemcode"
 	"github.com/Wei-Shaw/sub2api/ent/schema"
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
@@ -1823,6 +1824,36 @@ func init() {
 	proxyDescExpiryWarnDays := proxyFields[10].Descriptor()
 	// proxy.DefaultExpiryWarnDays holds the default value on creation for the expiry_warn_days field.
 	proxy.DefaultExpiryWarnDays = proxyDescExpiryWarnDays.Default.(int)
+	qrispaymentFields := schema.QrisPayment{}.Fields()
+	_ = qrispaymentFields
+	// qrispaymentDescPaymentRef is the schema descriptor for payment_ref field.
+	qrispaymentDescPaymentRef := qrispaymentFields[3].Descriptor()
+	// qrispayment.PaymentRefValidator is a validator for the "payment_ref" field. It is called by the builders before save.
+	qrispayment.PaymentRefValidator = qrispaymentDescPaymentRef.Validators[0].(func(string) error)
+	// qrispaymentDescStatus is the schema descriptor for status field.
+	qrispaymentDescStatus := qrispaymentFields[7].Descriptor()
+	// qrispayment.DefaultStatus holds the default value on creation for the status field.
+	qrispayment.DefaultStatus = qrispaymentDescStatus.Default.(string)
+	// qrispayment.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	qrispayment.StatusValidator = qrispaymentDescStatus.Validators[0].(func(string) error)
+	// qrispaymentDescIdempotencyKey is the schema descriptor for idempotency_key field.
+	qrispaymentDescIdempotencyKey := qrispaymentFields[9].Descriptor()
+	// qrispayment.IdempotencyKeyValidator is a validator for the "idempotency_key" field. It is called by the builders before save.
+	qrispayment.IdempotencyKeyValidator = qrispaymentDescIdempotencyKey.Validators[0].(func(string) error)
+	// qrispaymentDescCreatedAt is the schema descriptor for created_at field.
+	qrispaymentDescCreatedAt := qrispaymentFields[10].Descriptor()
+	// qrispayment.DefaultCreatedAt holds the default value on creation for the created_at field.
+	qrispayment.DefaultCreatedAt = qrispaymentDescCreatedAt.Default.(func() time.Time)
+	// qrispaymentDescUpdatedAt is the schema descriptor for updated_at field.
+	qrispaymentDescUpdatedAt := qrispaymentFields[11].Descriptor()
+	// qrispayment.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	qrispayment.DefaultUpdatedAt = qrispaymentDescUpdatedAt.Default.(func() time.Time)
+	// qrispayment.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	qrispayment.UpdateDefaultUpdatedAt = qrispaymentDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// qrispaymentDescID is the schema descriptor for id field.
+	qrispaymentDescID := qrispaymentFields[0].Descriptor()
+	// qrispayment.DefaultID holds the default value on creation for the id field.
+	qrispayment.DefaultID = qrispaymentDescID.Default.(func() string)
 	redeemcodeFields := schema.RedeemCode{}.Fields()
 	_ = redeemcodeFields
 	// redeemcodeDescCode is the schema descriptor for code field.

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -14,58 +15,57 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/Wei-Shaw/sub2api/ent/paymentorder"
 	"github.com/Wei-Shaw/sub2api/ent/predicate"
-	"github.com/Wei-Shaw/sub2api/ent/user"
+	"github.com/Wei-Shaw/sub2api/ent/qrispayment"
 )
 
-// PaymentOrderQuery is the builder for querying PaymentOrder entities.
-type PaymentOrderQuery struct {
+// QrisPaymentQuery is the builder for querying QrisPayment entities.
+type QrisPaymentQuery struct {
 	config
-	ctx        *QueryContext
-	order      []paymentorder.OrderOption
-	inters     []Interceptor
-	predicates []predicate.PaymentOrder
-	withUser   *UserQuery
-	withFKs    bool
-	modifiers  []func(*sql.Selector)
+	ctx               *QueryContext
+	order             []qrispayment.OrderOption
+	inters            []Interceptor
+	predicates        []predicate.QrisPayment
+	withPaymentOrders *PaymentOrderQuery
+	modifiers         []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
-// Where adds a new predicate for the PaymentOrderQuery builder.
-func (_q *PaymentOrderQuery) Where(ps ...predicate.PaymentOrder) *PaymentOrderQuery {
+// Where adds a new predicate for the QrisPaymentQuery builder.
+func (_q *QrisPaymentQuery) Where(ps ...predicate.QrisPayment) *QrisPaymentQuery {
 	_q.predicates = append(_q.predicates, ps...)
 	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (_q *PaymentOrderQuery) Limit(limit int) *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) Limit(limit int) *QrisPaymentQuery {
 	_q.ctx.Limit = &limit
 	return _q
 }
 
 // Offset to start from.
-func (_q *PaymentOrderQuery) Offset(offset int) *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) Offset(offset int) *QrisPaymentQuery {
 	_q.ctx.Offset = &offset
 	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (_q *PaymentOrderQuery) Unique(unique bool) *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) Unique(unique bool) *QrisPaymentQuery {
 	_q.ctx.Unique = &unique
 	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (_q *PaymentOrderQuery) Order(o ...paymentorder.OrderOption) *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) Order(o ...qrispayment.OrderOption) *QrisPaymentQuery {
 	_q.order = append(_q.order, o...)
 	return _q
 }
 
-// QueryUser chains the current query on the "user" edge.
-func (_q *PaymentOrderQuery) QueryUser() *UserQuery {
-	query := (&UserClient{config: _q.config}).Query()
+// QueryPaymentOrders chains the current query on the "payment_orders" edge.
+func (_q *QrisPaymentQuery) QueryPaymentOrders() *PaymentOrderQuery {
+	query := (&PaymentOrderClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -75,9 +75,9 @@ func (_q *PaymentOrderQuery) QueryUser() *UserQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(paymentorder.Table, paymentorder.FieldID, selector),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, paymentorder.UserTable, paymentorder.UserColumn),
+			sqlgraph.From(qrispayment.Table, qrispayment.FieldID, selector),
+			sqlgraph.To(paymentorder.Table, paymentorder.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, qrispayment.PaymentOrdersTable, qrispayment.PaymentOrdersColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -85,21 +85,21 @@ func (_q *PaymentOrderQuery) QueryUser() *UserQuery {
 	return query
 }
 
-// First returns the first PaymentOrder entity from the query.
-// Returns a *NotFoundError when no PaymentOrder was found.
-func (_q *PaymentOrderQuery) First(ctx context.Context) (*PaymentOrder, error) {
+// First returns the first QrisPayment entity from the query.
+// Returns a *NotFoundError when no QrisPayment was found.
+func (_q *QrisPaymentQuery) First(ctx context.Context) (*QrisPayment, error) {
 	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{paymentorder.Label}
+		return nil, &NotFoundError{qrispayment.Label}
 	}
 	return nodes[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (_q *PaymentOrderQuery) FirstX(ctx context.Context) *PaymentOrder {
+func (_q *QrisPaymentQuery) FirstX(ctx context.Context) *QrisPayment {
 	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -107,22 +107,22 @@ func (_q *PaymentOrderQuery) FirstX(ctx context.Context) *PaymentOrder {
 	return node
 }
 
-// FirstID returns the first PaymentOrder ID from the query.
-// Returns a *NotFoundError when no PaymentOrder ID was found.
-func (_q *PaymentOrderQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+// FirstID returns the first QrisPayment ID from the query.
+// Returns a *NotFoundError when no QrisPayment ID was found.
+func (_q *QrisPaymentQuery) FirstID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{paymentorder.Label}
+		err = &NotFoundError{qrispayment.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (_q *PaymentOrderQuery) FirstIDX(ctx context.Context) int64 {
+func (_q *QrisPaymentQuery) FirstIDX(ctx context.Context) string {
 	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -130,10 +130,10 @@ func (_q *PaymentOrderQuery) FirstIDX(ctx context.Context) int64 {
 	return id
 }
 
-// Only returns a single PaymentOrder entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when more than one PaymentOrder entity is found.
-// Returns a *NotFoundError when no PaymentOrder entities are found.
-func (_q *PaymentOrderQuery) Only(ctx context.Context) (*PaymentOrder, error) {
+// Only returns a single QrisPayment entity found by the query, ensuring it only returns one.
+// Returns a *NotSingularError when more than one QrisPayment entity is found.
+// Returns a *NotFoundError when no QrisPayment entities are found.
+func (_q *QrisPaymentQuery) Only(ctx context.Context) (*QrisPayment, error) {
 	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
@@ -142,14 +142,14 @@ func (_q *PaymentOrderQuery) Only(ctx context.Context) (*PaymentOrder, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{paymentorder.Label}
+		return nil, &NotFoundError{qrispayment.Label}
 	default:
-		return nil, &NotSingularError{paymentorder.Label}
+		return nil, &NotSingularError{qrispayment.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (_q *PaymentOrderQuery) OnlyX(ctx context.Context) *PaymentOrder {
+func (_q *QrisPaymentQuery) OnlyX(ctx context.Context) *QrisPayment {
 	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -157,11 +157,11 @@ func (_q *PaymentOrderQuery) OnlyX(ctx context.Context) *PaymentOrder {
 	return node
 }
 
-// OnlyID is like Only, but returns the only PaymentOrder ID in the query.
-// Returns a *NotSingularError when more than one PaymentOrder ID is found.
+// OnlyID is like Only, but returns the only QrisPayment ID in the query.
+// Returns a *NotSingularError when more than one QrisPayment ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (_q *PaymentOrderQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (_q *QrisPaymentQuery) OnlyID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -169,15 +169,15 @@ func (_q *PaymentOrderQuery) OnlyID(ctx context.Context) (id int64, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{paymentorder.Label}
+		err = &NotFoundError{qrispayment.Label}
 	default:
-		err = &NotSingularError{paymentorder.Label}
+		err = &NotSingularError{qrispayment.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (_q *PaymentOrderQuery) OnlyIDX(ctx context.Context) int64 {
+func (_q *QrisPaymentQuery) OnlyIDX(ctx context.Context) string {
 	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -185,18 +185,18 @@ func (_q *PaymentOrderQuery) OnlyIDX(ctx context.Context) int64 {
 	return id
 }
 
-// All executes the query and returns a list of PaymentOrders.
-func (_q *PaymentOrderQuery) All(ctx context.Context) ([]*PaymentOrder, error) {
+// All executes the query and returns a list of QrisPayments.
+func (_q *QrisPaymentQuery) All(ctx context.Context) ([]*QrisPayment, error) {
 	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
 	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	qr := querierAll[[]*PaymentOrder, *PaymentOrderQuery]()
-	return withInterceptors[[]*PaymentOrder](ctx, _q, qr, _q.inters)
+	qr := querierAll[[]*QrisPayment, *QrisPaymentQuery]()
+	return withInterceptors[[]*QrisPayment](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (_q *PaymentOrderQuery) AllX(ctx context.Context) []*PaymentOrder {
+func (_q *QrisPaymentQuery) AllX(ctx context.Context) []*QrisPayment {
 	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
@@ -204,20 +204,20 @@ func (_q *PaymentOrderQuery) AllX(ctx context.Context) []*PaymentOrder {
 	return nodes
 }
 
-// IDs executes the query and returns a list of PaymentOrder IDs.
-func (_q *PaymentOrderQuery) IDs(ctx context.Context) (ids []int64, err error) {
+// IDs executes the query and returns a list of QrisPayment IDs.
+func (_q *QrisPaymentQuery) IDs(ctx context.Context) (ids []string, err error) {
 	if _q.ctx.Unique == nil && _q.path != nil {
 		_q.Unique(true)
 	}
 	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryIDs)
-	if err = _q.Select(paymentorder.FieldID).Scan(ctx, &ids); err != nil {
+	if err = _q.Select(qrispayment.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (_q *PaymentOrderQuery) IDsX(ctx context.Context) []int64 {
+func (_q *QrisPaymentQuery) IDsX(ctx context.Context) []string {
 	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -226,16 +226,16 @@ func (_q *PaymentOrderQuery) IDsX(ctx context.Context) []int64 {
 }
 
 // Count returns the count of the given query.
-func (_q *PaymentOrderQuery) Count(ctx context.Context) (int, error) {
+func (_q *QrisPaymentQuery) Count(ctx context.Context) (int, error) {
 	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
 	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, _q, querierCount[*PaymentOrderQuery](), _q.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*QrisPaymentQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (_q *PaymentOrderQuery) CountX(ctx context.Context) int {
+func (_q *QrisPaymentQuery) CountX(ctx context.Context) int {
 	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -244,7 +244,7 @@ func (_q *PaymentOrderQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (_q *PaymentOrderQuery) Exist(ctx context.Context) (bool, error) {
+func (_q *QrisPaymentQuery) Exist(ctx context.Context) (bool, error) {
 	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
 	switch _, err := _q.FirstID(ctx); {
 	case IsNotFound(err):
@@ -257,7 +257,7 @@ func (_q *PaymentOrderQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (_q *PaymentOrderQuery) ExistX(ctx context.Context) bool {
+func (_q *QrisPaymentQuery) ExistX(ctx context.Context) bool {
 	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -265,33 +265,33 @@ func (_q *PaymentOrderQuery) ExistX(ctx context.Context) bool {
 	return exist
 }
 
-// Clone returns a duplicate of the PaymentOrderQuery builder, including all associated steps. It can be
+// Clone returns a duplicate of the QrisPaymentQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (_q *PaymentOrderQuery) Clone() *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) Clone() *QrisPaymentQuery {
 	if _q == nil {
 		return nil
 	}
-	return &PaymentOrderQuery{
-		config:     _q.config,
-		ctx:        _q.ctx.Clone(),
-		order:      append([]paymentorder.OrderOption{}, _q.order...),
-		inters:     append([]Interceptor{}, _q.inters...),
-		predicates: append([]predicate.PaymentOrder{}, _q.predicates...),
-		withUser:   _q.withUser.Clone(),
+	return &QrisPaymentQuery{
+		config:            _q.config,
+		ctx:               _q.ctx.Clone(),
+		order:             append([]qrispayment.OrderOption{}, _q.order...),
+		inters:            append([]Interceptor{}, _q.inters...),
+		predicates:        append([]predicate.QrisPayment{}, _q.predicates...),
+		withPaymentOrders: _q.withPaymentOrders.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
 	}
 }
 
-// WithUser tells the query-builder to eager-load the nodes that are connected to
-// the "user" edge. The optional arguments are used to configure the query builder of the edge.
-func (_q *PaymentOrderQuery) WithUser(opts ...func(*UserQuery)) *PaymentOrderQuery {
-	query := (&UserClient{config: _q.config}).Query()
+// WithPaymentOrders tells the query-builder to eager-load the nodes that are connected to
+// the "payment_orders" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *QrisPaymentQuery) WithPaymentOrders(opts ...func(*PaymentOrderQuery)) *QrisPaymentQuery {
+	query := (&PaymentOrderClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	_q.withUser = query
+	_q.withPaymentOrders = query
 	return _q
 }
 
@@ -305,15 +305,15 @@ func (_q *PaymentOrderQuery) WithUser(opts ...func(*UserQuery)) *PaymentOrderQue
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.PaymentOrder.Query().
-//		GroupBy(paymentorder.FieldUserID).
+//	client.QrisPayment.Query().
+//		GroupBy(qrispayment.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (_q *PaymentOrderQuery) GroupBy(field string, fields ...string) *PaymentOrderGroupBy {
+func (_q *QrisPaymentQuery) GroupBy(field string, fields ...string) *QrisPaymentGroupBy {
 	_q.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &PaymentOrderGroupBy{build: _q}
+	grbuild := &QrisPaymentGroupBy{build: _q}
 	grbuild.flds = &_q.ctx.Fields
-	grbuild.label = paymentorder.Label
+	grbuild.label = qrispayment.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
 }
@@ -327,23 +327,23 @@ func (_q *PaymentOrderQuery) GroupBy(field string, fields ...string) *PaymentOrd
 //		UserID int64 `json:"user_id,omitempty"`
 //	}
 //
-//	client.PaymentOrder.Query().
-//		Select(paymentorder.FieldUserID).
+//	client.QrisPayment.Query().
+//		Select(qrispayment.FieldUserID).
 //		Scan(ctx, &v)
-func (_q *PaymentOrderQuery) Select(fields ...string) *PaymentOrderSelect {
+func (_q *QrisPaymentQuery) Select(fields ...string) *QrisPaymentSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
-	sbuild := &PaymentOrderSelect{PaymentOrderQuery: _q}
-	sbuild.label = paymentorder.Label
+	sbuild := &QrisPaymentSelect{QrisPaymentQuery: _q}
+	sbuild.label = qrispayment.Label
 	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
-// Aggregate returns a PaymentOrderSelect configured with the given aggregations.
-func (_q *PaymentOrderQuery) Aggregate(fns ...AggregateFunc) *PaymentOrderSelect {
+// Aggregate returns a QrisPaymentSelect configured with the given aggregations.
+func (_q *QrisPaymentQuery) Aggregate(fns ...AggregateFunc) *QrisPaymentSelect {
 	return _q.Select().Aggregate(fns...)
 }
 
-func (_q *PaymentOrderQuery) prepareQuery(ctx context.Context) error {
+func (_q *QrisPaymentQuery) prepareQuery(ctx context.Context) error {
 	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
@@ -355,7 +355,7 @@ func (_q *PaymentOrderQuery) prepareQuery(ctx context.Context) error {
 		}
 	}
 	for _, f := range _q.ctx.Fields {
-		if !paymentorder.ValidColumn(f) {
+		if !qrispayment.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -369,23 +369,19 @@ func (_q *PaymentOrderQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (_q *PaymentOrderQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*PaymentOrder, error) {
+func (_q *QrisPaymentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*QrisPayment, error) {
 	var (
-		nodes       = []*PaymentOrder{}
-		withFKs     = _q.withFKs
+		nodes       = []*QrisPayment{}
 		_spec       = _q.querySpec()
 		loadedTypes = [1]bool{
-			_q.withUser != nil,
+			_q.withPaymentOrders != nil,
 		}
 	)
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, paymentorder.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
-		return (*PaymentOrder).scanValues(nil, columns)
+		return (*QrisPayment).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &PaymentOrder{config: _q.config}
+		node := &QrisPayment{config: _q.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
@@ -402,46 +398,49 @@ func (_q *PaymentOrderQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := _q.withUser; query != nil {
-		if err := _q.loadUser(ctx, query, nodes, nil,
-			func(n *PaymentOrder, e *User) { n.Edges.User = e }); err != nil {
+	if query := _q.withPaymentOrders; query != nil {
+		if err := _q.loadPaymentOrders(ctx, query, nodes,
+			func(n *QrisPayment) { n.Edges.PaymentOrders = []*PaymentOrder{} },
+			func(n *QrisPayment, e *PaymentOrder) { n.Edges.PaymentOrders = append(n.Edges.PaymentOrders, e) }); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (_q *PaymentOrderQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*PaymentOrder, init func(*PaymentOrder), assign func(*PaymentOrder, *User)) error {
-	ids := make([]int64, 0, len(nodes))
-	nodeids := make(map[int64][]*PaymentOrder)
+func (_q *QrisPaymentQuery) loadPaymentOrders(ctx context.Context, query *PaymentOrderQuery, nodes []*QrisPayment, init func(*QrisPayment), assign func(*QrisPayment, *PaymentOrder)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[string]*QrisPayment)
 	for i := range nodes {
-		fk := nodes[i].UserID
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
 		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
-	if len(ids) == 0 {
-		return nil
-	}
-	query.Where(user.IDIn(ids...))
+	query.withFKs = true
+	query.Where(predicate.PaymentOrder(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(qrispayment.PaymentOrdersColumn), fks...))
+	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
+		fk := n.qris_payment_payment_orders
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "qris_payment_payment_orders" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "user_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "qris_payment_payment_orders" returned %v for node %v`, *fk, n.ID)
 		}
-		for i := range nodes {
-			assign(nodes[i], n)
-		}
+		assign(node, n)
 	}
 	return nil
 }
 
-func (_q *PaymentOrderQuery) sqlCount(ctx context.Context) (int, error) {
+func (_q *QrisPaymentQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := _q.querySpec()
 	if len(_q.modifiers) > 0 {
 		_spec.Modifiers = _q.modifiers
@@ -453,8 +452,8 @@ func (_q *PaymentOrderQuery) sqlCount(ctx context.Context) (int, error) {
 	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (_q *PaymentOrderQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(paymentorder.Table, paymentorder.Columns, sqlgraph.NewFieldSpec(paymentorder.FieldID, field.TypeInt64))
+func (_q *QrisPaymentQuery) querySpec() *sqlgraph.QuerySpec {
+	_spec := sqlgraph.NewQuerySpec(qrispayment.Table, qrispayment.Columns, sqlgraph.NewFieldSpec(qrispayment.FieldID, field.TypeString))
 	_spec.From = _q.sql
 	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -463,14 +462,11 @@ func (_q *PaymentOrderQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, paymentorder.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, qrispayment.FieldID)
 		for i := range fields {
-			if fields[i] != paymentorder.FieldID {
+			if fields[i] != qrispayment.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
-		}
-		if _q.withUser != nil {
-			_spec.Node.AddColumnOnce(paymentorder.FieldUserID)
 		}
 	}
 	if ps := _q.predicates; len(ps) > 0 {
@@ -496,12 +492,12 @@ func (_q *PaymentOrderQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (_q *PaymentOrderQuery) sqlQuery(ctx context.Context) *sql.Selector {
+func (_q *QrisPaymentQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(_q.driver.Dialect())
-	t1 := builder.Table(paymentorder.Table)
+	t1 := builder.Table(qrispayment.Table)
 	columns := _q.ctx.Fields
 	if len(columns) == 0 {
-		columns = paymentorder.Columns
+		columns = qrispayment.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if _q.sql != nil {
@@ -534,7 +530,7 @@ func (_q *PaymentOrderQuery) sqlQuery(ctx context.Context) *sql.Selector {
 // ForUpdate locks the selected rows against concurrent updates, and prevent them from being
 // updated, deleted or "selected ... for update" by other sessions, until the transaction is
 // either committed or rolled-back.
-func (_q *PaymentOrderQuery) ForUpdate(opts ...sql.LockOption) *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) ForUpdate(opts ...sql.LockOption) *QrisPaymentQuery {
 	if _q.driver.Dialect() == dialect.Postgres {
 		_q.Unique(false)
 	}
@@ -547,7 +543,7 @@ func (_q *PaymentOrderQuery) ForUpdate(opts ...sql.LockOption) *PaymentOrderQuer
 // ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
 // on any rows that are read. Other sessions can read the rows, but cannot modify them
 // until your transaction commits.
-func (_q *PaymentOrderQuery) ForShare(opts ...sql.LockOption) *PaymentOrderQuery {
+func (_q *QrisPaymentQuery) ForShare(opts ...sql.LockOption) *QrisPaymentQuery {
 	if _q.driver.Dialect() == dialect.Postgres {
 		_q.Unique(false)
 	}
@@ -557,28 +553,28 @@ func (_q *PaymentOrderQuery) ForShare(opts ...sql.LockOption) *PaymentOrderQuery
 	return _q
 }
 
-// PaymentOrderGroupBy is the group-by builder for PaymentOrder entities.
-type PaymentOrderGroupBy struct {
+// QrisPaymentGroupBy is the group-by builder for QrisPayment entities.
+type QrisPaymentGroupBy struct {
 	selector
-	build *PaymentOrderQuery
+	build *QrisPaymentQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (_g *PaymentOrderGroupBy) Aggregate(fns ...AggregateFunc) *PaymentOrderGroupBy {
+func (_g *QrisPaymentGroupBy) Aggregate(fns ...AggregateFunc) *QrisPaymentGroupBy {
 	_g.fns = append(_g.fns, fns...)
 	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (_g *PaymentOrderGroupBy) Scan(ctx context.Context, v any) error {
+func (_g *QrisPaymentGroupBy) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
 	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*PaymentOrderQuery, *PaymentOrderGroupBy](ctx, _g.build, _g, _g.build.inters, v)
+	return scanWithInterceptors[*QrisPaymentQuery, *QrisPaymentGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (_g *PaymentOrderGroupBy) sqlScan(ctx context.Context, root *PaymentOrderQuery, v any) error {
+func (_g *QrisPaymentGroupBy) sqlScan(ctx context.Context, root *QrisPaymentQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
 	aggregation := make([]string, 0, len(_g.fns))
 	for _, fn := range _g.fns {
@@ -605,28 +601,28 @@ func (_g *PaymentOrderGroupBy) sqlScan(ctx context.Context, root *PaymentOrderQu
 	return sql.ScanSlice(rows, v)
 }
 
-// PaymentOrderSelect is the builder for selecting fields of PaymentOrder entities.
-type PaymentOrderSelect struct {
-	*PaymentOrderQuery
+// QrisPaymentSelect is the builder for selecting fields of QrisPayment entities.
+type QrisPaymentSelect struct {
+	*QrisPaymentQuery
 	selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (_s *PaymentOrderSelect) Aggregate(fns ...AggregateFunc) *PaymentOrderSelect {
+func (_s *QrisPaymentSelect) Aggregate(fns ...AggregateFunc) *QrisPaymentSelect {
 	_s.fns = append(_s.fns, fns...)
 	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (_s *PaymentOrderSelect) Scan(ctx context.Context, v any) error {
+func (_s *QrisPaymentSelect) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
 	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*PaymentOrderQuery, *PaymentOrderSelect](ctx, _s.PaymentOrderQuery, _s, _s.inters, v)
+	return scanWithInterceptors[*QrisPaymentQuery, *QrisPaymentSelect](ctx, _s.QrisPaymentQuery, _s, _s.inters, v)
 }
 
-func (_s *PaymentOrderSelect) sqlScan(ctx context.Context, root *PaymentOrderQuery, v any) error {
+func (_s *QrisPaymentSelect) sqlScan(ctx context.Context, root *QrisPaymentQuery, v any) error {
 	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(_s.fns))
 	for _, fn := range _s.fns {
