@@ -476,6 +476,29 @@ func HasSupplierPricingWith(preds ...predicate.SupplierPricing) predicate.ModelC
 	})
 }
 
+// HasBalances applies the HasEdge predicate on the "balances" edge.
+func HasBalances() predicate.ModelCatalog {
+	return predicate.ModelCatalog(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, BalancesTable, BalancesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasBalancesWith applies the HasEdge predicate on the "balances" edge with a given conditions (other predicates).
+func HasBalancesWith(preds ...predicate.ModelBalance) predicate.ModelCatalog {
+	return predicate.ModelCatalog(func(s *sql.Selector) {
+		step := newBalancesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.ModelCatalog) predicate.ModelCatalog {
 	return predicate.ModelCatalog(sql.AndPredicates(predicates...))

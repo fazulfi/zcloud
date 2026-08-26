@@ -85,6 +85,113 @@ func (_u *UserSubscriptionUpdate) SetNillableGroupID(v *int64) *UserSubscription
 	return _u
 }
 
+// SetModelID sets the "model_id" field.
+func (_u *UserSubscriptionUpdate) SetModelID(v string) *UserSubscriptionUpdate {
+	_u.mutation.SetModelID(v)
+	return _u
+}
+
+// SetNillableModelID sets the "model_id" field if the given value is not nil.
+func (_u *UserSubscriptionUpdate) SetNillableModelID(v *string) *UserSubscriptionUpdate {
+	if v != nil {
+		_u.SetModelID(*v)
+	}
+	return _u
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (_u *UserSubscriptionUpdate) ClearModelID() *UserSubscriptionUpdate {
+	_u.mutation.ClearModelID()
+	return _u
+}
+
+// SetPurchasedTokens sets the "purchased_tokens" field.
+func (_u *UserSubscriptionUpdate) SetPurchasedTokens(v int64) *UserSubscriptionUpdate {
+	_u.mutation.ResetPurchasedTokens()
+	_u.mutation.SetPurchasedTokens(v)
+	return _u
+}
+
+// SetNillablePurchasedTokens sets the "purchased_tokens" field if the given value is not nil.
+func (_u *UserSubscriptionUpdate) SetNillablePurchasedTokens(v *int64) *UserSubscriptionUpdate {
+	if v != nil {
+		_u.SetPurchasedTokens(*v)
+	}
+	return _u
+}
+
+// AddPurchasedTokens adds value to the "purchased_tokens" field.
+func (_u *UserSubscriptionUpdate) AddPurchasedTokens(v int64) *UserSubscriptionUpdate {
+	_u.mutation.AddPurchasedTokens(v)
+	return _u
+}
+
+// ClearPurchasedTokens clears the value of the "purchased_tokens" field.
+func (_u *UserSubscriptionUpdate) ClearPurchasedTokens() *UserSubscriptionUpdate {
+	_u.mutation.ClearPurchasedTokens()
+	return _u
+}
+
+// SetTokenExpiryAt sets the "token_expiry_at" field.
+func (_u *UserSubscriptionUpdate) SetTokenExpiryAt(v time.Time) *UserSubscriptionUpdate {
+	_u.mutation.SetTokenExpiryAt(v)
+	return _u
+}
+
+// SetNillableTokenExpiryAt sets the "token_expiry_at" field if the given value is not nil.
+func (_u *UserSubscriptionUpdate) SetNillableTokenExpiryAt(v *time.Time) *UserSubscriptionUpdate {
+	if v != nil {
+		_u.SetTokenExpiryAt(*v)
+	}
+	return _u
+}
+
+// ClearTokenExpiryAt clears the value of the "token_expiry_at" field.
+func (_u *UserSubscriptionUpdate) ClearTokenExpiryAt() *UserSubscriptionUpdate {
+	_u.mutation.ClearTokenExpiryAt()
+	return _u
+}
+
+// SetCreditLedgerID sets the "credit_ledger_id" field.
+func (_u *UserSubscriptionUpdate) SetCreditLedgerID(v string) *UserSubscriptionUpdate {
+	_u.mutation.SetCreditLedgerID(v)
+	return _u
+}
+
+// SetNillableCreditLedgerID sets the "credit_ledger_id" field if the given value is not nil.
+func (_u *UserSubscriptionUpdate) SetNillableCreditLedgerID(v *string) *UserSubscriptionUpdate {
+	if v != nil {
+		_u.SetCreditLedgerID(*v)
+	}
+	return _u
+}
+
+// ClearCreditLedgerID clears the value of the "credit_ledger_id" field.
+func (_u *UserSubscriptionUpdate) ClearCreditLedgerID() *UserSubscriptionUpdate {
+	_u.mutation.ClearCreditLedgerID()
+	return _u
+}
+
+// SetPlanNameSnapshot sets the "plan_name_snapshot" field.
+func (_u *UserSubscriptionUpdate) SetPlanNameSnapshot(v string) *UserSubscriptionUpdate {
+	_u.mutation.SetPlanNameSnapshot(v)
+	return _u
+}
+
+// SetNillablePlanNameSnapshot sets the "plan_name_snapshot" field if the given value is not nil.
+func (_u *UserSubscriptionUpdate) SetNillablePlanNameSnapshot(v *string) *UserSubscriptionUpdate {
+	if v != nil {
+		_u.SetPlanNameSnapshot(*v)
+	}
+	return _u
+}
+
+// ClearPlanNameSnapshot clears the value of the "plan_name_snapshot" field.
+func (_u *UserSubscriptionUpdate) ClearPlanNameSnapshot() *UserSubscriptionUpdate {
+	_u.mutation.ClearPlanNameSnapshot()
+	return _u
+}
+
 // SetStartsAt sets the "starts_at" field.
 func (_u *UserSubscriptionUpdate) SetStartsAt(v time.Time) *UserSubscriptionUpdate {
 	_u.mutation.SetStartsAt(v)
@@ -436,6 +543,11 @@ func (_u *UserSubscriptionUpdate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *UserSubscriptionUpdate) check() error {
+	if v, ok := _u.mutation.PlanNameSnapshot(); ok {
+		if err := usersubscription.PlanNameSnapshotValidator(v); err != nil {
+			return &ValidationError{Name: "plan_name_snapshot", err: fmt.Errorf(`ent: validator failed for field "UserSubscription.plan_name_snapshot": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Status(); ok {
 		if err := usersubscription.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "UserSubscription.status": %w`, err)}
@@ -470,6 +582,39 @@ func (_u *UserSubscriptionUpdate) sqlSave(ctx context.Context) (_node int, err e
 	}
 	if _u.mutation.DeletedAtCleared() {
 		_spec.ClearField(usersubscription.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.ModelID(); ok {
+		_spec.SetField(usersubscription.FieldModelID, field.TypeString, value)
+	}
+	if _u.mutation.ModelIDCleared() {
+		_spec.ClearField(usersubscription.FieldModelID, field.TypeString)
+	}
+	if value, ok := _u.mutation.PurchasedTokens(); ok {
+		_spec.SetField(usersubscription.FieldPurchasedTokens, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedPurchasedTokens(); ok {
+		_spec.AddField(usersubscription.FieldPurchasedTokens, field.TypeInt64, value)
+	}
+	if _u.mutation.PurchasedTokensCleared() {
+		_spec.ClearField(usersubscription.FieldPurchasedTokens, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.TokenExpiryAt(); ok {
+		_spec.SetField(usersubscription.FieldTokenExpiryAt, field.TypeTime, value)
+	}
+	if _u.mutation.TokenExpiryAtCleared() {
+		_spec.ClearField(usersubscription.FieldTokenExpiryAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreditLedgerID(); ok {
+		_spec.SetField(usersubscription.FieldCreditLedgerID, field.TypeString, value)
+	}
+	if _u.mutation.CreditLedgerIDCleared() {
+		_spec.ClearField(usersubscription.FieldCreditLedgerID, field.TypeString)
+	}
+	if value, ok := _u.mutation.PlanNameSnapshot(); ok {
+		_spec.SetField(usersubscription.FieldPlanNameSnapshot, field.TypeString, value)
+	}
+	if _u.mutation.PlanNameSnapshotCleared() {
+		_spec.ClearField(usersubscription.FieldPlanNameSnapshot, field.TypeString)
 	}
 	if value, ok := _u.mutation.StartsAt(); ok {
 		_spec.SetField(usersubscription.FieldStartsAt, field.TypeTime, value)
@@ -728,6 +873,113 @@ func (_u *UserSubscriptionUpdateOne) SetNillableGroupID(v *int64) *UserSubscript
 	if v != nil {
 		_u.SetGroupID(*v)
 	}
+	return _u
+}
+
+// SetModelID sets the "model_id" field.
+func (_u *UserSubscriptionUpdateOne) SetModelID(v string) *UserSubscriptionUpdateOne {
+	_u.mutation.SetModelID(v)
+	return _u
+}
+
+// SetNillableModelID sets the "model_id" field if the given value is not nil.
+func (_u *UserSubscriptionUpdateOne) SetNillableModelID(v *string) *UserSubscriptionUpdateOne {
+	if v != nil {
+		_u.SetModelID(*v)
+	}
+	return _u
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (_u *UserSubscriptionUpdateOne) ClearModelID() *UserSubscriptionUpdateOne {
+	_u.mutation.ClearModelID()
+	return _u
+}
+
+// SetPurchasedTokens sets the "purchased_tokens" field.
+func (_u *UserSubscriptionUpdateOne) SetPurchasedTokens(v int64) *UserSubscriptionUpdateOne {
+	_u.mutation.ResetPurchasedTokens()
+	_u.mutation.SetPurchasedTokens(v)
+	return _u
+}
+
+// SetNillablePurchasedTokens sets the "purchased_tokens" field if the given value is not nil.
+func (_u *UserSubscriptionUpdateOne) SetNillablePurchasedTokens(v *int64) *UserSubscriptionUpdateOne {
+	if v != nil {
+		_u.SetPurchasedTokens(*v)
+	}
+	return _u
+}
+
+// AddPurchasedTokens adds value to the "purchased_tokens" field.
+func (_u *UserSubscriptionUpdateOne) AddPurchasedTokens(v int64) *UserSubscriptionUpdateOne {
+	_u.mutation.AddPurchasedTokens(v)
+	return _u
+}
+
+// ClearPurchasedTokens clears the value of the "purchased_tokens" field.
+func (_u *UserSubscriptionUpdateOne) ClearPurchasedTokens() *UserSubscriptionUpdateOne {
+	_u.mutation.ClearPurchasedTokens()
+	return _u
+}
+
+// SetTokenExpiryAt sets the "token_expiry_at" field.
+func (_u *UserSubscriptionUpdateOne) SetTokenExpiryAt(v time.Time) *UserSubscriptionUpdateOne {
+	_u.mutation.SetTokenExpiryAt(v)
+	return _u
+}
+
+// SetNillableTokenExpiryAt sets the "token_expiry_at" field if the given value is not nil.
+func (_u *UserSubscriptionUpdateOne) SetNillableTokenExpiryAt(v *time.Time) *UserSubscriptionUpdateOne {
+	if v != nil {
+		_u.SetTokenExpiryAt(*v)
+	}
+	return _u
+}
+
+// ClearTokenExpiryAt clears the value of the "token_expiry_at" field.
+func (_u *UserSubscriptionUpdateOne) ClearTokenExpiryAt() *UserSubscriptionUpdateOne {
+	_u.mutation.ClearTokenExpiryAt()
+	return _u
+}
+
+// SetCreditLedgerID sets the "credit_ledger_id" field.
+func (_u *UserSubscriptionUpdateOne) SetCreditLedgerID(v string) *UserSubscriptionUpdateOne {
+	_u.mutation.SetCreditLedgerID(v)
+	return _u
+}
+
+// SetNillableCreditLedgerID sets the "credit_ledger_id" field if the given value is not nil.
+func (_u *UserSubscriptionUpdateOne) SetNillableCreditLedgerID(v *string) *UserSubscriptionUpdateOne {
+	if v != nil {
+		_u.SetCreditLedgerID(*v)
+	}
+	return _u
+}
+
+// ClearCreditLedgerID clears the value of the "credit_ledger_id" field.
+func (_u *UserSubscriptionUpdateOne) ClearCreditLedgerID() *UserSubscriptionUpdateOne {
+	_u.mutation.ClearCreditLedgerID()
+	return _u
+}
+
+// SetPlanNameSnapshot sets the "plan_name_snapshot" field.
+func (_u *UserSubscriptionUpdateOne) SetPlanNameSnapshot(v string) *UserSubscriptionUpdateOne {
+	_u.mutation.SetPlanNameSnapshot(v)
+	return _u
+}
+
+// SetNillablePlanNameSnapshot sets the "plan_name_snapshot" field if the given value is not nil.
+func (_u *UserSubscriptionUpdateOne) SetNillablePlanNameSnapshot(v *string) *UserSubscriptionUpdateOne {
+	if v != nil {
+		_u.SetPlanNameSnapshot(*v)
+	}
+	return _u
+}
+
+// ClearPlanNameSnapshot clears the value of the "plan_name_snapshot" field.
+func (_u *UserSubscriptionUpdateOne) ClearPlanNameSnapshot() *UserSubscriptionUpdateOne {
+	_u.mutation.ClearPlanNameSnapshot()
 	return _u
 }
 
@@ -1095,6 +1347,11 @@ func (_u *UserSubscriptionUpdateOne) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *UserSubscriptionUpdateOne) check() error {
+	if v, ok := _u.mutation.PlanNameSnapshot(); ok {
+		if err := usersubscription.PlanNameSnapshotValidator(v); err != nil {
+			return &ValidationError{Name: "plan_name_snapshot", err: fmt.Errorf(`ent: validator failed for field "UserSubscription.plan_name_snapshot": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Status(); ok {
 		if err := usersubscription.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "UserSubscription.status": %w`, err)}
@@ -1146,6 +1403,39 @@ func (_u *UserSubscriptionUpdateOne) sqlSave(ctx context.Context) (_node *UserSu
 	}
 	if _u.mutation.DeletedAtCleared() {
 		_spec.ClearField(usersubscription.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.ModelID(); ok {
+		_spec.SetField(usersubscription.FieldModelID, field.TypeString, value)
+	}
+	if _u.mutation.ModelIDCleared() {
+		_spec.ClearField(usersubscription.FieldModelID, field.TypeString)
+	}
+	if value, ok := _u.mutation.PurchasedTokens(); ok {
+		_spec.SetField(usersubscription.FieldPurchasedTokens, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedPurchasedTokens(); ok {
+		_spec.AddField(usersubscription.FieldPurchasedTokens, field.TypeInt64, value)
+	}
+	if _u.mutation.PurchasedTokensCleared() {
+		_spec.ClearField(usersubscription.FieldPurchasedTokens, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.TokenExpiryAt(); ok {
+		_spec.SetField(usersubscription.FieldTokenExpiryAt, field.TypeTime, value)
+	}
+	if _u.mutation.TokenExpiryAtCleared() {
+		_spec.ClearField(usersubscription.FieldTokenExpiryAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.CreditLedgerID(); ok {
+		_spec.SetField(usersubscription.FieldCreditLedgerID, field.TypeString, value)
+	}
+	if _u.mutation.CreditLedgerIDCleared() {
+		_spec.ClearField(usersubscription.FieldCreditLedgerID, field.TypeString)
+	}
+	if value, ok := _u.mutation.PlanNameSnapshot(); ok {
+		_spec.SetField(usersubscription.FieldPlanNameSnapshot, field.TypeString, value)
+	}
+	if _u.mutation.PlanNameSnapshotCleared() {
+		_spec.ClearField(usersubscription.FieldPlanNameSnapshot, field.TypeString)
 	}
 	if value, ok := _u.mutation.StartsAt(); ok {
 		_spec.SetField(usersubscription.FieldStartsAt, field.TypeTime, value)

@@ -34,6 +34,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/idempotencyrecord"
 	"github.com/Wei-Shaw/sub2api/ent/identityadoptiondecision"
+	"github.com/Wei-Shaw/sub2api/ent/modelbalance"
 	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
 	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/paymentauditlog"
@@ -104,6 +105,8 @@ type Client struct {
 	IdempotencyRecord *IdempotencyRecordClient
 	// IdentityAdoptionDecision is the client for interacting with the IdentityAdoptionDecision builders.
 	IdentityAdoptionDecision *IdentityAdoptionDecisionClient
+	// ModelBalance is the client for interacting with the ModelBalance builders.
+	ModelBalance *ModelBalanceClient
 	// ModelCatalog is the client for interacting with the ModelCatalog builders.
 	ModelCatalog *ModelCatalogClient
 	// ModelPricing is the client for interacting with the ModelPricing builders.
@@ -180,6 +183,7 @@ func (c *Client) init() {
 	c.Group = NewGroupClient(c.config)
 	c.IdempotencyRecord = NewIdempotencyRecordClient(c.config)
 	c.IdentityAdoptionDecision = NewIdentityAdoptionDecisionClient(c.config)
+	c.ModelBalance = NewModelBalanceClient(c.config)
 	c.ModelCatalog = NewModelCatalogClient(c.config)
 	c.ModelPricing = NewModelPricingClient(c.config)
 	c.PaymentAuditLog = NewPaymentAuditLogClient(c.config)
@@ -314,6 +318,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Group:                         NewGroupClient(cfg),
 		IdempotencyRecord:             NewIdempotencyRecordClient(cfg),
 		IdentityAdoptionDecision:      NewIdentityAdoptionDecisionClient(cfg),
+		ModelBalance:                  NewModelBalanceClient(cfg),
 		ModelCatalog:                  NewModelCatalogClient(cfg),
 		ModelPricing:                  NewModelPricingClient(cfg),
 		PaymentAuditLog:               NewPaymentAuditLogClient(cfg),
@@ -375,6 +380,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Group:                         NewGroupClient(cfg),
 		IdempotencyRecord:             NewIdempotencyRecordClient(cfg),
 		IdentityAdoptionDecision:      NewIdentityAdoptionDecisionClient(cfg),
+		ModelBalance:                  NewModelBalanceClient(cfg),
 		ModelCatalog:                  NewModelCatalogClient(cfg),
 		ModelPricing:                  NewModelPricingClient(cfg),
 		PaymentAuditLog:               NewPaymentAuditLogClient(cfg),
@@ -432,13 +438,13 @@ func (c *Client) Use(hooks ...Hook) {
 		c.BatchImageJob, c.ChannelMonitor, c.ChannelMonitorDailyRollup,
 		c.ChannelMonitorHistory, c.ChannelMonitorRequestTemplate,
 		c.CompositeModelRoute, c.ErrorPassthroughRule, c.Group, c.IdempotencyRecord,
-		c.IdentityAdoptionDecision, c.ModelCatalog, c.ModelPricing, c.PaymentAuditLog,
-		c.PaymentOrder, c.PaymentProviderInstance, c.PendingAuthSession, c.PromoCode,
-		c.PromoCodeUsage, c.Proxy, c.RedeemCode, c.SecuritySecret, c.Setting,
-		c.SubscriptionPlan, c.SupplierPricing, c.TLSFingerprintProfile,
-		c.UsageCleanupTask, c.UsageLog, c.User, c.UserAllowedGroup,
-		c.UserAttributeDefinition, c.UserAttributeValue, c.UserPlatformQuota,
-		c.UserSubscription,
+		c.IdentityAdoptionDecision, c.ModelBalance, c.ModelCatalog, c.ModelPricing,
+		c.PaymentAuditLog, c.PaymentOrder, c.PaymentProviderInstance,
+		c.PendingAuthSession, c.PromoCode, c.PromoCodeUsage, c.Proxy, c.RedeemCode,
+		c.SecuritySecret, c.Setting, c.SubscriptionPlan, c.SupplierPricing,
+		c.TLSFingerprintProfile, c.UsageCleanupTask, c.UsageLog, c.User,
+		c.UserAllowedGroup, c.UserAttributeDefinition, c.UserAttributeValue,
+		c.UserPlatformQuota, c.UserSubscription,
 	} {
 		n.Use(hooks...)
 	}
@@ -453,13 +459,13 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 		c.BatchImageJob, c.ChannelMonitor, c.ChannelMonitorDailyRollup,
 		c.ChannelMonitorHistory, c.ChannelMonitorRequestTemplate,
 		c.CompositeModelRoute, c.ErrorPassthroughRule, c.Group, c.IdempotencyRecord,
-		c.IdentityAdoptionDecision, c.ModelCatalog, c.ModelPricing, c.PaymentAuditLog,
-		c.PaymentOrder, c.PaymentProviderInstance, c.PendingAuthSession, c.PromoCode,
-		c.PromoCodeUsage, c.Proxy, c.RedeemCode, c.SecuritySecret, c.Setting,
-		c.SubscriptionPlan, c.SupplierPricing, c.TLSFingerprintProfile,
-		c.UsageCleanupTask, c.UsageLog, c.User, c.UserAllowedGroup,
-		c.UserAttributeDefinition, c.UserAttributeValue, c.UserPlatformQuota,
-		c.UserSubscription,
+		c.IdentityAdoptionDecision, c.ModelBalance, c.ModelCatalog, c.ModelPricing,
+		c.PaymentAuditLog, c.PaymentOrder, c.PaymentProviderInstance,
+		c.PendingAuthSession, c.PromoCode, c.PromoCodeUsage, c.Proxy, c.RedeemCode,
+		c.SecuritySecret, c.Setting, c.SubscriptionPlan, c.SupplierPricing,
+		c.TLSFingerprintProfile, c.UsageCleanupTask, c.UsageLog, c.User,
+		c.UserAllowedGroup, c.UserAttributeDefinition, c.UserAttributeValue,
+		c.UserPlatformQuota, c.UserSubscription,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -506,6 +512,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.IdempotencyRecord.mutate(ctx, m)
 	case *IdentityAdoptionDecisionMutation:
 		return c.IdentityAdoptionDecision.mutate(ctx, m)
+	case *ModelBalanceMutation:
+		return c.ModelBalance.mutate(ctx, m)
 	case *ModelCatalogMutation:
 		return c.ModelCatalog.mutate(ctx, m)
 	case *ModelPricingMutation:
@@ -3603,6 +3611,155 @@ func (c *IdentityAdoptionDecisionClient) mutate(ctx context.Context, m *Identity
 	}
 }
 
+// ModelBalanceClient is a client for the ModelBalance schema.
+type ModelBalanceClient struct {
+	config
+}
+
+// NewModelBalanceClient returns a client for the ModelBalance from the given config.
+func NewModelBalanceClient(c config) *ModelBalanceClient {
+	return &ModelBalanceClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `modelbalance.Hooks(f(g(h())))`.
+func (c *ModelBalanceClient) Use(hooks ...Hook) {
+	c.hooks.ModelBalance = append(c.hooks.ModelBalance, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `modelbalance.Intercept(f(g(h())))`.
+func (c *ModelBalanceClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ModelBalance = append(c.inters.ModelBalance, interceptors...)
+}
+
+// Create returns a builder for creating a ModelBalance entity.
+func (c *ModelBalanceClient) Create() *ModelBalanceCreate {
+	mutation := newModelBalanceMutation(c.config, OpCreate)
+	return &ModelBalanceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ModelBalance entities.
+func (c *ModelBalanceClient) CreateBulk(builders ...*ModelBalanceCreate) *ModelBalanceCreateBulk {
+	return &ModelBalanceCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ModelBalanceClient) MapCreateBulk(slice any, setFunc func(*ModelBalanceCreate, int)) *ModelBalanceCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ModelBalanceCreateBulk{err: fmt.Errorf("calling to ModelBalanceClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ModelBalanceCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ModelBalanceCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ModelBalance.
+func (c *ModelBalanceClient) Update() *ModelBalanceUpdate {
+	mutation := newModelBalanceMutation(c.config, OpUpdate)
+	return &ModelBalanceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ModelBalanceClient) UpdateOne(_m *ModelBalance) *ModelBalanceUpdateOne {
+	mutation := newModelBalanceMutation(c.config, OpUpdateOne, withModelBalance(_m))
+	return &ModelBalanceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ModelBalanceClient) UpdateOneID(id string) *ModelBalanceUpdateOne {
+	mutation := newModelBalanceMutation(c.config, OpUpdateOne, withModelBalanceID(id))
+	return &ModelBalanceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ModelBalance.
+func (c *ModelBalanceClient) Delete() *ModelBalanceDelete {
+	mutation := newModelBalanceMutation(c.config, OpDelete)
+	return &ModelBalanceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ModelBalanceClient) DeleteOne(_m *ModelBalance) *ModelBalanceDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ModelBalanceClient) DeleteOneID(id string) *ModelBalanceDeleteOne {
+	builder := c.Delete().Where(modelbalance.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ModelBalanceDeleteOne{builder}
+}
+
+// Query returns a query builder for ModelBalance.
+func (c *ModelBalanceClient) Query() *ModelBalanceQuery {
+	return &ModelBalanceQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeModelBalance},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ModelBalance entity by its id.
+func (c *ModelBalanceClient) Get(ctx context.Context, id string) (*ModelBalance, error) {
+	return c.Query().Where(modelbalance.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ModelBalanceClient) GetX(ctx context.Context, id string) *ModelBalance {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryModel queries the model edge of a ModelBalance.
+func (c *ModelBalanceClient) QueryModel(_m *ModelBalance) *ModelCatalogQuery {
+	query := (&ModelCatalogClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(modelbalance.Table, modelbalance.FieldID, id),
+			sqlgraph.To(modelcatalog.Table, modelcatalog.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, modelbalance.ModelTable, modelbalance.ModelColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ModelBalanceClient) Hooks() []Hook {
+	return c.hooks.ModelBalance
+}
+
+// Interceptors returns the client interceptors.
+func (c *ModelBalanceClient) Interceptors() []Interceptor {
+	return c.inters.ModelBalance
+}
+
+func (c *ModelBalanceClient) mutate(ctx context.Context, m *ModelBalanceMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ModelBalanceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ModelBalanceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ModelBalanceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ModelBalanceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ModelBalance mutation op: %q", m.Op())
+	}
+}
+
 // ModelCatalogClient is a client for the ModelCatalog schema.
 type ModelCatalogClient struct {
 	config
@@ -3736,6 +3893,22 @@ func (c *ModelCatalogClient) QuerySupplierPricing(_m *ModelCatalog) *SupplierPri
 			sqlgraph.From(modelcatalog.Table, modelcatalog.FieldID, id),
 			sqlgraph.To(supplierpricing.Table, supplierpricing.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, modelcatalog.SupplierPricingTable, modelcatalog.SupplierPricingColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryBalances queries the balances edge of a ModelCatalog.
+func (c *ModelCatalogClient) QueryBalances(_m *ModelCatalog) *ModelBalanceQuery {
+	query := (&ModelBalanceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(modelcatalog.Table, modelcatalog.FieldID, id),
+			sqlgraph.To(modelbalance.Table, modelbalance.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, modelcatalog.BalancesTable, modelcatalog.BalancesColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -7318,24 +7491,26 @@ type (
 		AuthIdentityChannel, BatchImageEvent, BatchImageItem, BatchImageJob,
 		ChannelMonitor, ChannelMonitorDailyRollup, ChannelMonitorHistory,
 		ChannelMonitorRequestTemplate, CompositeModelRoute, ErrorPassthroughRule,
-		Group, IdempotencyRecord, IdentityAdoptionDecision, ModelCatalog, ModelPricing,
-		PaymentAuditLog, PaymentOrder, PaymentProviderInstance, PendingAuthSession,
-		PromoCode, PromoCodeUsage, Proxy, RedeemCode, SecuritySecret, Setting,
-		SubscriptionPlan, SupplierPricing, TLSFingerprintProfile, UsageCleanupTask,
-		UsageLog, User, UserAllowedGroup, UserAttributeDefinition, UserAttributeValue,
-		UserPlatformQuota, UserSubscription []ent.Hook
+		Group, IdempotencyRecord, IdentityAdoptionDecision, ModelBalance, ModelCatalog,
+		ModelPricing, PaymentAuditLog, PaymentOrder, PaymentProviderInstance,
+		PendingAuthSession, PromoCode, PromoCodeUsage, Proxy, RedeemCode,
+		SecuritySecret, Setting, SubscriptionPlan, SupplierPricing,
+		TLSFingerprintProfile, UsageCleanupTask, UsageLog, User, UserAllowedGroup,
+		UserAttributeDefinition, UserAttributeValue, UserPlatformQuota,
+		UserSubscription []ent.Hook
 	}
 	inters struct {
 		APIKey, Account, AccountGroup, Announcement, AnnouncementRead, AuthIdentity,
 		AuthIdentityChannel, BatchImageEvent, BatchImageItem, BatchImageJob,
 		ChannelMonitor, ChannelMonitorDailyRollup, ChannelMonitorHistory,
 		ChannelMonitorRequestTemplate, CompositeModelRoute, ErrorPassthroughRule,
-		Group, IdempotencyRecord, IdentityAdoptionDecision, ModelCatalog, ModelPricing,
-		PaymentAuditLog, PaymentOrder, PaymentProviderInstance, PendingAuthSession,
-		PromoCode, PromoCodeUsage, Proxy, RedeemCode, SecuritySecret, Setting,
-		SubscriptionPlan, SupplierPricing, TLSFingerprintProfile, UsageCleanupTask,
-		UsageLog, User, UserAllowedGroup, UserAttributeDefinition, UserAttributeValue,
-		UserPlatformQuota, UserSubscription []ent.Interceptor
+		Group, IdempotencyRecord, IdentityAdoptionDecision, ModelBalance, ModelCatalog,
+		ModelPricing, PaymentAuditLog, PaymentOrder, PaymentProviderInstance,
+		PendingAuthSession, PromoCode, PromoCodeUsage, Proxy, RedeemCode,
+		SecuritySecret, Setting, SubscriptionPlan, SupplierPricing,
+		TLSFingerprintProfile, UsageCleanupTask, UsageLog, User, UserAllowedGroup,
+		UserAttributeDefinition, UserAttributeValue, UserPlatformQuota,
+		UserSubscription []ent.Interceptor
 	}
 )
 

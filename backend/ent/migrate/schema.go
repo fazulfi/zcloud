@@ -1093,6 +1093,51 @@ var (
 			},
 		},
 	}
+	// ModelBalancesColumns holds the columns for the "model_balances" table.
+	ModelBalancesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "user_id", Type: field.TypeInt64},
+		{Name: "tokens_purchased", Type: field.TypeInt64, Default: 0},
+		{Name: "tokens_consumed", Type: field.TypeInt64, Default: 0},
+		{Name: "balance", Type: field.TypeInt64, Default: 0},
+		{Name: "usage_percent", Type: field.TypeFloat64, Default: 0, SchemaType: map[string]string{"postgres": "numeric(20,8)"}},
+		{Name: "status", Type: field.TypeString, Size: 20, Default: "active"},
+		{Name: "version", Type: field.TypeInt64, Default: 1},
+		{Name: "model_id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+	}
+	// ModelBalancesTable holds the schema information for the "model_balances" table.
+	ModelBalancesTable = &schema.Table{
+		Name:       "model_balances",
+		Columns:    ModelBalancesColumns,
+		PrimaryKey: []*schema.Column{ModelBalancesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "model_balances_model_catalog_balances",
+				Columns:    []*schema.Column{ModelBalancesColumns[10]},
+				RefColumns: []*schema.Column{ModelCatalogColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "modelbalance_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{ModelBalancesColumns[3]},
+			},
+			{
+				Name:    "modelbalance_status",
+				Unique:  false,
+				Columns: []*schema.Column{ModelBalancesColumns[8]},
+			},
+			{
+				Name:    "modelbalance_user_id_model_id",
+				Unique:  true,
+				Columns: []*schema.Column{ModelBalancesColumns[3], ModelBalancesColumns[10]},
+			},
+		},
+	}
 	// ModelCatalogColumns holds the columns for the "model_catalog" table.
 	ModelCatalogColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
@@ -2096,6 +2141,11 @@ var (
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "model_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "purchased_tokens", Type: field.TypeInt64, Nullable: true},
+		{Name: "token_expiry_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "credit_ledger_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "plan_name_snapshot", Type: field.TypeString, Nullable: true, Size: 200},
 		{Name: "starts_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "expires_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "status", Type: field.TypeString, Size: 20, Default: "active"},
@@ -2119,19 +2169,19 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "user_subscriptions_groups_subscriptions",
-				Columns:    []*schema.Column{UserSubscriptionsColumns[15]},
+				Columns:    []*schema.Column{UserSubscriptionsColumns[20]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "user_subscriptions_users_subscriptions",
-				Columns:    []*schema.Column{UserSubscriptionsColumns[16]},
+				Columns:    []*schema.Column{UserSubscriptionsColumns[21]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "user_subscriptions_users_assigned_subscriptions",
-				Columns:    []*schema.Column{UserSubscriptionsColumns[17]},
+				Columns:    []*schema.Column{UserSubscriptionsColumns[22]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -2140,37 +2190,37 @@ var (
 			{
 				Name:    "usersubscription_user_id",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[16]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[21]},
 			},
 			{
 				Name:    "usersubscription_group_id",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[15]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[20]},
 			},
 			{
 				Name:    "usersubscription_status",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[6]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[11]},
 			},
 			{
 				Name:    "usersubscription_expires_at",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[5]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[10]},
 			},
 			{
 				Name:    "usersubscription_user_id_status_expires_at",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[16], UserSubscriptionsColumns[6], UserSubscriptionsColumns[5]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[21], UserSubscriptionsColumns[11], UserSubscriptionsColumns[10]},
 			},
 			{
 				Name:    "usersubscription_assigned_by",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[17]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[22]},
 			},
 			{
 				Name:    "usersubscription_user_id_group_id",
 				Unique:  false,
-				Columns: []*schema.Column{UserSubscriptionsColumns[16], UserSubscriptionsColumns[15]},
+				Columns: []*schema.Column{UserSubscriptionsColumns[21], UserSubscriptionsColumns[20]},
 			},
 			{
 				Name:    "usersubscription_deleted_at",
@@ -2200,6 +2250,7 @@ var (
 		GroupsTable,
 		IdempotencyRecordsTable,
 		IdentityAdoptionDecisionsTable,
+		ModelBalancesTable,
 		ModelCatalogTable,
 		ModelPricingTable,
 		PaymentAuditLogsTable,
@@ -2299,6 +2350,10 @@ func init() {
 	IdentityAdoptionDecisionsTable.ForeignKeys[1].RefTable = PendingAuthSessionsTable
 	IdentityAdoptionDecisionsTable.Annotation = &entsql.Annotation{
 		Table: "identity_adoption_decisions",
+	}
+	ModelBalancesTable.ForeignKeys[0].RefTable = ModelCatalogTable
+	ModelBalancesTable.Annotation = &entsql.Annotation{
+		Table: "model_balances",
 	}
 	ModelCatalogTable.Annotation = &entsql.Annotation{
 		Table: "model_catalog",

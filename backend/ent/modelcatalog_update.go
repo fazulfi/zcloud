@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
+	"github.com/Wei-Shaw/sub2api/ent/modelbalance"
 	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
 	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/predicate"
@@ -154,6 +155,21 @@ func (_u *ModelCatalogUpdate) AddSupplierPricing(v ...*SupplierPricing) *ModelCa
 	return _u.AddSupplierPricingIDs(ids...)
 }
 
+// AddBalanceIDs adds the "balances" edge to the ModelBalance entity by IDs.
+func (_u *ModelCatalogUpdate) AddBalanceIDs(ids ...string) *ModelCatalogUpdate {
+	_u.mutation.AddBalanceIDs(ids...)
+	return _u
+}
+
+// AddBalances adds the "balances" edges to the ModelBalance entity.
+func (_u *ModelCatalogUpdate) AddBalances(v ...*ModelBalance) *ModelCatalogUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddBalanceIDs(ids...)
+}
+
 // Mutation returns the ModelCatalogMutation object of the builder.
 func (_u *ModelCatalogUpdate) Mutation() *ModelCatalogMutation {
 	return _u.mutation
@@ -199,6 +215,27 @@ func (_u *ModelCatalogUpdate) RemoveSupplierPricing(v ...*SupplierPricing) *Mode
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveSupplierPricingIDs(ids...)
+}
+
+// ClearBalances clears all "balances" edges to the ModelBalance entity.
+func (_u *ModelCatalogUpdate) ClearBalances() *ModelCatalogUpdate {
+	_u.mutation.ClearBalances()
+	return _u
+}
+
+// RemoveBalanceIDs removes the "balances" edge to ModelBalance entities by IDs.
+func (_u *ModelCatalogUpdate) RemoveBalanceIDs(ids ...string) *ModelCatalogUpdate {
+	_u.mutation.RemoveBalanceIDs(ids...)
+	return _u
+}
+
+// RemoveBalances removes "balances" edges to ModelBalance entities.
+func (_u *ModelCatalogUpdate) RemoveBalances(v ...*ModelBalance) *ModelCatalogUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveBalanceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -391,6 +428,51 @@ func (_u *ModelCatalogUpdate) sqlSave(ctx context.Context) (_node int, err error
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.BalancesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedBalancesIDs(); len(nodes) > 0 && !_u.mutation.BalancesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.BalancesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{modelcatalog.Label}
@@ -534,6 +616,21 @@ func (_u *ModelCatalogUpdateOne) AddSupplierPricing(v ...*SupplierPricing) *Mode
 	return _u.AddSupplierPricingIDs(ids...)
 }
 
+// AddBalanceIDs adds the "balances" edge to the ModelBalance entity by IDs.
+func (_u *ModelCatalogUpdateOne) AddBalanceIDs(ids ...string) *ModelCatalogUpdateOne {
+	_u.mutation.AddBalanceIDs(ids...)
+	return _u
+}
+
+// AddBalances adds the "balances" edges to the ModelBalance entity.
+func (_u *ModelCatalogUpdateOne) AddBalances(v ...*ModelBalance) *ModelCatalogUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddBalanceIDs(ids...)
+}
+
 // Mutation returns the ModelCatalogMutation object of the builder.
 func (_u *ModelCatalogUpdateOne) Mutation() *ModelCatalogMutation {
 	return _u.mutation
@@ -579,6 +676,27 @@ func (_u *ModelCatalogUpdateOne) RemoveSupplierPricing(v ...*SupplierPricing) *M
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveSupplierPricingIDs(ids...)
+}
+
+// ClearBalances clears all "balances" edges to the ModelBalance entity.
+func (_u *ModelCatalogUpdateOne) ClearBalances() *ModelCatalogUpdateOne {
+	_u.mutation.ClearBalances()
+	return _u
+}
+
+// RemoveBalanceIDs removes the "balances" edge to ModelBalance entities by IDs.
+func (_u *ModelCatalogUpdateOne) RemoveBalanceIDs(ids ...string) *ModelCatalogUpdateOne {
+	_u.mutation.RemoveBalanceIDs(ids...)
+	return _u
+}
+
+// RemoveBalances removes "balances" edges to ModelBalance entities.
+func (_u *ModelCatalogUpdateOne) RemoveBalances(v ...*ModelBalance) *ModelCatalogUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveBalanceIDs(ids...)
 }
 
 // Where appends a list predicates to the ModelCatalogUpdate builder.
@@ -794,6 +912,51 @@ func (_u *ModelCatalogUpdateOne) sqlSave(ctx context.Context) (_node *ModelCatal
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(supplierpricing.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.BalancesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedBalancesIDs(); len(nodes) > 0 && !_u.mutation.BalancesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.BalancesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

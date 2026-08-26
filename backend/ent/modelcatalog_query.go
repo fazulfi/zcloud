@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/Wei-Shaw/sub2api/ent/modelbalance"
 	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
 	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/predicate"
@@ -28,6 +29,7 @@ type ModelCatalogQuery struct {
 	predicates          []predicate.ModelCatalog
 	withPricing         *ModelPricingQuery
 	withSupplierPricing *SupplierPricingQuery
+	withBalances        *ModelBalanceQuery
 	modifiers           []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -102,6 +104,28 @@ func (_q *ModelCatalogQuery) QuerySupplierPricing() *SupplierPricingQuery {
 			sqlgraph.From(modelcatalog.Table, modelcatalog.FieldID, selector),
 			sqlgraph.To(supplierpricing.Table, supplierpricing.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, modelcatalog.SupplierPricingTable, modelcatalog.SupplierPricingColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryBalances chains the current query on the "balances" edge.
+func (_q *ModelCatalogQuery) QueryBalances() *ModelBalanceQuery {
+	query := (&ModelBalanceClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(modelcatalog.Table, modelcatalog.FieldID, selector),
+			sqlgraph.To(modelbalance.Table, modelbalance.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, modelcatalog.BalancesTable, modelcatalog.BalancesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -303,6 +327,7 @@ func (_q *ModelCatalogQuery) Clone() *ModelCatalogQuery {
 		predicates:          append([]predicate.ModelCatalog{}, _q.predicates...),
 		withPricing:         _q.withPricing.Clone(),
 		withSupplierPricing: _q.withSupplierPricing.Clone(),
+		withBalances:        _q.withBalances.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -328,6 +353,17 @@ func (_q *ModelCatalogQuery) WithSupplierPricing(opts ...func(*SupplierPricingQu
 		opt(query)
 	}
 	_q.withSupplierPricing = query
+	return _q
+}
+
+// WithBalances tells the query-builder to eager-load the nodes that are connected to
+// the "balances" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ModelCatalogQuery) WithBalances(opts ...func(*ModelBalanceQuery)) *ModelCatalogQuery {
+	query := (&ModelBalanceClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withBalances = query
 	return _q
 }
 
@@ -409,9 +445,10 @@ func (_q *ModelCatalogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	var (
 		nodes       = []*ModelCatalog{}
 		_spec       = _q.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			_q.withPricing != nil,
 			_q.withSupplierPricing != nil,
+			_q.withBalances != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -448,6 +485,13 @@ func (_q *ModelCatalogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 			func(n *ModelCatalog, e *SupplierPricing) {
 				n.Edges.SupplierPricing = append(n.Edges.SupplierPricing, e)
 			}); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withBalances; query != nil {
+		if err := _q.loadBalances(ctx, query, nodes,
+			func(n *ModelCatalog) { n.Edges.Balances = []*ModelBalance{} },
+			func(n *ModelCatalog, e *ModelBalance) { n.Edges.Balances = append(n.Edges.Balances, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -515,6 +559,36 @@ func (_q *ModelCatalogQuery) loadSupplierPricing(ctx context.Context, query *Sup
 		node, ok := nodeids[*fk]
 		if !ok {
 			return fmt.Errorf(`unexpected referenced foreign-key "model_id" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *ModelCatalogQuery) loadBalances(ctx context.Context, query *ModelBalanceQuery, nodes []*ModelCatalog, init func(*ModelCatalog), assign func(*ModelCatalog, *ModelBalance)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[string]*ModelCatalog)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(modelbalance.FieldModelID)
+	}
+	query.Where(predicate.ModelBalance(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(modelcatalog.BalancesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ModelID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "model_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

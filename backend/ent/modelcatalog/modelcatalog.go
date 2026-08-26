@@ -32,6 +32,8 @@ const (
 	EdgePricing = "pricing"
 	// EdgeSupplierPricing holds the string denoting the supplier_pricing edge name in mutations.
 	EdgeSupplierPricing = "supplier_pricing"
+	// EdgeBalances holds the string denoting the balances edge name in mutations.
+	EdgeBalances = "balances"
 	// Table holds the table name of the modelcatalog in the database.
 	Table = "model_catalog"
 	// PricingTable is the table that holds the pricing relation/edge.
@@ -48,6 +50,13 @@ const (
 	SupplierPricingInverseTable = "supplier_pricing"
 	// SupplierPricingColumn is the table column denoting the supplier_pricing relation/edge.
 	SupplierPricingColumn = "model_id"
+	// BalancesTable is the table that holds the balances relation/edge.
+	BalancesTable = "model_balances"
+	// BalancesInverseTable is the table name for the ModelBalance entity.
+	// It exists in this package in order to avoid circular dependency with the "modelbalance" package.
+	BalancesInverseTable = "model_balances"
+	// BalancesColumn is the table column denoting the balances relation/edge.
+	BalancesColumn = "model_id"
 )
 
 // Columns holds all SQL columns for modelcatalog fields.
@@ -156,6 +165,20 @@ func BySupplierPricing(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newSupplierPricingStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByBalancesCount orders the results by balances count.
+func ByBalancesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newBalancesStep(), opts...)
+	}
+}
+
+// ByBalances orders the results by balances terms.
+func ByBalances(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newBalancesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newPricingStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -168,5 +191,12 @@ func newSupplierPricingStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(SupplierPricingInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, SupplierPricingTable, SupplierPricingColumn),
+	)
+}
+func newBalancesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(BalancesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, BalancesTable, BalancesColumn),
 	)
 }

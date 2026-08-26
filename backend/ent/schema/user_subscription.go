@@ -37,6 +37,25 @@ func (UserSubscription) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("user_id"),
 		field.Int64("group_id"),
+		field.String("model_id").
+			SchemaType(map[string]string{dialect.Postgres: "uuid"}).
+			Optional().
+			Nillable(),
+		field.Int64("purchased_tokens").
+			Optional().
+			Nillable(),
+		field.Time("token_expiry_at").
+			SchemaType(map[string]string{dialect.Postgres: "timestamptz"}).
+			Optional().
+			Nillable(),
+		field.String("credit_ledger_id").
+			SchemaType(map[string]string{dialect.Postgres: "uuid"}).
+			Optional().
+			Nillable(),
+		field.String("plan_name_snapshot").
+			MaxLen(200).
+			Optional().
+			Nillable(),
 
 		field.Time("starts_at").
 			SchemaType(map[string]string{dialect.Postgres: "timestamptz"}),

@@ -44,9 +44,11 @@ type ModelCatalogEdges struct {
 	Pricing []*ModelPricing `json:"pricing,omitempty"`
 	// SupplierPricing holds the value of the supplier_pricing edge.
 	SupplierPricing []*SupplierPricing `json:"supplier_pricing,omitempty"`
+	// Balances holds the value of the balances edge.
+	Balances []*ModelBalance `json:"balances,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // PricingOrErr returns the Pricing value or an error if the edge
@@ -65,6 +67,15 @@ func (e ModelCatalogEdges) SupplierPricingOrErr() ([]*SupplierPricing, error) {
 		return e.SupplierPricing, nil
 	}
 	return nil, &NotLoadedError{edge: "supplier_pricing"}
+}
+
+// BalancesOrErr returns the Balances value or an error if the edge
+// was not loaded in eager-loading.
+func (e ModelCatalogEdges) BalancesOrErr() ([]*ModelBalance, error) {
+	if e.loadedTypes[2] {
+		return e.Balances, nil
+	}
+	return nil, &NotLoadedError{edge: "balances"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -167,6 +178,11 @@ func (_m *ModelCatalog) QueryPricing() *ModelPricingQuery {
 // QuerySupplierPricing queries the "supplier_pricing" edge of the ModelCatalog entity.
 func (_m *ModelCatalog) QuerySupplierPricing() *SupplierPricingQuery {
 	return NewModelCatalogClient(_m.config).QuerySupplierPricing(_m)
+}
+
+// QueryBalances queries the "balances" edge of the ModelCatalog entity.
+func (_m *ModelCatalog) QueryBalances() *ModelBalanceQuery {
+	return NewModelCatalogClient(_m.config).QueryBalances(_m)
 }
 
 // Update returns a builder for updating this ModelCatalog.

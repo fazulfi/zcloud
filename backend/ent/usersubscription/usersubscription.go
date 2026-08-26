@@ -25,6 +25,16 @@ const (
 	FieldUserID = "user_id"
 	// FieldGroupID holds the string denoting the group_id field in the database.
 	FieldGroupID = "group_id"
+	// FieldModelID holds the string denoting the model_id field in the database.
+	FieldModelID = "model_id"
+	// FieldPurchasedTokens holds the string denoting the purchased_tokens field in the database.
+	FieldPurchasedTokens = "purchased_tokens"
+	// FieldTokenExpiryAt holds the string denoting the token_expiry_at field in the database.
+	FieldTokenExpiryAt = "token_expiry_at"
+	// FieldCreditLedgerID holds the string denoting the credit_ledger_id field in the database.
+	FieldCreditLedgerID = "credit_ledger_id"
+	// FieldPlanNameSnapshot holds the string denoting the plan_name_snapshot field in the database.
+	FieldPlanNameSnapshot = "plan_name_snapshot"
 	// FieldStartsAt holds the string denoting the starts_at field in the database.
 	FieldStartsAt = "starts_at"
 	// FieldExpiresAt holds the string denoting the expires_at field in the database.
@@ -97,6 +107,11 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldUserID,
 	FieldGroupID,
+	FieldModelID,
+	FieldPurchasedTokens,
+	FieldTokenExpiryAt,
+	FieldCreditLedgerID,
+	FieldPlanNameSnapshot,
 	FieldStartsAt,
 	FieldExpiresAt,
 	FieldStatus,
@@ -135,6 +150,8 @@ var (
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() time.Time
+	// PlanNameSnapshotValidator is a validator for the "plan_name_snapshot" field. It is called by the builders before save.
+	PlanNameSnapshotValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus string
 	// StatusValidator is a validator for the "status" field. It is called by the builders before save.
@@ -180,6 +197,31 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 // ByGroupID orders the results by the group_id field.
 func ByGroupID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGroupID, opts...).ToFunc()
+}
+
+// ByModelID orders the results by the model_id field.
+func ByModelID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldModelID, opts...).ToFunc()
+}
+
+// ByPurchasedTokens orders the results by the purchased_tokens field.
+func ByPurchasedTokens(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPurchasedTokens, opts...).ToFunc()
+}
+
+// ByTokenExpiryAt orders the results by the token_expiry_at field.
+func ByTokenExpiryAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTokenExpiryAt, opts...).ToFunc()
+}
+
+// ByCreditLedgerID orders the results by the credit_ledger_id field.
+func ByCreditLedgerID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreditLedgerID, opts...).ToFunc()
+}
+
+// ByPlanNameSnapshot orders the results by the plan_name_snapshot field.
+func ByPlanNameSnapshot(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPlanNameSnapshot, opts...).ToFunc()
 }
 
 // ByStartsAt orders the results by the starts_at field.

@@ -36,6 +36,7 @@ func (ModelCatalog) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("pricing", ModelPricing.Type),
 		edge.To("supplier_pricing", SupplierPricing.Type),
+		edge.To("balances", ModelBalance.Type),
 	}
 }
 

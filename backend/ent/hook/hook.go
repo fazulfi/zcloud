@@ -237,6 +237,18 @@ func (f IdentityAdoptionDecisionFunc) Mutate(ctx context.Context, m ent.Mutation
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.IdentityAdoptionDecisionMutation", m)
 }
 
+// The ModelBalanceFunc type is an adapter to allow the use of ordinary
+// function as ModelBalance mutator.
+type ModelBalanceFunc func(context.Context, *ent.ModelBalanceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ModelBalanceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ModelBalanceMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ModelBalanceMutation", m)
+}
+
 // The ModelCatalogFunc type is an adapter to allow the use of ordinary
 // function as ModelCatalog mutator.
 type ModelCatalogFunc func(context.Context, *ent.ModelCatalogMutation) (ent.Value, error)

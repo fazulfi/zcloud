@@ -24,6 +24,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/idempotencyrecord"
 	"github.com/Wei-Shaw/sub2api/ent/identityadoptiondecision"
+	"github.com/Wei-Shaw/sub2api/ent/modelbalance"
 	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
 	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/paymentauditlog"
@@ -1270,6 +1271,51 @@ func init() {
 	identityadoptiondecisionDescDecidedAt := identityadoptiondecisionFields[4].Descriptor()
 	// identityadoptiondecision.DefaultDecidedAt holds the default value on creation for the decided_at field.
 	identityadoptiondecision.DefaultDecidedAt = identityadoptiondecisionDescDecidedAt.Default.(func() time.Time)
+	modelbalanceMixin := schema.ModelBalance{}.Mixin()
+	modelbalanceMixinFields0 := modelbalanceMixin[0].Fields()
+	_ = modelbalanceMixinFields0
+	modelbalanceFields := schema.ModelBalance{}.Fields()
+	_ = modelbalanceFields
+	// modelbalanceDescCreatedAt is the schema descriptor for created_at field.
+	modelbalanceDescCreatedAt := modelbalanceMixinFields0[0].Descriptor()
+	// modelbalance.DefaultCreatedAt holds the default value on creation for the created_at field.
+	modelbalance.DefaultCreatedAt = modelbalanceDescCreatedAt.Default.(func() time.Time)
+	// modelbalanceDescUpdatedAt is the schema descriptor for updated_at field.
+	modelbalanceDescUpdatedAt := modelbalanceMixinFields0[1].Descriptor()
+	// modelbalance.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	modelbalance.DefaultUpdatedAt = modelbalanceDescUpdatedAt.Default.(func() time.Time)
+	// modelbalance.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	modelbalance.UpdateDefaultUpdatedAt = modelbalanceDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// modelbalanceDescTokensPurchased is the schema descriptor for tokens_purchased field.
+	modelbalanceDescTokensPurchased := modelbalanceFields[3].Descriptor()
+	// modelbalance.DefaultTokensPurchased holds the default value on creation for the tokens_purchased field.
+	modelbalance.DefaultTokensPurchased = modelbalanceDescTokensPurchased.Default.(int64)
+	// modelbalanceDescTokensConsumed is the schema descriptor for tokens_consumed field.
+	modelbalanceDescTokensConsumed := modelbalanceFields[4].Descriptor()
+	// modelbalance.DefaultTokensConsumed holds the default value on creation for the tokens_consumed field.
+	modelbalance.DefaultTokensConsumed = modelbalanceDescTokensConsumed.Default.(int64)
+	// modelbalanceDescBalance is the schema descriptor for balance field.
+	modelbalanceDescBalance := modelbalanceFields[5].Descriptor()
+	// modelbalance.DefaultBalance holds the default value on creation for the balance field.
+	modelbalance.DefaultBalance = modelbalanceDescBalance.Default.(int64)
+	// modelbalanceDescUsagePercent is the schema descriptor for usage_percent field.
+	modelbalanceDescUsagePercent := modelbalanceFields[6].Descriptor()
+	// modelbalance.DefaultUsagePercent holds the default value on creation for the usage_percent field.
+	modelbalance.DefaultUsagePercent = modelbalanceDescUsagePercent.Default.(float64)
+	// modelbalanceDescStatus is the schema descriptor for status field.
+	modelbalanceDescStatus := modelbalanceFields[7].Descriptor()
+	// modelbalance.DefaultStatus holds the default value on creation for the status field.
+	modelbalance.DefaultStatus = modelbalanceDescStatus.Default.(string)
+	// modelbalance.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	modelbalance.StatusValidator = modelbalanceDescStatus.Validators[0].(func(string) error)
+	// modelbalanceDescVersion is the schema descriptor for version field.
+	modelbalanceDescVersion := modelbalanceFields[8].Descriptor()
+	// modelbalance.DefaultVersion holds the default value on creation for the version field.
+	modelbalance.DefaultVersion = modelbalanceDescVersion.Default.(int64)
+	// modelbalanceDescID is the schema descriptor for id field.
+	modelbalanceDescID := modelbalanceFields[0].Descriptor()
+	// modelbalance.DefaultID holds the default value on creation for the id field.
+	modelbalance.DefaultID = modelbalanceDescID.Default.(func() string)
 	modelcatalogMixin := schema.ModelCatalog{}.Mixin()
 	modelcatalogMixinFields0 := modelcatalogMixin[0].Fields()
 	_ = modelcatalogMixinFields0
@@ -2544,26 +2590,30 @@ func init() {
 	usersubscription.DefaultUpdatedAt = usersubscriptionDescUpdatedAt.Default.(func() time.Time)
 	// usersubscription.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	usersubscription.UpdateDefaultUpdatedAt = usersubscriptionDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// usersubscriptionDescPlanNameSnapshot is the schema descriptor for plan_name_snapshot field.
+	usersubscriptionDescPlanNameSnapshot := usersubscriptionFields[6].Descriptor()
+	// usersubscription.PlanNameSnapshotValidator is a validator for the "plan_name_snapshot" field. It is called by the builders before save.
+	usersubscription.PlanNameSnapshotValidator = usersubscriptionDescPlanNameSnapshot.Validators[0].(func(string) error)
 	// usersubscriptionDescStatus is the schema descriptor for status field.
-	usersubscriptionDescStatus := usersubscriptionFields[4].Descriptor()
+	usersubscriptionDescStatus := usersubscriptionFields[9].Descriptor()
 	// usersubscription.DefaultStatus holds the default value on creation for the status field.
 	usersubscription.DefaultStatus = usersubscriptionDescStatus.Default.(string)
 	// usersubscription.StatusValidator is a validator for the "status" field. It is called by the builders before save.
 	usersubscription.StatusValidator = usersubscriptionDescStatus.Validators[0].(func(string) error)
 	// usersubscriptionDescDailyUsageUsd is the schema descriptor for daily_usage_usd field.
-	usersubscriptionDescDailyUsageUsd := usersubscriptionFields[8].Descriptor()
+	usersubscriptionDescDailyUsageUsd := usersubscriptionFields[13].Descriptor()
 	// usersubscription.DefaultDailyUsageUsd holds the default value on creation for the daily_usage_usd field.
 	usersubscription.DefaultDailyUsageUsd = usersubscriptionDescDailyUsageUsd.Default.(float64)
 	// usersubscriptionDescWeeklyUsageUsd is the schema descriptor for weekly_usage_usd field.
-	usersubscriptionDescWeeklyUsageUsd := usersubscriptionFields[9].Descriptor()
+	usersubscriptionDescWeeklyUsageUsd := usersubscriptionFields[14].Descriptor()
 	// usersubscription.DefaultWeeklyUsageUsd holds the default value on creation for the weekly_usage_usd field.
 	usersubscription.DefaultWeeklyUsageUsd = usersubscriptionDescWeeklyUsageUsd.Default.(float64)
 	// usersubscriptionDescMonthlyUsageUsd is the schema descriptor for monthly_usage_usd field.
-	usersubscriptionDescMonthlyUsageUsd := usersubscriptionFields[10].Descriptor()
+	usersubscriptionDescMonthlyUsageUsd := usersubscriptionFields[15].Descriptor()
 	// usersubscription.DefaultMonthlyUsageUsd holds the default value on creation for the monthly_usage_usd field.
 	usersubscription.DefaultMonthlyUsageUsd = usersubscriptionDescMonthlyUsageUsd.Default.(float64)
 	// usersubscriptionDescAssignedAt is the schema descriptor for assigned_at field.
-	usersubscriptionDescAssignedAt := usersubscriptionFields[12].Descriptor()
+	usersubscriptionDescAssignedAt := usersubscriptionFields[17].Descriptor()
 	// usersubscription.DefaultAssignedAt holds the default value on creation for the assigned_at field.
 	usersubscription.DefaultAssignedAt = usersubscriptionDescAssignedAt.Default.(func() time.Time)
 }

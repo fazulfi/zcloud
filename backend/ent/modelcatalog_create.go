@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/Wei-Shaw/sub2api/ent/modelbalance"
 	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
 	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/supplierpricing"
@@ -141,6 +142,21 @@ func (_c *ModelCatalogCreate) AddSupplierPricing(v ...*SupplierPricing) *ModelCa
 		ids[i] = v[i].ID
 	}
 	return _c.AddSupplierPricingIDs(ids...)
+}
+
+// AddBalanceIDs adds the "balances" edge to the ModelBalance entity by IDs.
+func (_c *ModelCatalogCreate) AddBalanceIDs(ids ...string) *ModelCatalogCreate {
+	_c.mutation.AddBalanceIDs(ids...)
+	return _c
+}
+
+// AddBalances adds the "balances" edges to the ModelBalance entity.
+func (_c *ModelCatalogCreate) AddBalances(v ...*ModelBalance) *ModelCatalogCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddBalanceIDs(ids...)
 }
 
 // Mutation returns the ModelCatalogMutation object of the builder.
@@ -317,6 +333,22 @@ func (_c *ModelCatalogCreate) createSpec() (*ModelCatalog, *sqlgraph.CreateSpec)
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(supplierpricing.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.BalancesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   modelcatalog.BalancesTable,
+			Columns: []string{modelcatalog.BalancesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(modelbalance.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
