@@ -1,0 +1,97 @@
+# zcloud production docker compose (fork build)
+
+# Staging (MVP): zcloud.82.25.62.204.sslip.io → nginx host :18080/:18443
+# Production:   zcloud.dev / api.zcloud.dev / app.zcloud.dev (TLS via Caddy/nginx)
+
+# Stack: zrouter (stateless, built from fork, NOT weishaw/sub2api:latest)
+#        postgres   — pinned, named volume, private network (VPS host PG reuse for staging)
+#        redis      — pinned, password, private network (VPS host Redis reuse for staging)
+#        caddy/nginx— TLS reverse proxy, SSE buffering off (host nginx for staging)
+
+# Usage:
+#   cp deploy/.env.zcloud.example deploy/.env.zcloud && chmod 600 deploy/.env.zcloud
+#   docker compose -f deploy/docker-compose.zcloud.yml --env-file deploy/.env.zcloud build
+#   docker compose -f deploy/docker-compose.zcloud.yml --env-file deploy/.env.zcloud up -d
+
+name: zcloud
+
+services:
+  zrouter:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        VERSION: ${ZCLOUD_VERSION:-0.1.183-zcloud}
+    image: zcloud/zrouter:${ZCLOUD_VERSION:-0.1.183-zcloud}
+    container_name: zcloud-zrouter
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ulimits:
+      nofile:
+        soft: 100000
+        hard: 100000
+    ports:
+      # Staging: host 18080 → container 8080 (avoids clash with host nginx 80/443)
+      - "${BIND_HOST:-0.0.0.0}:${SERVER_PORT:-18080}:8080"
+    env_file:
+      - .env.zcloud
+    volumes:
+      - zcloud_data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-T", "5", "-O", "/dev/null", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Staging only: isolated PG/Redis. Production may point DATABASE_HOST/REDIS_HOST
+  # at managed instances; keep these services on the private network.
+  postgres:
+    image: postgres:18-alpine
+    container_name: zcloud-postgres
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-zcloud}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: ${POSTGRES_DB:-zcloud}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zcloud} -d ${POSTGRES_DB:-zcloud}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    container_name: zcloud-redis
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?required}"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:?required}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  zcloud_data:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: zcloud-net
