@@ -17,6 +17,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/announcement"
 	"github.com/Wei-Shaw/sub2api/ent/announcementread"
 	"github.com/Wei-Shaw/sub2api/ent/apikey"
+	"github.com/Wei-Shaw/sub2api/ent/apikeymodelscope"
 	"github.com/Wei-Shaw/sub2api/ent/authidentity"
 	"github.com/Wei-Shaw/sub2api/ent/authidentitychannel"
 	"github.com/Wei-Shaw/sub2api/ent/batchimageevent"
@@ -74,6 +75,7 @@ const (
 	TypeAccountGroup                  = "AccountGroup"
 	TypeAnnouncement                  = "Announcement"
 	TypeAnnouncementRead              = "AnnouncementRead"
+	TypeApiKeyModelScope              = "ApiKeyModelScope"
 	TypeAuthIdentity                  = "AuthIdentity"
 	TypeAuthIdentityChannel           = "AuthIdentityChannel"
 	TypeBatchImageEvent               = "BatchImageEvent"
@@ -118,51 +120,57 @@ const (
 // APIKeyMutation represents an operation that mutates the APIKey nodes in the graph.
 type APIKeyMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int64
-	created_at         *time.Time
-	updated_at         *time.Time
-	deleted_at         *time.Time
-	key                *string
-	name               *string
-	status             *string
-	last_used_at       *time.Time
-	ip_whitelist       *[]string
-	appendip_whitelist []string
-	ip_blacklist       *[]string
-	appendip_blacklist []string
-	quota              *float64
-	addquota           *float64
-	quota_used         *float64
-	addquota_used      *float64
-	expires_at         *time.Time
-	rate_limit_5h      *float64
-	addrate_limit_5h   *float64
-	rate_limit_1d      *float64
-	addrate_limit_1d   *float64
-	rate_limit_7d      *float64
-	addrate_limit_7d   *float64
-	usage_5h           *float64
-	addusage_5h        *float64
-	usage_1d           *float64
-	addusage_1d        *float64
-	usage_7d           *float64
-	addusage_7d        *float64
-	window_5h_start    *time.Time
-	window_1d_start    *time.Time
-	window_7d_start    *time.Time
-	clearedFields      map[string]struct{}
-	user               *int64
-	cleareduser        bool
-	group              *int64
-	clearedgroup       bool
-	usage_logs         map[int64]struct{}
-	removedusage_logs  map[int64]struct{}
-	clearedusage_logs  bool
-	done               bool
-	oldValue           func(context.Context) (*APIKey, error)
-	predicates         []predicate.APIKey
+	op                      Op
+	typ                     string
+	id                      *int64
+	created_at              *time.Time
+	updated_at              *time.Time
+	deleted_at              *time.Time
+	key                     *string
+	name                    *string
+	status                  *string
+	last_used_at            *time.Time
+	ip_whitelist            *[]string
+	appendip_whitelist      []string
+	ip_blacklist            *[]string
+	appendip_blacklist      []string
+	quota                   *float64
+	addquota                *float64
+	quota_used              *float64
+	addquota_used           *float64
+	expires_at              *time.Time
+	rate_limit_5h           *float64
+	addrate_limit_5h        *float64
+	rate_limit_1d           *float64
+	addrate_limit_1d        *float64
+	rate_limit_7d           *float64
+	addrate_limit_7d        *float64
+	usage_5h                *float64
+	addusage_5h             *float64
+	usage_1d                *float64
+	addusage_1d             *float64
+	usage_7d                *float64
+	addusage_7d             *float64
+	window_5h_start         *time.Time
+	window_1d_start         *time.Time
+	window_7d_start         *time.Time
+	model_scope_mode        *string
+	enabled_models_count    *int
+	addenabled_models_count *int
+	clearedFields           map[string]struct{}
+	user                    *int64
+	cleareduser             bool
+	group                   *int64
+	clearedgroup            bool
+	usage_logs              map[int64]struct{}
+	removedusage_logs       map[int64]struct{}
+	clearedusage_logs       bool
+	model_scopes            map[string]struct{}
+	removedmodel_scopes     map[string]struct{}
+	clearedmodel_scopes     bool
+	done                    bool
+	oldValue                func(context.Context) (*APIKey, error)
+	predicates              []predicate.APIKey
 }
 
 var _ ent.Mutation = (*APIKeyMutation)(nil)
@@ -1400,6 +1408,98 @@ func (m *APIKeyMutation) ResetWindow7dStart() {
 	delete(m.clearedFields, apikey.FieldWindow7dStart)
 }
 
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (m *APIKeyMutation) SetModelScopeMode(s string) {
+	m.model_scope_mode = &s
+}
+
+// ModelScopeMode returns the value of the "model_scope_mode" field in the mutation.
+func (m *APIKeyMutation) ModelScopeMode() (r string, exists bool) {
+	v := m.model_scope_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldModelScopeMode returns the old "model_scope_mode" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldModelScopeMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldModelScopeMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldModelScopeMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldModelScopeMode: %w", err)
+	}
+	return oldValue.ModelScopeMode, nil
+}
+
+// ResetModelScopeMode resets all changes to the "model_scope_mode" field.
+func (m *APIKeyMutation) ResetModelScopeMode() {
+	m.model_scope_mode = nil
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (m *APIKeyMutation) SetEnabledModelsCount(i int) {
+	m.enabled_models_count = &i
+	m.addenabled_models_count = nil
+}
+
+// EnabledModelsCount returns the value of the "enabled_models_count" field in the mutation.
+func (m *APIKeyMutation) EnabledModelsCount() (r int, exists bool) {
+	v := m.enabled_models_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEnabledModelsCount returns the old "enabled_models_count" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldEnabledModelsCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEnabledModelsCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEnabledModelsCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEnabledModelsCount: %w", err)
+	}
+	return oldValue.EnabledModelsCount, nil
+}
+
+// AddEnabledModelsCount adds i to the "enabled_models_count" field.
+func (m *APIKeyMutation) AddEnabledModelsCount(i int) {
+	if m.addenabled_models_count != nil {
+		*m.addenabled_models_count += i
+	} else {
+		m.addenabled_models_count = &i
+	}
+}
+
+// AddedEnabledModelsCount returns the value that was added to the "enabled_models_count" field in this mutation.
+func (m *APIKeyMutation) AddedEnabledModelsCount() (r int, exists bool) {
+	v := m.addenabled_models_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetEnabledModelsCount resets all changes to the "enabled_models_count" field.
+func (m *APIKeyMutation) ResetEnabledModelsCount() {
+	m.enabled_models_count = nil
+	m.addenabled_models_count = nil
+}
+
 // ClearUser clears the "user" edge to the User entity.
 func (m *APIKeyMutation) ClearUser() {
 	m.cleareduser = true
@@ -1508,6 +1608,60 @@ func (m *APIKeyMutation) ResetUsageLogs() {
 	m.removedusage_logs = nil
 }
 
+// AddModelScopeIDs adds the "model_scopes" edge to the ApiKeyModelScope entity by ids.
+func (m *APIKeyMutation) AddModelScopeIDs(ids ...string) {
+	if m.model_scopes == nil {
+		m.model_scopes = make(map[string]struct{})
+	}
+	for i := range ids {
+		m.model_scopes[ids[i]] = struct{}{}
+	}
+}
+
+// ClearModelScopes clears the "model_scopes" edge to the ApiKeyModelScope entity.
+func (m *APIKeyMutation) ClearModelScopes() {
+	m.clearedmodel_scopes = true
+}
+
+// ModelScopesCleared reports if the "model_scopes" edge to the ApiKeyModelScope entity was cleared.
+func (m *APIKeyMutation) ModelScopesCleared() bool {
+	return m.clearedmodel_scopes
+}
+
+// RemoveModelScopeIDs removes the "model_scopes" edge to the ApiKeyModelScope entity by IDs.
+func (m *APIKeyMutation) RemoveModelScopeIDs(ids ...string) {
+	if m.removedmodel_scopes == nil {
+		m.removedmodel_scopes = make(map[string]struct{})
+	}
+	for i := range ids {
+		delete(m.model_scopes, ids[i])
+		m.removedmodel_scopes[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedModelScopes returns the removed IDs of the "model_scopes" edge to the ApiKeyModelScope entity.
+func (m *APIKeyMutation) RemovedModelScopesIDs() (ids []string) {
+	for id := range m.removedmodel_scopes {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ModelScopesIDs returns the "model_scopes" edge IDs in the mutation.
+func (m *APIKeyMutation) ModelScopesIDs() (ids []string) {
+	for id := range m.model_scopes {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetModelScopes resets all changes to the "model_scopes" edge.
+func (m *APIKeyMutation) ResetModelScopes() {
+	m.model_scopes = nil
+	m.clearedmodel_scopes = false
+	m.removedmodel_scopes = nil
+}
+
 // Where appends a list predicates to the APIKeyMutation builder.
 func (m *APIKeyMutation) Where(ps ...predicate.APIKey) {
 	m.predicates = append(m.predicates, ps...)
@@ -1542,7 +1696,7 @@ func (m *APIKeyMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *APIKeyMutation) Fields() []string {
-	fields := make([]string, 0, 23)
+	fields := make([]string, 0, 25)
 	if m.created_at != nil {
 		fields = append(fields, apikey.FieldCreatedAt)
 	}
@@ -1612,6 +1766,12 @@ func (m *APIKeyMutation) Fields() []string {
 	if m.window_7d_start != nil {
 		fields = append(fields, apikey.FieldWindow7dStart)
 	}
+	if m.model_scope_mode != nil {
+		fields = append(fields, apikey.FieldModelScopeMode)
+	}
+	if m.enabled_models_count != nil {
+		fields = append(fields, apikey.FieldEnabledModelsCount)
+	}
 	return fields
 }
 
@@ -1666,6 +1826,10 @@ func (m *APIKeyMutation) Field(name string) (ent.Value, bool) {
 		return m.Window1dStart()
 	case apikey.FieldWindow7dStart:
 		return m.Window7dStart()
+	case apikey.FieldModelScopeMode:
+		return m.ModelScopeMode()
+	case apikey.FieldEnabledModelsCount:
+		return m.EnabledModelsCount()
 	}
 	return nil, false
 }
@@ -1721,6 +1885,10 @@ func (m *APIKeyMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldWindow1dStart(ctx)
 	case apikey.FieldWindow7dStart:
 		return m.OldWindow7dStart(ctx)
+	case apikey.FieldModelScopeMode:
+		return m.OldModelScopeMode(ctx)
+	case apikey.FieldEnabledModelsCount:
+		return m.OldEnabledModelsCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown APIKey field %s", name)
 }
@@ -1891,6 +2059,20 @@ func (m *APIKeyMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetWindow7dStart(v)
 		return nil
+	case apikey.FieldModelScopeMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetModelScopeMode(v)
+		return nil
+	case apikey.FieldEnabledModelsCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEnabledModelsCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown APIKey field %s", name)
 }
@@ -1923,6 +2105,9 @@ func (m *APIKeyMutation) AddedFields() []string {
 	if m.addusage_7d != nil {
 		fields = append(fields, apikey.FieldUsage7d)
 	}
+	if m.addenabled_models_count != nil {
+		fields = append(fields, apikey.FieldEnabledModelsCount)
+	}
 	return fields
 }
 
@@ -1947,6 +2132,8 @@ func (m *APIKeyMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUsage1d()
 	case apikey.FieldUsage7d:
 		return m.AddedUsage7d()
+	case apikey.FieldEnabledModelsCount:
+		return m.AddedEnabledModelsCount()
 	}
 	return nil, false
 }
@@ -2011,6 +2198,13 @@ func (m *APIKeyMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUsage7d(v)
+		return nil
+	case apikey.FieldEnabledModelsCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEnabledModelsCount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown APIKey numeric field %s", name)
@@ -2165,13 +2359,19 @@ func (m *APIKeyMutation) ResetField(name string) error {
 	case apikey.FieldWindow7dStart:
 		m.ResetWindow7dStart()
 		return nil
+	case apikey.FieldModelScopeMode:
+		m.ResetModelScopeMode()
+		return nil
+	case apikey.FieldEnabledModelsCount:
+		m.ResetEnabledModelsCount()
+		return nil
 	}
 	return fmt.Errorf("unknown APIKey field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *APIKeyMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.user != nil {
 		edges = append(edges, apikey.EdgeUser)
 	}
@@ -2180,6 +2380,9 @@ func (m *APIKeyMutation) AddedEdges() []string {
 	}
 	if m.usage_logs != nil {
 		edges = append(edges, apikey.EdgeUsageLogs)
+	}
+	if m.model_scopes != nil {
+		edges = append(edges, apikey.EdgeModelScopes)
 	}
 	return edges
 }
@@ -2202,15 +2405,24 @@ func (m *APIKeyMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case apikey.EdgeModelScopes:
+		ids := make([]ent.Value, 0, len(m.model_scopes))
+		for id := range m.model_scopes {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *APIKeyMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.removedusage_logs != nil {
 		edges = append(edges, apikey.EdgeUsageLogs)
+	}
+	if m.removedmodel_scopes != nil {
+		edges = append(edges, apikey.EdgeModelScopes)
 	}
 	return edges
 }
@@ -2225,13 +2437,19 @@ func (m *APIKeyMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case apikey.EdgeModelScopes:
+		ids := make([]ent.Value, 0, len(m.removedmodel_scopes))
+		for id := range m.removedmodel_scopes {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *APIKeyMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.cleareduser {
 		edges = append(edges, apikey.EdgeUser)
 	}
@@ -2240,6 +2458,9 @@ func (m *APIKeyMutation) ClearedEdges() []string {
 	}
 	if m.clearedusage_logs {
 		edges = append(edges, apikey.EdgeUsageLogs)
+	}
+	if m.clearedmodel_scopes {
+		edges = append(edges, apikey.EdgeModelScopes)
 	}
 	return edges
 }
@@ -2254,6 +2475,8 @@ func (m *APIKeyMutation) EdgeCleared(name string) bool {
 		return m.clearedgroup
 	case apikey.EdgeUsageLogs:
 		return m.clearedusage_logs
+	case apikey.EdgeModelScopes:
+		return m.clearedmodel_scopes
 	}
 	return false
 }
@@ -2284,6 +2507,9 @@ func (m *APIKeyMutation) ResetEdge(name string) error {
 		return nil
 	case apikey.EdgeUsageLogs:
 		m.ResetUsageLogs()
+		return nil
+	case apikey.EdgeModelScopes:
+		m.ResetModelScopes()
 		return nil
 	}
 	return fmt.Errorf("unknown APIKey edge %s", name)
@@ -7297,6 +7523,807 @@ func (m *AnnouncementReadMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown AnnouncementRead edge %s", name)
+}
+
+// ApiKeyModelScopeMutation represents an operation that mutates the ApiKeyModelScope nodes in the graph.
+type ApiKeyModelScopeMutation struct {
+	config
+	op                     Op
+	typ                    string
+	id                     *string
+	created_at             *time.Time
+	updated_at             *time.Time
+	model_id               *string
+	rate_limit_per_min     *int
+	addrate_limit_per_min  *int
+	rate_limit_per_hour    *int
+	addrate_limit_per_hour *int
+	enabled                *bool
+	clearedFields          map[string]struct{}
+	api_key                *int64
+	clearedapi_key         bool
+	done                   bool
+	oldValue               func(context.Context) (*ApiKeyModelScope, error)
+	predicates             []predicate.ApiKeyModelScope
+}
+
+var _ ent.Mutation = (*ApiKeyModelScopeMutation)(nil)
+
+// apikeymodelscopeOption allows management of the mutation configuration using functional options.
+type apikeymodelscopeOption func(*ApiKeyModelScopeMutation)
+
+// newApiKeyModelScopeMutation creates new mutation for the ApiKeyModelScope entity.
+func newApiKeyModelScopeMutation(c config, op Op, opts ...apikeymodelscopeOption) *ApiKeyModelScopeMutation {
+	m := &ApiKeyModelScopeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeApiKeyModelScope,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withApiKeyModelScopeID sets the ID field of the mutation.
+func withApiKeyModelScopeID(id string) apikeymodelscopeOption {
+	return func(m *ApiKeyModelScopeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ApiKeyModelScope
+		)
+		m.oldValue = func(ctx context.Context) (*ApiKeyModelScope, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ApiKeyModelScope.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withApiKeyModelScope sets the old ApiKeyModelScope of the mutation.
+func withApiKeyModelScope(node *ApiKeyModelScope) apikeymodelscopeOption {
+	return func(m *ApiKeyModelScopeMutation) {
+		m.oldValue = func(context.Context) (*ApiKeyModelScope, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ApiKeyModelScopeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ApiKeyModelScopeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ApiKeyModelScope entities.
+func (m *ApiKeyModelScopeMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ApiKeyModelScopeMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ApiKeyModelScopeMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ApiKeyModelScope.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *ApiKeyModelScopeMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ApiKeyModelScopeMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *ApiKeyModelScopeMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *ApiKeyModelScopeMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *ApiKeyModelScopeMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *ApiKeyModelScopeMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetAPIKeyID sets the "api_key_id" field.
+func (m *ApiKeyModelScopeMutation) SetAPIKeyID(i int64) {
+	m.api_key = &i
+}
+
+// APIKeyID returns the value of the "api_key_id" field in the mutation.
+func (m *ApiKeyModelScopeMutation) APIKeyID() (r int64, exists bool) {
+	v := m.api_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAPIKeyID returns the old "api_key_id" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldAPIKeyID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAPIKeyID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAPIKeyID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAPIKeyID: %w", err)
+	}
+	return oldValue.APIKeyID, nil
+}
+
+// ResetAPIKeyID resets all changes to the "api_key_id" field.
+func (m *ApiKeyModelScopeMutation) ResetAPIKeyID() {
+	m.api_key = nil
+}
+
+// SetModelID sets the "model_id" field.
+func (m *ApiKeyModelScopeMutation) SetModelID(s string) {
+	m.model_id = &s
+}
+
+// ModelID returns the value of the "model_id" field in the mutation.
+func (m *ApiKeyModelScopeMutation) ModelID() (r string, exists bool) {
+	v := m.model_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldModelID returns the old "model_id" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldModelID(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldModelID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldModelID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldModelID: %w", err)
+	}
+	return oldValue.ModelID, nil
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (m *ApiKeyModelScopeMutation) ClearModelID() {
+	m.model_id = nil
+	m.clearedFields[apikeymodelscope.FieldModelID] = struct{}{}
+}
+
+// ModelIDCleared returns if the "model_id" field was cleared in this mutation.
+func (m *ApiKeyModelScopeMutation) ModelIDCleared() bool {
+	_, ok := m.clearedFields[apikeymodelscope.FieldModelID]
+	return ok
+}
+
+// ResetModelID resets all changes to the "model_id" field.
+func (m *ApiKeyModelScopeMutation) ResetModelID() {
+	m.model_id = nil
+	delete(m.clearedFields, apikeymodelscope.FieldModelID)
+}
+
+// SetRateLimitPerMin sets the "rate_limit_per_min" field.
+func (m *ApiKeyModelScopeMutation) SetRateLimitPerMin(i int) {
+	m.rate_limit_per_min = &i
+	m.addrate_limit_per_min = nil
+}
+
+// RateLimitPerMin returns the value of the "rate_limit_per_min" field in the mutation.
+func (m *ApiKeyModelScopeMutation) RateLimitPerMin() (r int, exists bool) {
+	v := m.rate_limit_per_min
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRateLimitPerMin returns the old "rate_limit_per_min" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldRateLimitPerMin(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRateLimitPerMin is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRateLimitPerMin requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRateLimitPerMin: %w", err)
+	}
+	return oldValue.RateLimitPerMin, nil
+}
+
+// AddRateLimitPerMin adds i to the "rate_limit_per_min" field.
+func (m *ApiKeyModelScopeMutation) AddRateLimitPerMin(i int) {
+	if m.addrate_limit_per_min != nil {
+		*m.addrate_limit_per_min += i
+	} else {
+		m.addrate_limit_per_min = &i
+	}
+}
+
+// AddedRateLimitPerMin returns the value that was added to the "rate_limit_per_min" field in this mutation.
+func (m *ApiKeyModelScopeMutation) AddedRateLimitPerMin() (r int, exists bool) {
+	v := m.addrate_limit_per_min
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetRateLimitPerMin resets all changes to the "rate_limit_per_min" field.
+func (m *ApiKeyModelScopeMutation) ResetRateLimitPerMin() {
+	m.rate_limit_per_min = nil
+	m.addrate_limit_per_min = nil
+}
+
+// SetRateLimitPerHour sets the "rate_limit_per_hour" field.
+func (m *ApiKeyModelScopeMutation) SetRateLimitPerHour(i int) {
+	m.rate_limit_per_hour = &i
+	m.addrate_limit_per_hour = nil
+}
+
+// RateLimitPerHour returns the value of the "rate_limit_per_hour" field in the mutation.
+func (m *ApiKeyModelScopeMutation) RateLimitPerHour() (r int, exists bool) {
+	v := m.rate_limit_per_hour
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRateLimitPerHour returns the old "rate_limit_per_hour" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldRateLimitPerHour(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRateLimitPerHour is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRateLimitPerHour requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRateLimitPerHour: %w", err)
+	}
+	return oldValue.RateLimitPerHour, nil
+}
+
+// AddRateLimitPerHour adds i to the "rate_limit_per_hour" field.
+func (m *ApiKeyModelScopeMutation) AddRateLimitPerHour(i int) {
+	if m.addrate_limit_per_hour != nil {
+		*m.addrate_limit_per_hour += i
+	} else {
+		m.addrate_limit_per_hour = &i
+	}
+}
+
+// AddedRateLimitPerHour returns the value that was added to the "rate_limit_per_hour" field in this mutation.
+func (m *ApiKeyModelScopeMutation) AddedRateLimitPerHour() (r int, exists bool) {
+	v := m.addrate_limit_per_hour
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetRateLimitPerHour resets all changes to the "rate_limit_per_hour" field.
+func (m *ApiKeyModelScopeMutation) ResetRateLimitPerHour() {
+	m.rate_limit_per_hour = nil
+	m.addrate_limit_per_hour = nil
+}
+
+// SetEnabled sets the "enabled" field.
+func (m *ApiKeyModelScopeMutation) SetEnabled(b bool) {
+	m.enabled = &b
+}
+
+// Enabled returns the value of the "enabled" field in the mutation.
+func (m *ApiKeyModelScopeMutation) Enabled() (r bool, exists bool) {
+	v := m.enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEnabled returns the old "enabled" field's value of the ApiKeyModelScope entity.
+// If the ApiKeyModelScope object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiKeyModelScopeMutation) OldEnabled(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEnabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEnabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEnabled: %w", err)
+	}
+	return oldValue.Enabled, nil
+}
+
+// ResetEnabled resets all changes to the "enabled" field.
+func (m *ApiKeyModelScopeMutation) ResetEnabled() {
+	m.enabled = nil
+}
+
+// ClearAPIKey clears the "api_key" edge to the APIKey entity.
+func (m *ApiKeyModelScopeMutation) ClearAPIKey() {
+	m.clearedapi_key = true
+	m.clearedFields[apikeymodelscope.FieldAPIKeyID] = struct{}{}
+}
+
+// APIKeyCleared reports if the "api_key" edge to the APIKey entity was cleared.
+func (m *ApiKeyModelScopeMutation) APIKeyCleared() bool {
+	return m.clearedapi_key
+}
+
+// APIKeyIDs returns the "api_key" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// APIKeyID instead. It exists only for internal usage by the builders.
+func (m *ApiKeyModelScopeMutation) APIKeyIDs() (ids []int64) {
+	if id := m.api_key; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetAPIKey resets all changes to the "api_key" edge.
+func (m *ApiKeyModelScopeMutation) ResetAPIKey() {
+	m.api_key = nil
+	m.clearedapi_key = false
+}
+
+// Where appends a list predicates to the ApiKeyModelScopeMutation builder.
+func (m *ApiKeyModelScopeMutation) Where(ps ...predicate.ApiKeyModelScope) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ApiKeyModelScopeMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ApiKeyModelScopeMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ApiKeyModelScope, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ApiKeyModelScopeMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ApiKeyModelScopeMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ApiKeyModelScope).
+func (m *ApiKeyModelScopeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ApiKeyModelScopeMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.created_at != nil {
+		fields = append(fields, apikeymodelscope.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, apikeymodelscope.FieldUpdatedAt)
+	}
+	if m.api_key != nil {
+		fields = append(fields, apikeymodelscope.FieldAPIKeyID)
+	}
+	if m.model_id != nil {
+		fields = append(fields, apikeymodelscope.FieldModelID)
+	}
+	if m.rate_limit_per_min != nil {
+		fields = append(fields, apikeymodelscope.FieldRateLimitPerMin)
+	}
+	if m.rate_limit_per_hour != nil {
+		fields = append(fields, apikeymodelscope.FieldRateLimitPerHour)
+	}
+	if m.enabled != nil {
+		fields = append(fields, apikeymodelscope.FieldEnabled)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ApiKeyModelScopeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case apikeymodelscope.FieldCreatedAt:
+		return m.CreatedAt()
+	case apikeymodelscope.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case apikeymodelscope.FieldAPIKeyID:
+		return m.APIKeyID()
+	case apikeymodelscope.FieldModelID:
+		return m.ModelID()
+	case apikeymodelscope.FieldRateLimitPerMin:
+		return m.RateLimitPerMin()
+	case apikeymodelscope.FieldRateLimitPerHour:
+		return m.RateLimitPerHour()
+	case apikeymodelscope.FieldEnabled:
+		return m.Enabled()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ApiKeyModelScopeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case apikeymodelscope.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case apikeymodelscope.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case apikeymodelscope.FieldAPIKeyID:
+		return m.OldAPIKeyID(ctx)
+	case apikeymodelscope.FieldModelID:
+		return m.OldModelID(ctx)
+	case apikeymodelscope.FieldRateLimitPerMin:
+		return m.OldRateLimitPerMin(ctx)
+	case apikeymodelscope.FieldRateLimitPerHour:
+		return m.OldRateLimitPerHour(ctx)
+	case apikeymodelscope.FieldEnabled:
+		return m.OldEnabled(ctx)
+	}
+	return nil, fmt.Errorf("unknown ApiKeyModelScope field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiKeyModelScopeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case apikeymodelscope.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case apikeymodelscope.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case apikeymodelscope.FieldAPIKeyID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAPIKeyID(v)
+		return nil
+	case apikeymodelscope.FieldModelID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetModelID(v)
+		return nil
+	case apikeymodelscope.FieldRateLimitPerMin:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRateLimitPerMin(v)
+		return nil
+	case apikeymodelscope.FieldRateLimitPerHour:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRateLimitPerHour(v)
+		return nil
+	case apikeymodelscope.FieldEnabled:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEnabled(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ApiKeyModelScope field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ApiKeyModelScopeMutation) AddedFields() []string {
+	var fields []string
+	if m.addrate_limit_per_min != nil {
+		fields = append(fields, apikeymodelscope.FieldRateLimitPerMin)
+	}
+	if m.addrate_limit_per_hour != nil {
+		fields = append(fields, apikeymodelscope.FieldRateLimitPerHour)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ApiKeyModelScopeMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case apikeymodelscope.FieldRateLimitPerMin:
+		return m.AddedRateLimitPerMin()
+	case apikeymodelscope.FieldRateLimitPerHour:
+		return m.AddedRateLimitPerHour()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiKeyModelScopeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case apikeymodelscope.FieldRateLimitPerMin:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRateLimitPerMin(v)
+		return nil
+	case apikeymodelscope.FieldRateLimitPerHour:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRateLimitPerHour(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ApiKeyModelScope numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ApiKeyModelScopeMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(apikeymodelscope.FieldModelID) {
+		fields = append(fields, apikeymodelscope.FieldModelID)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ApiKeyModelScopeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ApiKeyModelScopeMutation) ClearField(name string) error {
+	switch name {
+	case apikeymodelscope.FieldModelID:
+		m.ClearModelID()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiKeyModelScope nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ApiKeyModelScopeMutation) ResetField(name string) error {
+	switch name {
+	case apikeymodelscope.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case apikeymodelscope.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case apikeymodelscope.FieldAPIKeyID:
+		m.ResetAPIKeyID()
+		return nil
+	case apikeymodelscope.FieldModelID:
+		m.ResetModelID()
+		return nil
+	case apikeymodelscope.FieldRateLimitPerMin:
+		m.ResetRateLimitPerMin()
+		return nil
+	case apikeymodelscope.FieldRateLimitPerHour:
+		m.ResetRateLimitPerHour()
+		return nil
+	case apikeymodelscope.FieldEnabled:
+		m.ResetEnabled()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiKeyModelScope field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ApiKeyModelScopeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.api_key != nil {
+		edges = append(edges, apikeymodelscope.EdgeAPIKey)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ApiKeyModelScopeMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case apikeymodelscope.EdgeAPIKey:
+		if id := m.api_key; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ApiKeyModelScopeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ApiKeyModelScopeMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ApiKeyModelScopeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedapi_key {
+		edges = append(edges, apikeymodelscope.EdgeAPIKey)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ApiKeyModelScopeMutation) EdgeCleared(name string) bool {
+	switch name {
+	case apikeymodelscope.EdgeAPIKey:
+		return m.clearedapi_key
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ApiKeyModelScopeMutation) ClearEdge(name string) error {
+	switch name {
+	case apikeymodelscope.EdgeAPIKey:
+		m.ClearAPIKey()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiKeyModelScope unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ApiKeyModelScopeMutation) ResetEdge(name string) error {
+	switch name {
+	case apikeymodelscope.EdgeAPIKey:
+		m.ResetAPIKey()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiKeyModelScope edge %s", name)
 }
 
 // AuthIdentityMutation represents an operation that mutates the AuthIdentity nodes in the graph.

@@ -160,6 +160,16 @@ func Window7dStart(v time.Time) predicate.APIKey {
 	return predicate.APIKey(sql.FieldEQ(FieldWindow7dStart, v))
 }
 
+// ModelScopeMode applies equality check predicate on the "model_scope_mode" field. It's identical to ModelScopeModeEQ.
+func ModelScopeMode(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldModelScopeMode, v))
+}
+
+// EnabledModelsCount applies equality check predicate on the "enabled_models_count" field. It's identical to EnabledModelsCountEQ.
+func EnabledModelsCount(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldEnabledModelsCount, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.APIKey {
 	return predicate.APIKey(sql.FieldEQ(FieldCreatedAt, v))
@@ -1125,6 +1135,111 @@ func Window7dStartNotNil() predicate.APIKey {
 	return predicate.APIKey(sql.FieldNotNull(FieldWindow7dStart))
 }
 
+// ModelScopeModeEQ applies the EQ predicate on the "model_scope_mode" field.
+func ModelScopeModeEQ(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeNEQ applies the NEQ predicate on the "model_scope_mode" field.
+func ModelScopeModeNEQ(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeIn applies the In predicate on the "model_scope_mode" field.
+func ModelScopeModeIn(vs ...string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldModelScopeMode, vs...))
+}
+
+// ModelScopeModeNotIn applies the NotIn predicate on the "model_scope_mode" field.
+func ModelScopeModeNotIn(vs ...string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldModelScopeMode, vs...))
+}
+
+// ModelScopeModeGT applies the GT predicate on the "model_scope_mode" field.
+func ModelScopeModeGT(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeGTE applies the GTE predicate on the "model_scope_mode" field.
+func ModelScopeModeGTE(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeLT applies the LT predicate on the "model_scope_mode" field.
+func ModelScopeModeLT(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeLTE applies the LTE predicate on the "model_scope_mode" field.
+func ModelScopeModeLTE(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeContains applies the Contains predicate on the "model_scope_mode" field.
+func ModelScopeModeContains(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldContains(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeHasPrefix applies the HasPrefix predicate on the "model_scope_mode" field.
+func ModelScopeModeHasPrefix(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldHasPrefix(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeHasSuffix applies the HasSuffix predicate on the "model_scope_mode" field.
+func ModelScopeModeHasSuffix(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldHasSuffix(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeEqualFold applies the EqualFold predicate on the "model_scope_mode" field.
+func ModelScopeModeEqualFold(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEqualFold(FieldModelScopeMode, v))
+}
+
+// ModelScopeModeContainsFold applies the ContainsFold predicate on the "model_scope_mode" field.
+func ModelScopeModeContainsFold(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldContainsFold(FieldModelScopeMode, v))
+}
+
+// EnabledModelsCountEQ applies the EQ predicate on the "enabled_models_count" field.
+func EnabledModelsCountEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldEnabledModelsCount, v))
+}
+
+// EnabledModelsCountNEQ applies the NEQ predicate on the "enabled_models_count" field.
+func EnabledModelsCountNEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldEnabledModelsCount, v))
+}
+
+// EnabledModelsCountIn applies the In predicate on the "enabled_models_count" field.
+func EnabledModelsCountIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldEnabledModelsCount, vs...))
+}
+
+// EnabledModelsCountNotIn applies the NotIn predicate on the "enabled_models_count" field.
+func EnabledModelsCountNotIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldEnabledModelsCount, vs...))
+}
+
+// EnabledModelsCountGT applies the GT predicate on the "enabled_models_count" field.
+func EnabledModelsCountGT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldEnabledModelsCount, v))
+}
+
+// EnabledModelsCountGTE applies the GTE predicate on the "enabled_models_count" field.
+func EnabledModelsCountGTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldEnabledModelsCount, v))
+}
+
+// EnabledModelsCountLT applies the LT predicate on the "enabled_models_count" field.
+func EnabledModelsCountLT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldEnabledModelsCount, v))
+}
+
+// EnabledModelsCountLTE applies the LTE predicate on the "enabled_models_count" field.
+func EnabledModelsCountLTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldEnabledModelsCount, v))
+}
+
 // HasUser applies the HasEdge predicate on the "user" edge.
 func HasUser() predicate.APIKey {
 	return predicate.APIKey(func(s *sql.Selector) {
@@ -1186,6 +1301,29 @@ func HasUsageLogs() predicate.APIKey {
 func HasUsageLogsWith(preds ...predicate.UsageLog) predicate.APIKey {
 	return predicate.APIKey(func(s *sql.Selector) {
 		step := newUsageLogsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasModelScopes applies the HasEdge predicate on the "model_scopes" edge.
+func HasModelScopes() predicate.APIKey {
+	return predicate.APIKey(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ModelScopesTable, ModelScopesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasModelScopesWith applies the HasEdge predicate on the "model_scopes" edge with a given conditions (other predicates).
+func HasModelScopesWith(preds ...predicate.ApiKeyModelScope) predicate.APIKey {
+	return predicate.APIKey(func(s *sql.Selector) {
+		step := newModelScopesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

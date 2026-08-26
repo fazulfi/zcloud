@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/Wei-Shaw/sub2api/ent/apikey"
+	"github.com/Wei-Shaw/sub2api/ent/apikeymodelscope"
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/predicate"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
@@ -438,6 +439,41 @@ func (_u *APIKeyUpdate) ClearWindow7dStart() *APIKeyUpdate {
 	return _u
 }
 
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (_u *APIKeyUpdate) SetModelScopeMode(v string) *APIKeyUpdate {
+	_u.mutation.SetModelScopeMode(v)
+	return _u
+}
+
+// SetNillableModelScopeMode sets the "model_scope_mode" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableModelScopeMode(v *string) *APIKeyUpdate {
+	if v != nil {
+		_u.SetModelScopeMode(*v)
+	}
+	return _u
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (_u *APIKeyUpdate) SetEnabledModelsCount(v int) *APIKeyUpdate {
+	_u.mutation.ResetEnabledModelsCount()
+	_u.mutation.SetEnabledModelsCount(v)
+	return _u
+}
+
+// SetNillableEnabledModelsCount sets the "enabled_models_count" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableEnabledModelsCount(v *int) *APIKeyUpdate {
+	if v != nil {
+		_u.SetEnabledModelsCount(*v)
+	}
+	return _u
+}
+
+// AddEnabledModelsCount adds value to the "enabled_models_count" field.
+func (_u *APIKeyUpdate) AddEnabledModelsCount(v int) *APIKeyUpdate {
+	_u.mutation.AddEnabledModelsCount(v)
+	return _u
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (_u *APIKeyUpdate) SetUser(v *User) *APIKeyUpdate {
 	return _u.SetUserID(v.ID)
@@ -461,6 +497,21 @@ func (_u *APIKeyUpdate) AddUsageLogs(v ...*UsageLog) *APIKeyUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.AddUsageLogIDs(ids...)
+}
+
+// AddModelScopeIDs adds the "model_scopes" edge to the ApiKeyModelScope entity by IDs.
+func (_u *APIKeyUpdate) AddModelScopeIDs(ids ...string) *APIKeyUpdate {
+	_u.mutation.AddModelScopeIDs(ids...)
+	return _u
+}
+
+// AddModelScopes adds the "model_scopes" edges to the ApiKeyModelScope entity.
+func (_u *APIKeyUpdate) AddModelScopes(v ...*ApiKeyModelScope) *APIKeyUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddModelScopeIDs(ids...)
 }
 
 // Mutation returns the APIKeyMutation object of the builder.
@@ -499,6 +550,27 @@ func (_u *APIKeyUpdate) RemoveUsageLogs(v ...*UsageLog) *APIKeyUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveUsageLogIDs(ids...)
+}
+
+// ClearModelScopes clears all "model_scopes" edges to the ApiKeyModelScope entity.
+func (_u *APIKeyUpdate) ClearModelScopes() *APIKeyUpdate {
+	_u.mutation.ClearModelScopes()
+	return _u
+}
+
+// RemoveModelScopeIDs removes the "model_scopes" edge to ApiKeyModelScope entities by IDs.
+func (_u *APIKeyUpdate) RemoveModelScopeIDs(ids ...string) *APIKeyUpdate {
+	_u.mutation.RemoveModelScopeIDs(ids...)
+	return _u
+}
+
+// RemoveModelScopes removes "model_scopes" edges to ApiKeyModelScope entities.
+func (_u *APIKeyUpdate) RemoveModelScopes(v ...*ApiKeyModelScope) *APIKeyUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveModelScopeIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -558,6 +630,11 @@ func (_u *APIKeyUpdate) check() error {
 	if v, ok := _u.mutation.Status(); ok {
 		if err := apikey.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "APIKey.status": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.ModelScopeMode(); ok {
+		if err := apikey.ModelScopeModeValidator(v); err != nil {
+			return &ValidationError{Name: "model_scope_mode", err: fmt.Errorf(`ent: validator failed for field "APIKey.model_scope_mode": %w`, err)}
 		}
 	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
@@ -696,6 +773,15 @@ func (_u *APIKeyUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if _u.mutation.Window7dStartCleared() {
 		_spec.ClearField(apikey.FieldWindow7dStart, field.TypeTime)
 	}
+	if value, ok := _u.mutation.ModelScopeMode(); ok {
+		_spec.SetField(apikey.FieldModelScopeMode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.EnabledModelsCount(); ok {
+		_spec.SetField(apikey.FieldEnabledModelsCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedEnabledModelsCount(); ok {
+		_spec.AddField(apikey.FieldEnabledModelsCount, field.TypeInt, value)
+	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -792,6 +878,51 @@ func (_u *APIKeyUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(usagelog.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ModelScopesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedModelScopesIDs(); len(nodes) > 0 && !_u.mutation.ModelScopesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ModelScopesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1225,6 +1356,41 @@ func (_u *APIKeyUpdateOne) ClearWindow7dStart() *APIKeyUpdateOne {
 	return _u
 }
 
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (_u *APIKeyUpdateOne) SetModelScopeMode(v string) *APIKeyUpdateOne {
+	_u.mutation.SetModelScopeMode(v)
+	return _u
+}
+
+// SetNillableModelScopeMode sets the "model_scope_mode" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableModelScopeMode(v *string) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetModelScopeMode(*v)
+	}
+	return _u
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (_u *APIKeyUpdateOne) SetEnabledModelsCount(v int) *APIKeyUpdateOne {
+	_u.mutation.ResetEnabledModelsCount()
+	_u.mutation.SetEnabledModelsCount(v)
+	return _u
+}
+
+// SetNillableEnabledModelsCount sets the "enabled_models_count" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableEnabledModelsCount(v *int) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetEnabledModelsCount(*v)
+	}
+	return _u
+}
+
+// AddEnabledModelsCount adds value to the "enabled_models_count" field.
+func (_u *APIKeyUpdateOne) AddEnabledModelsCount(v int) *APIKeyUpdateOne {
+	_u.mutation.AddEnabledModelsCount(v)
+	return _u
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (_u *APIKeyUpdateOne) SetUser(v *User) *APIKeyUpdateOne {
 	return _u.SetUserID(v.ID)
@@ -1248,6 +1414,21 @@ func (_u *APIKeyUpdateOne) AddUsageLogs(v ...*UsageLog) *APIKeyUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.AddUsageLogIDs(ids...)
+}
+
+// AddModelScopeIDs adds the "model_scopes" edge to the ApiKeyModelScope entity by IDs.
+func (_u *APIKeyUpdateOne) AddModelScopeIDs(ids ...string) *APIKeyUpdateOne {
+	_u.mutation.AddModelScopeIDs(ids...)
+	return _u
+}
+
+// AddModelScopes adds the "model_scopes" edges to the ApiKeyModelScope entity.
+func (_u *APIKeyUpdateOne) AddModelScopes(v ...*ApiKeyModelScope) *APIKeyUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddModelScopeIDs(ids...)
 }
 
 // Mutation returns the APIKeyMutation object of the builder.
@@ -1286,6 +1467,27 @@ func (_u *APIKeyUpdateOne) RemoveUsageLogs(v ...*UsageLog) *APIKeyUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveUsageLogIDs(ids...)
+}
+
+// ClearModelScopes clears all "model_scopes" edges to the ApiKeyModelScope entity.
+func (_u *APIKeyUpdateOne) ClearModelScopes() *APIKeyUpdateOne {
+	_u.mutation.ClearModelScopes()
+	return _u
+}
+
+// RemoveModelScopeIDs removes the "model_scopes" edge to ApiKeyModelScope entities by IDs.
+func (_u *APIKeyUpdateOne) RemoveModelScopeIDs(ids ...string) *APIKeyUpdateOne {
+	_u.mutation.RemoveModelScopeIDs(ids...)
+	return _u
+}
+
+// RemoveModelScopes removes "model_scopes" edges to ApiKeyModelScope entities.
+func (_u *APIKeyUpdateOne) RemoveModelScopes(v ...*ApiKeyModelScope) *APIKeyUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveModelScopeIDs(ids...)
 }
 
 // Where appends a list predicates to the APIKeyUpdate builder.
@@ -1358,6 +1560,11 @@ func (_u *APIKeyUpdateOne) check() error {
 	if v, ok := _u.mutation.Status(); ok {
 		if err := apikey.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "APIKey.status": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.ModelScopeMode(); ok {
+		if err := apikey.ModelScopeModeValidator(v); err != nil {
+			return &ValidationError{Name: "model_scope_mode", err: fmt.Errorf(`ent: validator failed for field "APIKey.model_scope_mode": %w`, err)}
 		}
 	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
@@ -1513,6 +1720,15 @@ func (_u *APIKeyUpdateOne) sqlSave(ctx context.Context) (_node *APIKey, err erro
 	if _u.mutation.Window7dStartCleared() {
 		_spec.ClearField(apikey.FieldWindow7dStart, field.TypeTime)
 	}
+	if value, ok := _u.mutation.ModelScopeMode(); ok {
+		_spec.SetField(apikey.FieldModelScopeMode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.EnabledModelsCount(); ok {
+		_spec.SetField(apikey.FieldEnabledModelsCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedEnabledModelsCount(); ok {
+		_spec.AddField(apikey.FieldEnabledModelsCount, field.TypeInt, value)
+	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -1609,6 +1825,51 @@ func (_u *APIKeyUpdateOne) sqlSave(ctx context.Context) (_node *APIKey, err erro
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(usagelog.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ModelScopesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedModelScopesIDs(); len(nodes) > 0 && !_u.mutation.ModelScopesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ModelScopesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

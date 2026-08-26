@@ -61,12 +61,18 @@ const (
 	FieldWindow1dStart = "window_1d_start"
 	// FieldWindow7dStart holds the string denoting the window_7d_start field in the database.
 	FieldWindow7dStart = "window_7d_start"
+	// FieldModelScopeMode holds the string denoting the model_scope_mode field in the database.
+	FieldModelScopeMode = "model_scope_mode"
+	// FieldEnabledModelsCount holds the string denoting the enabled_models_count field in the database.
+	FieldEnabledModelsCount = "enabled_models_count"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// EdgeGroup holds the string denoting the group edge name in mutations.
 	EdgeGroup = "group"
 	// EdgeUsageLogs holds the string denoting the usage_logs edge name in mutations.
 	EdgeUsageLogs = "usage_logs"
+	// EdgeModelScopes holds the string denoting the model_scopes edge name in mutations.
+	EdgeModelScopes = "model_scopes"
 	// Table holds the table name of the apikey in the database.
 	Table = "api_keys"
 	// UserTable is the table that holds the user relation/edge.
@@ -90,6 +96,13 @@ const (
 	UsageLogsInverseTable = "usage_logs"
 	// UsageLogsColumn is the table column denoting the usage_logs relation/edge.
 	UsageLogsColumn = "api_key_id"
+	// ModelScopesTable is the table that holds the model_scopes relation/edge.
+	ModelScopesTable = "api_key_model_scopes"
+	// ModelScopesInverseTable is the table name for the ApiKeyModelScope entity.
+	// It exists in this package in order to avoid circular dependency with the "apikeymodelscope" package.
+	ModelScopesInverseTable = "api_key_model_scopes"
+	// ModelScopesColumn is the table column denoting the model_scopes relation/edge.
+	ModelScopesColumn = "api_key_id"
 )
 
 // Columns holds all SQL columns for apikey fields.
@@ -118,6 +131,8 @@ var Columns = []string{
 	FieldWindow5hStart,
 	FieldWindow1dStart,
 	FieldWindow7dStart,
+	FieldModelScopeMode,
+	FieldEnabledModelsCount,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -168,6 +183,12 @@ var (
 	DefaultUsage1d float64
 	// DefaultUsage7d holds the default value on creation for the "usage_7d" field.
 	DefaultUsage7d float64
+	// DefaultModelScopeMode holds the default value on creation for the "model_scope_mode" field.
+	DefaultModelScopeMode string
+	// ModelScopeModeValidator is a validator for the "model_scope_mode" field. It is called by the builders before save.
+	ModelScopeModeValidator func(string) error
+	// DefaultEnabledModelsCount holds the default value on creation for the "enabled_models_count" field.
+	DefaultEnabledModelsCount int
 )
 
 // OrderOption defines the ordering options for the APIKey queries.
@@ -283,6 +304,16 @@ func ByWindow7dStart(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldWindow7dStart, opts...).ToFunc()
 }
 
+// ByModelScopeMode orders the results by the model_scope_mode field.
+func ByModelScopeMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldModelScopeMode, opts...).ToFunc()
+}
+
+// ByEnabledModelsCount orders the results by the enabled_models_count field.
+func ByEnabledModelsCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEnabledModelsCount, opts...).ToFunc()
+}
+
 // ByUserField orders the results by user field.
 func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -310,6 +341,20 @@ func ByUsageLogs(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newUsageLogsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByModelScopesCount orders the results by model_scopes count.
+func ByModelScopesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newModelScopesStep(), opts...)
+	}
+}
+
+// ByModelScopes orders the results by model_scopes terms.
+func ByModelScopes(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newModelScopesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newUserStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -329,5 +374,12 @@ func newUsageLogsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UsageLogsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, UsageLogsTable, UsageLogsColumn),
+	)
+}
+func newModelScopesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ModelScopesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ModelScopesTable, ModelScopesColumn),
 	)
 }

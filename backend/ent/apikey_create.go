@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/Wei-Shaw/sub2api/ent/apikey"
+	"github.com/Wei-Shaw/sub2api/ent/apikeymodelscope"
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
 	"github.com/Wei-Shaw/sub2api/ent/user"
@@ -307,6 +308,34 @@ func (_c *APIKeyCreate) SetNillableWindow7dStart(v *time.Time) *APIKeyCreate {
 	return _c
 }
 
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (_c *APIKeyCreate) SetModelScopeMode(v string) *APIKeyCreate {
+	_c.mutation.SetModelScopeMode(v)
+	return _c
+}
+
+// SetNillableModelScopeMode sets the "model_scope_mode" field if the given value is not nil.
+func (_c *APIKeyCreate) SetNillableModelScopeMode(v *string) *APIKeyCreate {
+	if v != nil {
+		_c.SetModelScopeMode(*v)
+	}
+	return _c
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (_c *APIKeyCreate) SetEnabledModelsCount(v int) *APIKeyCreate {
+	_c.mutation.SetEnabledModelsCount(v)
+	return _c
+}
+
+// SetNillableEnabledModelsCount sets the "enabled_models_count" field if the given value is not nil.
+func (_c *APIKeyCreate) SetNillableEnabledModelsCount(v *int) *APIKeyCreate {
+	if v != nil {
+		_c.SetEnabledModelsCount(*v)
+	}
+	return _c
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (_c *APIKeyCreate) SetUser(v *User) *APIKeyCreate {
 	return _c.SetUserID(v.ID)
@@ -330,6 +359,21 @@ func (_c *APIKeyCreate) AddUsageLogs(v ...*UsageLog) *APIKeyCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddUsageLogIDs(ids...)
+}
+
+// AddModelScopeIDs adds the "model_scopes" edge to the ApiKeyModelScope entity by IDs.
+func (_c *APIKeyCreate) AddModelScopeIDs(ids ...string) *APIKeyCreate {
+	_c.mutation.AddModelScopeIDs(ids...)
+	return _c
+}
+
+// AddModelScopes adds the "model_scopes" edges to the ApiKeyModelScope entity.
+func (_c *APIKeyCreate) AddModelScopes(v ...*ApiKeyModelScope) *APIKeyCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddModelScopeIDs(ids...)
 }
 
 // Mutation returns the APIKeyMutation object of the builder.
@@ -419,6 +463,14 @@ func (_c *APIKeyCreate) defaults() error {
 		v := apikey.DefaultUsage7d
 		_c.mutation.SetUsage7d(v)
 	}
+	if _, ok := _c.mutation.ModelScopeMode(); !ok {
+		v := apikey.DefaultModelScopeMode
+		_c.mutation.SetModelScopeMode(v)
+	}
+	if _, ok := _c.mutation.EnabledModelsCount(); !ok {
+		v := apikey.DefaultEnabledModelsCount
+		_c.mutation.SetEnabledModelsCount(v)
+	}
 	return nil
 }
 
@@ -480,6 +532,17 @@ func (_c *APIKeyCreate) check() error {
 	}
 	if _, ok := _c.mutation.Usage7d(); !ok {
 		return &ValidationError{Name: "usage_7d", err: errors.New(`ent: missing required field "APIKey.usage_7d"`)}
+	}
+	if _, ok := _c.mutation.ModelScopeMode(); !ok {
+		return &ValidationError{Name: "model_scope_mode", err: errors.New(`ent: missing required field "APIKey.model_scope_mode"`)}
+	}
+	if v, ok := _c.mutation.ModelScopeMode(); ok {
+		if err := apikey.ModelScopeModeValidator(v); err != nil {
+			return &ValidationError{Name: "model_scope_mode", err: fmt.Errorf(`ent: validator failed for field "APIKey.model_scope_mode": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.EnabledModelsCount(); !ok {
+		return &ValidationError{Name: "enabled_models_count", err: errors.New(`ent: missing required field "APIKey.enabled_models_count"`)}
 	}
 	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "APIKey.user"`)}
@@ -595,6 +658,14 @@ func (_c *APIKeyCreate) createSpec() (*APIKey, *sqlgraph.CreateSpec) {
 		_spec.SetField(apikey.FieldWindow7dStart, field.TypeTime, value)
 		_node.Window7dStart = &value
 	}
+	if value, ok := _c.mutation.ModelScopeMode(); ok {
+		_spec.SetField(apikey.FieldModelScopeMode, field.TypeString, value)
+		_node.ModelScopeMode = value
+	}
+	if value, ok := _c.mutation.EnabledModelsCount(); ok {
+		_spec.SetField(apikey.FieldEnabledModelsCount, field.TypeInt, value)
+		_node.EnabledModelsCount = value
+	}
 	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -638,6 +709,22 @@ func (_c *APIKeyCreate) createSpec() (*APIKey, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(usagelog.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ModelScopesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   apikey.ModelScopesTable,
+			Columns: []string{apikey.ModelScopesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apikeymodelscope.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1060,6 +1147,36 @@ func (u *APIKeyUpsert) UpdateWindow7dStart() *APIKeyUpsert {
 // ClearWindow7dStart clears the value of the "window_7d_start" field.
 func (u *APIKeyUpsert) ClearWindow7dStart() *APIKeyUpsert {
 	u.SetNull(apikey.FieldWindow7dStart)
+	return u
+}
+
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (u *APIKeyUpsert) SetModelScopeMode(v string) *APIKeyUpsert {
+	u.Set(apikey.FieldModelScopeMode, v)
+	return u
+}
+
+// UpdateModelScopeMode sets the "model_scope_mode" field to the value that was provided on create.
+func (u *APIKeyUpsert) UpdateModelScopeMode() *APIKeyUpsert {
+	u.SetExcluded(apikey.FieldModelScopeMode)
+	return u
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (u *APIKeyUpsert) SetEnabledModelsCount(v int) *APIKeyUpsert {
+	u.Set(apikey.FieldEnabledModelsCount, v)
+	return u
+}
+
+// UpdateEnabledModelsCount sets the "enabled_models_count" field to the value that was provided on create.
+func (u *APIKeyUpsert) UpdateEnabledModelsCount() *APIKeyUpsert {
+	u.SetExcluded(apikey.FieldEnabledModelsCount)
+	return u
+}
+
+// AddEnabledModelsCount adds v to the "enabled_models_count" field.
+func (u *APIKeyUpsert) AddEnabledModelsCount(v int) *APIKeyUpsert {
+	u.Add(apikey.FieldEnabledModelsCount, v)
 	return u
 }
 
@@ -1532,6 +1649,41 @@ func (u *APIKeyUpsertOne) UpdateWindow7dStart() *APIKeyUpsertOne {
 func (u *APIKeyUpsertOne) ClearWindow7dStart() *APIKeyUpsertOne {
 	return u.Update(func(s *APIKeyUpsert) {
 		s.ClearWindow7dStart()
+	})
+}
+
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (u *APIKeyUpsertOne) SetModelScopeMode(v string) *APIKeyUpsertOne {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.SetModelScopeMode(v)
+	})
+}
+
+// UpdateModelScopeMode sets the "model_scope_mode" field to the value that was provided on create.
+func (u *APIKeyUpsertOne) UpdateModelScopeMode() *APIKeyUpsertOne {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.UpdateModelScopeMode()
+	})
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (u *APIKeyUpsertOne) SetEnabledModelsCount(v int) *APIKeyUpsertOne {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.SetEnabledModelsCount(v)
+	})
+}
+
+// AddEnabledModelsCount adds v to the "enabled_models_count" field.
+func (u *APIKeyUpsertOne) AddEnabledModelsCount(v int) *APIKeyUpsertOne {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.AddEnabledModelsCount(v)
+	})
+}
+
+// UpdateEnabledModelsCount sets the "enabled_models_count" field to the value that was provided on create.
+func (u *APIKeyUpsertOne) UpdateEnabledModelsCount() *APIKeyUpsertOne {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.UpdateEnabledModelsCount()
 	})
 }
 
@@ -2170,6 +2322,41 @@ func (u *APIKeyUpsertBulk) UpdateWindow7dStart() *APIKeyUpsertBulk {
 func (u *APIKeyUpsertBulk) ClearWindow7dStart() *APIKeyUpsertBulk {
 	return u.Update(func(s *APIKeyUpsert) {
 		s.ClearWindow7dStart()
+	})
+}
+
+// SetModelScopeMode sets the "model_scope_mode" field.
+func (u *APIKeyUpsertBulk) SetModelScopeMode(v string) *APIKeyUpsertBulk {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.SetModelScopeMode(v)
+	})
+}
+
+// UpdateModelScopeMode sets the "model_scope_mode" field to the value that was provided on create.
+func (u *APIKeyUpsertBulk) UpdateModelScopeMode() *APIKeyUpsertBulk {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.UpdateModelScopeMode()
+	})
+}
+
+// SetEnabledModelsCount sets the "enabled_models_count" field.
+func (u *APIKeyUpsertBulk) SetEnabledModelsCount(v int) *APIKeyUpsertBulk {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.SetEnabledModelsCount(v)
+	})
+}
+
+// AddEnabledModelsCount adds v to the "enabled_models_count" field.
+func (u *APIKeyUpsertBulk) AddEnabledModelsCount(v int) *APIKeyUpsertBulk {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.AddEnabledModelsCount(v)
+	})
+}
+
+// UpdateEnabledModelsCount sets the "enabled_models_count" field to the value that was provided on create.
+func (u *APIKeyUpsertBulk) UpdateEnabledModelsCount() *APIKeyUpsertBulk {
+	return u.Update(func(s *APIKeyUpsert) {
+		s.UpdateEnabledModelsCount()
 	})
 }
 

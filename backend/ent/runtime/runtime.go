@@ -10,6 +10,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/announcement"
 	"github.com/Wei-Shaw/sub2api/ent/announcementread"
 	"github.com/Wei-Shaw/sub2api/ent/apikey"
+	"github.com/Wei-Shaw/sub2api/ent/apikeymodelscope"
 	"github.com/Wei-Shaw/sub2api/ent/authidentity"
 	"github.com/Wei-Shaw/sub2api/ent/authidentitychannel"
 	"github.com/Wei-Shaw/sub2api/ent/batchimageevent"
@@ -150,6 +151,16 @@ func init() {
 	apikeyDescUsage7d := apikeyFields[16].Descriptor()
 	// apikey.DefaultUsage7d holds the default value on creation for the usage_7d field.
 	apikey.DefaultUsage7d = apikeyDescUsage7d.Default.(float64)
+	// apikeyDescModelScopeMode is the schema descriptor for model_scope_mode field.
+	apikeyDescModelScopeMode := apikeyFields[20].Descriptor()
+	// apikey.DefaultModelScopeMode holds the default value on creation for the model_scope_mode field.
+	apikey.DefaultModelScopeMode = apikeyDescModelScopeMode.Default.(string)
+	// apikey.ModelScopeModeValidator is a validator for the "model_scope_mode" field. It is called by the builders before save.
+	apikey.ModelScopeModeValidator = apikeyDescModelScopeMode.Validators[0].(func(string) error)
+	// apikeyDescEnabledModelsCount is the schema descriptor for enabled_models_count field.
+	apikeyDescEnabledModelsCount := apikeyFields[21].Descriptor()
+	// apikey.DefaultEnabledModelsCount holds the default value on creation for the enabled_models_count field.
+	apikey.DefaultEnabledModelsCount = apikeyDescEnabledModelsCount.Default.(int)
 	accountMixin := schema.Account{}.Mixin()
 	accountMixinHooks1 := accountMixin[1].Hooks()
 	account.Hooks[0] = accountMixinHooks1[0]
@@ -327,6 +338,37 @@ func init() {
 	announcementreadDescCreatedAt := announcementreadFields[3].Descriptor()
 	// announcementread.DefaultCreatedAt holds the default value on creation for the created_at field.
 	announcementread.DefaultCreatedAt = announcementreadDescCreatedAt.Default.(func() time.Time)
+	apikeymodelscopeMixin := schema.ApiKeyModelScope{}.Mixin()
+	apikeymodelscopeMixinFields0 := apikeymodelscopeMixin[0].Fields()
+	_ = apikeymodelscopeMixinFields0
+	apikeymodelscopeFields := schema.ApiKeyModelScope{}.Fields()
+	_ = apikeymodelscopeFields
+	// apikeymodelscopeDescCreatedAt is the schema descriptor for created_at field.
+	apikeymodelscopeDescCreatedAt := apikeymodelscopeMixinFields0[0].Descriptor()
+	// apikeymodelscope.DefaultCreatedAt holds the default value on creation for the created_at field.
+	apikeymodelscope.DefaultCreatedAt = apikeymodelscopeDescCreatedAt.Default.(func() time.Time)
+	// apikeymodelscopeDescUpdatedAt is the schema descriptor for updated_at field.
+	apikeymodelscopeDescUpdatedAt := apikeymodelscopeMixinFields0[1].Descriptor()
+	// apikeymodelscope.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	apikeymodelscope.DefaultUpdatedAt = apikeymodelscopeDescUpdatedAt.Default.(func() time.Time)
+	// apikeymodelscope.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	apikeymodelscope.UpdateDefaultUpdatedAt = apikeymodelscopeDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// apikeymodelscopeDescRateLimitPerMin is the schema descriptor for rate_limit_per_min field.
+	apikeymodelscopeDescRateLimitPerMin := apikeymodelscopeFields[3].Descriptor()
+	// apikeymodelscope.DefaultRateLimitPerMin holds the default value on creation for the rate_limit_per_min field.
+	apikeymodelscope.DefaultRateLimitPerMin = apikeymodelscopeDescRateLimitPerMin.Default.(int)
+	// apikeymodelscopeDescRateLimitPerHour is the schema descriptor for rate_limit_per_hour field.
+	apikeymodelscopeDescRateLimitPerHour := apikeymodelscopeFields[4].Descriptor()
+	// apikeymodelscope.DefaultRateLimitPerHour holds the default value on creation for the rate_limit_per_hour field.
+	apikeymodelscope.DefaultRateLimitPerHour = apikeymodelscopeDescRateLimitPerHour.Default.(int)
+	// apikeymodelscopeDescEnabled is the schema descriptor for enabled field.
+	apikeymodelscopeDescEnabled := apikeymodelscopeFields[5].Descriptor()
+	// apikeymodelscope.DefaultEnabled holds the default value on creation for the enabled field.
+	apikeymodelscope.DefaultEnabled = apikeymodelscopeDescEnabled.Default.(bool)
+	// apikeymodelscopeDescID is the schema descriptor for id field.
+	apikeymodelscopeDescID := apikeymodelscopeFields[0].Descriptor()
+	// apikeymodelscope.DefaultID holds the default value on creation for the id field.
+	apikeymodelscope.DefaultID = apikeymodelscopeDescID.Default.(func() string)
 	authidentityMixin := schema.AuthIdentity{}.Mixin()
 	authidentityMixinFields0 := authidentityMixin[0].Fields()
 	_ = authidentityMixinFields0

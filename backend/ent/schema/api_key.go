@@ -115,6 +115,12 @@ func (APIKey) Fields() []ent.Field {
 			Optional().
 			Nillable().
 			Comment("Start time of the current 7d rate limit window"),
+
+		field.String("model_scope_mode").
+			MaxLen(20).
+			Default("all"),
+		field.Int("enabled_models_count").
+			Default(0),
 	}
 }
 
@@ -130,6 +136,7 @@ func (APIKey) Edges() []ent.Edge {
 			Field("group_id").
 			Unique(),
 		edge.To("usage_logs", UsageLog.Type),
+		edge.To("model_scopes", ApiKeyModelScope.Type),
 	}
 }
 
