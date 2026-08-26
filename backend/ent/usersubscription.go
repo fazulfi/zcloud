@@ -29,6 +29,16 @@ type UserSubscription struct {
 	UserID int64 `json:"user_id,omitempty"`
 	// GroupID holds the value of the "group_id" field.
 	GroupID int64 `json:"group_id,omitempty"`
+	// ModelID holds the value of the "model_id" field.
+	ModelID *string `json:"model_id,omitempty"`
+	// PurchasedTokens holds the value of the "purchased_tokens" field.
+	PurchasedTokens *int64 `json:"purchased_tokens,omitempty"`
+	// TokenExpiryAt holds the value of the "token_expiry_at" field.
+	TokenExpiryAt *time.Time `json:"token_expiry_at,omitempty"`
+	// CreditLedgerID holds the value of the "credit_ledger_id" field.
+	CreditLedgerID *string `json:"credit_ledger_id,omitempty"`
+	// PlanNameSnapshot holds the value of the "plan_name_snapshot" field.
+	PlanNameSnapshot *string `json:"plan_name_snapshot,omitempty"`
 	// StartsAt holds the value of the "starts_at" field.
 	StartsAt time.Time `json:"starts_at,omitempty"`
 	// ExpiresAt holds the value of the "expires_at" field.
@@ -123,11 +133,11 @@ func (*UserSubscription) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case usersubscription.FieldDailyUsageUsd, usersubscription.FieldWeeklyUsageUsd, usersubscription.FieldMonthlyUsageUsd:
 			values[i] = new(sql.NullFloat64)
-		case usersubscription.FieldID, usersubscription.FieldUserID, usersubscription.FieldGroupID, usersubscription.FieldAssignedBy:
+		case usersubscription.FieldID, usersubscription.FieldUserID, usersubscription.FieldGroupID, usersubscription.FieldPurchasedTokens, usersubscription.FieldAssignedBy:
 			values[i] = new(sql.NullInt64)
-		case usersubscription.FieldStatus, usersubscription.FieldNotes:
+		case usersubscription.FieldModelID, usersubscription.FieldCreditLedgerID, usersubscription.FieldPlanNameSnapshot, usersubscription.FieldStatus, usersubscription.FieldNotes:
 			values[i] = new(sql.NullString)
-		case usersubscription.FieldCreatedAt, usersubscription.FieldUpdatedAt, usersubscription.FieldDeletedAt, usersubscription.FieldStartsAt, usersubscription.FieldExpiresAt, usersubscription.FieldDailyWindowStart, usersubscription.FieldWeeklyWindowStart, usersubscription.FieldMonthlyWindowStart, usersubscription.FieldAssignedAt:
+		case usersubscription.FieldCreatedAt, usersubscription.FieldUpdatedAt, usersubscription.FieldDeletedAt, usersubscription.FieldTokenExpiryAt, usersubscription.FieldStartsAt, usersubscription.FieldExpiresAt, usersubscription.FieldDailyWindowStart, usersubscription.FieldWeeklyWindowStart, usersubscription.FieldMonthlyWindowStart, usersubscription.FieldAssignedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -180,6 +190,41 @@ func (_m *UserSubscription) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field group_id", values[i])
 			} else if value.Valid {
 				_m.GroupID = value.Int64
+			}
+		case usersubscription.FieldModelID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field model_id", values[i])
+			} else if value.Valid {
+				_m.ModelID = new(string)
+				*_m.ModelID = value.String
+			}
+		case usersubscription.FieldPurchasedTokens:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field purchased_tokens", values[i])
+			} else if value.Valid {
+				_m.PurchasedTokens = new(int64)
+				*_m.PurchasedTokens = value.Int64
+			}
+		case usersubscription.FieldTokenExpiryAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field token_expiry_at", values[i])
+			} else if value.Valid {
+				_m.TokenExpiryAt = new(time.Time)
+				*_m.TokenExpiryAt = value.Time
+			}
+		case usersubscription.FieldCreditLedgerID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field credit_ledger_id", values[i])
+			} else if value.Valid {
+				_m.CreditLedgerID = new(string)
+				*_m.CreditLedgerID = value.String
+			}
+		case usersubscription.FieldPlanNameSnapshot:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field plan_name_snapshot", values[i])
+			} else if value.Valid {
+				_m.PlanNameSnapshot = new(string)
+				*_m.PlanNameSnapshot = value.String
 			}
 		case usersubscription.FieldStartsAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -330,6 +375,31 @@ func (_m *UserSubscription) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("group_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.GroupID))
+	builder.WriteString(", ")
+	if v := _m.ModelID; v != nil {
+		builder.WriteString("model_id=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.PurchasedTokens; v != nil {
+		builder.WriteString("purchased_tokens=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.TokenExpiryAt; v != nil {
+		builder.WriteString("token_expiry_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.CreditLedgerID; v != nil {
+		builder.WriteString("credit_ledger_id=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.PlanNameSnapshot; v != nil {
+		builder.WriteString("plan_name_snapshot=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("starts_at=")
 	builder.WriteString(_m.StartsAt.Format(time.ANSIC))

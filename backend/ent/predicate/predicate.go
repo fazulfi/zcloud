@@ -63,6 +63,9 @@ type IdempotencyRecord func(*sql.Selector)
 // IdentityAdoptionDecision is the predicate function for identityadoptiondecision builders.
 type IdentityAdoptionDecision func(*sql.Selector)
 
+// ModelBalance is the predicate function for modelbalance builders.
+type ModelBalance func(*sql.Selector)
+
 // ModelCatalog is the predicate function for modelcatalog builders.
 type ModelCatalog func(*sql.Selector)
 
