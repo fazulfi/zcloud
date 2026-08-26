@@ -63,6 +63,12 @@ type IdempotencyRecord func(*sql.Selector)
 // IdentityAdoptionDecision is the predicate function for identityadoptiondecision builders.
 type IdentityAdoptionDecision func(*sql.Selector)
 
+// ModelCatalog is the predicate function for modelcatalog builders.
+type ModelCatalog func(*sql.Selector)
+
+// ModelPricing is the predicate function for modelpricing builders.
+type ModelPricing func(*sql.Selector)
+
 // PaymentAuditLog is the predicate function for paymentauditlog builders.
 type PaymentAuditLog func(*sql.Selector)
 
@@ -95,6 +101,9 @@ type Setting func(*sql.Selector)
 
 // SubscriptionPlan is the predicate function for subscriptionplan builders.
 type SubscriptionPlan func(*sql.Selector)
+
+// SupplierPricing is the predicate function for supplierpricing builders.
+type SupplierPricing func(*sql.Selector)
 
 // TLSFingerprintProfile is the predicate function for tlsfingerprintprofile builders.
 type TLSFingerprintProfile func(*sql.Selector)

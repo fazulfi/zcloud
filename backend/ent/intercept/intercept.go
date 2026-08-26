@@ -27,6 +27,8 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/idempotencyrecord"
 	"github.com/Wei-Shaw/sub2api/ent/identityadoptiondecision"
+	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
+	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/paymentauditlog"
 	"github.com/Wei-Shaw/sub2api/ent/paymentorder"
 	"github.com/Wei-Shaw/sub2api/ent/paymentproviderinstance"
@@ -39,6 +41,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
 	"github.com/Wei-Shaw/sub2api/ent/setting"
 	"github.com/Wei-Shaw/sub2api/ent/subscriptionplan"
+	"github.com/Wei-Shaw/sub2api/ent/supplierpricing"
 	"github.com/Wei-Shaw/sub2api/ent/tlsfingerprintprofile"
 	"github.com/Wei-Shaw/sub2api/ent/usagecleanuptask"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
@@ -619,6 +622,60 @@ func (f TraverseIdentityAdoptionDecision) Traverse(ctx context.Context, q ent.Qu
 	return fmt.Errorf("unexpected query type %T. expect *ent.IdentityAdoptionDecisionQuery", q)
 }
 
+// The ModelCatalogFunc type is an adapter to allow the use of ordinary function as a Querier.
+type ModelCatalogFunc func(context.Context, *ent.ModelCatalogQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f ModelCatalogFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.ModelCatalogQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.ModelCatalogQuery", q)
+}
+
+// The TraverseModelCatalog type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseModelCatalog func(context.Context, *ent.ModelCatalogQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseModelCatalog) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseModelCatalog) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ModelCatalogQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.ModelCatalogQuery", q)
+}
+
+// The ModelPricingFunc type is an adapter to allow the use of ordinary function as a Querier.
+type ModelPricingFunc func(context.Context, *ent.ModelPricingQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f ModelPricingFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.ModelPricingQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.ModelPricingQuery", q)
+}
+
+// The TraverseModelPricing type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseModelPricing func(context.Context, *ent.ModelPricingQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseModelPricing) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseModelPricing) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ModelPricingQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.ModelPricingQuery", q)
+}
+
 // The PaymentAuditLogFunc type is an adapter to allow the use of ordinary function as a Querier.
 type PaymentAuditLogFunc func(context.Context, *ent.PaymentAuditLogQuery) (ent.Value, error)
 
@@ -916,6 +973,33 @@ func (f TraverseSubscriptionPlan) Traverse(ctx context.Context, q ent.Query) err
 	return fmt.Errorf("unexpected query type %T. expect *ent.SubscriptionPlanQuery", q)
 }
 
+// The SupplierPricingFunc type is an adapter to allow the use of ordinary function as a Querier.
+type SupplierPricingFunc func(context.Context, *ent.SupplierPricingQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f SupplierPricingFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.SupplierPricingQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.SupplierPricingQuery", q)
+}
+
+// The TraverseSupplierPricing type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseSupplierPricing func(context.Context, *ent.SupplierPricingQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseSupplierPricing) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseSupplierPricing) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.SupplierPricingQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.SupplierPricingQuery", q)
+}
+
 // The TLSFingerprintProfileFunc type is an adapter to allow the use of ordinary function as a Querier.
 type TLSFingerprintProfileFunc func(context.Context, *ent.TLSFingerprintProfileQuery) (ent.Value, error)
 
@@ -1200,6 +1284,10 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.IdempotencyRecordQuery, predicate.IdempotencyRecord, idempotencyrecord.OrderOption]{typ: ent.TypeIdempotencyRecord, tq: q}, nil
 	case *ent.IdentityAdoptionDecisionQuery:
 		return &query[*ent.IdentityAdoptionDecisionQuery, predicate.IdentityAdoptionDecision, identityadoptiondecision.OrderOption]{typ: ent.TypeIdentityAdoptionDecision, tq: q}, nil
+	case *ent.ModelCatalogQuery:
+		return &query[*ent.ModelCatalogQuery, predicate.ModelCatalog, modelcatalog.OrderOption]{typ: ent.TypeModelCatalog, tq: q}, nil
+	case *ent.ModelPricingQuery:
+		return &query[*ent.ModelPricingQuery, predicate.ModelPricing, modelpricing.OrderOption]{typ: ent.TypeModelPricing, tq: q}, nil
 	case *ent.PaymentAuditLogQuery:
 		return &query[*ent.PaymentAuditLogQuery, predicate.PaymentAuditLog, paymentauditlog.OrderOption]{typ: ent.TypePaymentAuditLog, tq: q}, nil
 	case *ent.PaymentOrderQuery:
@@ -1222,6 +1310,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.SettingQuery, predicate.Setting, setting.OrderOption]{typ: ent.TypeSetting, tq: q}, nil
 	case *ent.SubscriptionPlanQuery:
 		return &query[*ent.SubscriptionPlanQuery, predicate.SubscriptionPlan, subscriptionplan.OrderOption]{typ: ent.TypeSubscriptionPlan, tq: q}, nil
+	case *ent.SupplierPricingQuery:
+		return &query[*ent.SupplierPricingQuery, predicate.SupplierPricing, supplierpricing.OrderOption]{typ: ent.TypeSupplierPricing, tq: q}, nil
 	case *ent.TLSFingerprintProfileQuery:
 		return &query[*ent.TLSFingerprintProfileQuery, predicate.TLSFingerprintProfile, tlsfingerprintprofile.OrderOption]{typ: ent.TypeTLSFingerprintProfile, tq: q}, nil
 	case *ent.UsageCleanupTaskQuery:

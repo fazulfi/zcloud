@@ -31,6 +31,8 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/group"
 	"github.com/Wei-Shaw/sub2api/ent/idempotencyrecord"
 	"github.com/Wei-Shaw/sub2api/ent/identityadoptiondecision"
+	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
+	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/paymentauditlog"
 	"github.com/Wei-Shaw/sub2api/ent/paymentorder"
 	"github.com/Wei-Shaw/sub2api/ent/paymentproviderinstance"
@@ -42,6 +44,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
 	"github.com/Wei-Shaw/sub2api/ent/setting"
 	"github.com/Wei-Shaw/sub2api/ent/subscriptionplan"
+	"github.com/Wei-Shaw/sub2api/ent/supplierpricing"
 	"github.com/Wei-Shaw/sub2api/ent/tlsfingerprintprofile"
 	"github.com/Wei-Shaw/sub2api/ent/usagecleanuptask"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
@@ -130,6 +133,8 @@ func checkColumn(t, c string) error {
 			group.Table:                         group.ValidColumn,
 			idempotencyrecord.Table:             idempotencyrecord.ValidColumn,
 			identityadoptiondecision.Table:      identityadoptiondecision.ValidColumn,
+			modelcatalog.Table:                  modelcatalog.ValidColumn,
+			modelpricing.Table:                  modelpricing.ValidColumn,
 			paymentauditlog.Table:               paymentauditlog.ValidColumn,
 			paymentorder.Table:                  paymentorder.ValidColumn,
 			paymentproviderinstance.Table:       paymentproviderinstance.ValidColumn,
@@ -141,6 +146,7 @@ func checkColumn(t, c string) error {
 			securitysecret.Table:                securitysecret.ValidColumn,
 			setting.Table:                       setting.ValidColumn,
 			subscriptionplan.Table:              subscriptionplan.ValidColumn,
+			supplierpricing.Table:               supplierpricing.ValidColumn,
 			tlsfingerprintprofile.Table:         tlsfingerprintprofile.ValidColumn,
 			usagecleanuptask.Table:              usagecleanuptask.ValidColumn,
 			usagelog.Table:                      usagelog.ValidColumn,
