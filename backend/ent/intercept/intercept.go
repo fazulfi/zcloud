@@ -35,6 +35,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/promocode"
 	"github.com/Wei-Shaw/sub2api/ent/promocodeusage"
 	"github.com/Wei-Shaw/sub2api/ent/proxy"
+	"github.com/Wei-Shaw/sub2api/ent/qrispayment"
 	"github.com/Wei-Shaw/sub2api/ent/redeemcode"
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
 	"github.com/Wei-Shaw/sub2api/ent/setting"
@@ -808,6 +809,33 @@ func (f TraverseProxy) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.ProxyQuery", q)
 }
 
+// The QrisPaymentFunc type is an adapter to allow the use of ordinary function as a Querier.
+type QrisPaymentFunc func(context.Context, *ent.QrisPaymentQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f QrisPaymentFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.QrisPaymentQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.QrisPaymentQuery", q)
+}
+
+// The TraverseQrisPayment type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseQrisPayment func(context.Context, *ent.QrisPaymentQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseQrisPayment) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseQrisPayment) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.QrisPaymentQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.QrisPaymentQuery", q)
+}
+
 // The RedeemCodeFunc type is an adapter to allow the use of ordinary function as a Querier.
 type RedeemCodeFunc func(context.Context, *ent.RedeemCodeQuery) (ent.Value, error)
 
@@ -1214,6 +1242,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.PromoCodeUsageQuery, predicate.PromoCodeUsage, promocodeusage.OrderOption]{typ: ent.TypePromoCodeUsage, tq: q}, nil
 	case *ent.ProxyQuery:
 		return &query[*ent.ProxyQuery, predicate.Proxy, proxy.OrderOption]{typ: ent.TypeProxy, tq: q}, nil
+	case *ent.QrisPaymentQuery:
+		return &query[*ent.QrisPaymentQuery, predicate.QrisPayment, qrispayment.OrderOption]{typ: ent.TypeQrisPayment, tq: q}, nil
 	case *ent.RedeemCodeQuery:
 		return &query[*ent.RedeemCodeQuery, predicate.RedeemCode, redeemcode.OrderOption]{typ: ent.TypeRedeemCode, tq: q}, nil
 	case *ent.SecuritySecretQuery:

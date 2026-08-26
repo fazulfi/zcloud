@@ -31,6 +31,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/promocode"
 	"github.com/Wei-Shaw/sub2api/ent/promocodeusage"
 	"github.com/Wei-Shaw/sub2api/ent/proxy"
+	"github.com/Wei-Shaw/sub2api/ent/qrispayment"
 	"github.com/Wei-Shaw/sub2api/ent/redeemcode"
 	"github.com/Wei-Shaw/sub2api/ent/schema"
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
@@ -1355,20 +1356,52 @@ func init() {
 	paymentorderDescRefundRequestedBy := paymentorderFields[28].Descriptor()
 	// paymentorder.RefundRequestedByValidator is a validator for the "refund_requested_by" field. It is called by the builders before save.
 	paymentorder.RefundRequestedByValidator = paymentorderDescRefundRequestedBy.Validators[0].(func(string) error)
+	// paymentorderDescPaymentMethod is the schema descriptor for payment_method field.
+	paymentorderDescPaymentMethod := paymentorderFields[34].Descriptor()
+	// paymentorder.DefaultPaymentMethod holds the default value on creation for the payment_method field.
+	paymentorder.DefaultPaymentMethod = paymentorderDescPaymentMethod.Default.(string)
+	// paymentorder.PaymentMethodValidator is a validator for the "payment_method" field. It is called by the builders before save.
+	paymentorder.PaymentMethodValidator = paymentorderDescPaymentMethod.Validators[0].(func(string) error)
+	// paymentorderDescQrisPaymentRef is the schema descriptor for qris_payment_ref field.
+	paymentorderDescQrisPaymentRef := paymentorderFields[36].Descriptor()
+	// paymentorder.QrisPaymentRefValidator is a validator for the "qris_payment_ref" field. It is called by the builders before save.
+	paymentorder.QrisPaymentRefValidator = paymentorderDescQrisPaymentRef.Validators[0].(func(string) error)
+	// paymentorderDescQrisStatus is the schema descriptor for qris_status field.
+	paymentorderDescQrisStatus := paymentorderFields[38].Descriptor()
+	// paymentorder.DefaultQrisStatus holds the default value on creation for the qris_status field.
+	paymentorder.DefaultQrisStatus = paymentorderDescQrisStatus.Default.(string)
+	// paymentorder.QrisStatusValidator is a validator for the "qris_status" field. It is called by the builders before save.
+	paymentorder.QrisStatusValidator = paymentorderDescQrisStatus.Validators[0].(func(string) error)
+	// paymentorderDescIdempotencyKey is the schema descriptor for idempotency_key field.
+	paymentorderDescIdempotencyKey := paymentorderFields[41].Descriptor()
+	// paymentorder.IdempotencyKeyValidator is a validator for the "idempotency_key" field. It is called by the builders before save.
+	paymentorder.IdempotencyKeyValidator = paymentorderDescIdempotencyKey.Validators[0].(func(string) error)
+	// paymentorderDescAsset is the schema descriptor for asset field.
+	paymentorderDescAsset := paymentorderFields[42].Descriptor()
+	// paymentorder.DefaultAsset holds the default value on creation for the asset field.
+	paymentorder.DefaultAsset = paymentorderDescAsset.Default.(string)
+	// paymentorder.AssetValidator is a validator for the "asset" field. It is called by the builders before save.
+	paymentorder.AssetValidator = paymentorderDescAsset.Validators[0].(func(string) error)
+	// paymentorderDescNetwork is the schema descriptor for network field.
+	paymentorderDescNetwork := paymentorderFields[43].Descriptor()
+	// paymentorder.DefaultNetwork holds the default value on creation for the network field.
+	paymentorder.DefaultNetwork = paymentorderDescNetwork.Default.(string)
+	// paymentorder.NetworkValidator is a validator for the "network" field. It is called by the builders before save.
+	paymentorder.NetworkValidator = paymentorderDescNetwork.Validators[0].(func(string) error)
 	// paymentorderDescClientIP is the schema descriptor for client_ip field.
-	paymentorderDescClientIP := paymentorderFields[34].Descriptor()
+	paymentorderDescClientIP := paymentorderFields[44].Descriptor()
 	// paymentorder.ClientIPValidator is a validator for the "client_ip" field. It is called by the builders before save.
 	paymentorder.ClientIPValidator = paymentorderDescClientIP.Validators[0].(func(string) error)
 	// paymentorderDescSrcHost is the schema descriptor for src_host field.
-	paymentorderDescSrcHost := paymentorderFields[35].Descriptor()
+	paymentorderDescSrcHost := paymentorderFields[45].Descriptor()
 	// paymentorder.SrcHostValidator is a validator for the "src_host" field. It is called by the builders before save.
 	paymentorder.SrcHostValidator = paymentorderDescSrcHost.Validators[0].(func(string) error)
 	// paymentorderDescCreatedAt is the schema descriptor for created_at field.
-	paymentorderDescCreatedAt := paymentorderFields[37].Descriptor()
+	paymentorderDescCreatedAt := paymentorderFields[47].Descriptor()
 	// paymentorder.DefaultCreatedAt holds the default value on creation for the created_at field.
 	paymentorder.DefaultCreatedAt = paymentorderDescCreatedAt.Default.(func() time.Time)
 	// paymentorderDescUpdatedAt is the schema descriptor for updated_at field.
-	paymentorderDescUpdatedAt := paymentorderFields[38].Descriptor()
+	paymentorderDescUpdatedAt := paymentorderFields[48].Descriptor()
 	// paymentorder.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	paymentorder.DefaultUpdatedAt = paymentorderDescUpdatedAt.Default.(func() time.Time)
 	// paymentorder.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
@@ -1699,6 +1732,36 @@ func init() {
 	proxyDescExpiryWarnDays := proxyFields[10].Descriptor()
 	// proxy.DefaultExpiryWarnDays holds the default value on creation for the expiry_warn_days field.
 	proxy.DefaultExpiryWarnDays = proxyDescExpiryWarnDays.Default.(int)
+	qrispaymentFields := schema.QrisPayment{}.Fields()
+	_ = qrispaymentFields
+	// qrispaymentDescPaymentRef is the schema descriptor for payment_ref field.
+	qrispaymentDescPaymentRef := qrispaymentFields[3].Descriptor()
+	// qrispayment.PaymentRefValidator is a validator for the "payment_ref" field. It is called by the builders before save.
+	qrispayment.PaymentRefValidator = qrispaymentDescPaymentRef.Validators[0].(func(string) error)
+	// qrispaymentDescStatus is the schema descriptor for status field.
+	qrispaymentDescStatus := qrispaymentFields[7].Descriptor()
+	// qrispayment.DefaultStatus holds the default value on creation for the status field.
+	qrispayment.DefaultStatus = qrispaymentDescStatus.Default.(string)
+	// qrispayment.StatusValidator is a validator for the "status" field. It is called by the builders before save.
+	qrispayment.StatusValidator = qrispaymentDescStatus.Validators[0].(func(string) error)
+	// qrispaymentDescIdempotencyKey is the schema descriptor for idempotency_key field.
+	qrispaymentDescIdempotencyKey := qrispaymentFields[9].Descriptor()
+	// qrispayment.IdempotencyKeyValidator is a validator for the "idempotency_key" field. It is called by the builders before save.
+	qrispayment.IdempotencyKeyValidator = qrispaymentDescIdempotencyKey.Validators[0].(func(string) error)
+	// qrispaymentDescCreatedAt is the schema descriptor for created_at field.
+	qrispaymentDescCreatedAt := qrispaymentFields[10].Descriptor()
+	// qrispayment.DefaultCreatedAt holds the default value on creation for the created_at field.
+	qrispayment.DefaultCreatedAt = qrispaymentDescCreatedAt.Default.(func() time.Time)
+	// qrispaymentDescUpdatedAt is the schema descriptor for updated_at field.
+	qrispaymentDescUpdatedAt := qrispaymentFields[11].Descriptor()
+	// qrispayment.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	qrispayment.DefaultUpdatedAt = qrispaymentDescUpdatedAt.Default.(func() time.Time)
+	// qrispayment.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	qrispayment.UpdateDefaultUpdatedAt = qrispaymentDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// qrispaymentDescID is the schema descriptor for id field.
+	qrispaymentDescID := qrispaymentFields[0].Descriptor()
+	// qrispayment.DefaultID holds the default value on creation for the id field.
+	qrispayment.DefaultID = qrispaymentDescID.Default.(func() string)
 	redeemcodeFields := schema.RedeemCode{}.Fields()
 	_ = redeemcodeFields
 	// redeemcodeDescCode is the schema descriptor for code field.

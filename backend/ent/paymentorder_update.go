@@ -660,6 +660,189 @@ func (_u *PaymentOrderUpdate) ClearFailedReason() *PaymentOrderUpdate {
 	return _u
 }
 
+// SetPaymentMethod sets the "payment_method" field.
+func (_u *PaymentOrderUpdate) SetPaymentMethod(v string) *PaymentOrderUpdate {
+	_u.mutation.SetPaymentMethod(v)
+	return _u
+}
+
+// SetNillablePaymentMethod sets the "payment_method" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillablePaymentMethod(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetPaymentMethod(*v)
+	}
+	return _u
+}
+
+// SetQrisPaymentID sets the "qris_payment_id" field.
+func (_u *PaymentOrderUpdate) SetQrisPaymentID(v string) *PaymentOrderUpdate {
+	_u.mutation.SetQrisPaymentID(v)
+	return _u
+}
+
+// SetNillableQrisPaymentID sets the "qris_payment_id" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableQrisPaymentID(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetQrisPaymentID(*v)
+	}
+	return _u
+}
+
+// ClearQrisPaymentID clears the value of the "qris_payment_id" field.
+func (_u *PaymentOrderUpdate) ClearQrisPaymentID() *PaymentOrderUpdate {
+	_u.mutation.ClearQrisPaymentID()
+	return _u
+}
+
+// SetQrisPaymentRef sets the "qris_payment_ref" field.
+func (_u *PaymentOrderUpdate) SetQrisPaymentRef(v string) *PaymentOrderUpdate {
+	_u.mutation.SetQrisPaymentRef(v)
+	return _u
+}
+
+// SetNillableQrisPaymentRef sets the "qris_payment_ref" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableQrisPaymentRef(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetQrisPaymentRef(*v)
+	}
+	return _u
+}
+
+// ClearQrisPaymentRef clears the value of the "qris_payment_ref" field.
+func (_u *PaymentOrderUpdate) ClearQrisPaymentRef() *PaymentOrderUpdate {
+	_u.mutation.ClearQrisPaymentRef()
+	return _u
+}
+
+// SetQrisExpiresAt sets the "qris_expires_at" field.
+func (_u *PaymentOrderUpdate) SetQrisExpiresAt(v time.Time) *PaymentOrderUpdate {
+	_u.mutation.SetQrisExpiresAt(v)
+	return _u
+}
+
+// SetNillableQrisExpiresAt sets the "qris_expires_at" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableQrisExpiresAt(v *time.Time) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetQrisExpiresAt(*v)
+	}
+	return _u
+}
+
+// ClearQrisExpiresAt clears the value of the "qris_expires_at" field.
+func (_u *PaymentOrderUpdate) ClearQrisExpiresAt() *PaymentOrderUpdate {
+	_u.mutation.ClearQrisExpiresAt()
+	return _u
+}
+
+// SetQrisStatus sets the "qris_status" field.
+func (_u *PaymentOrderUpdate) SetQrisStatus(v string) *PaymentOrderUpdate {
+	_u.mutation.SetQrisStatus(v)
+	return _u
+}
+
+// SetNillableQrisStatus sets the "qris_status" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableQrisStatus(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetQrisStatus(*v)
+	}
+	return _u
+}
+
+// SetPlanIDUUID sets the "plan_id_uuid" field.
+func (_u *PaymentOrderUpdate) SetPlanIDUUID(v string) *PaymentOrderUpdate {
+	_u.mutation.SetPlanIDUUID(v)
+	return _u
+}
+
+// SetNillablePlanIDUUID sets the "plan_id_uuid" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillablePlanIDUUID(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetPlanIDUUID(*v)
+	}
+	return _u
+}
+
+// ClearPlanIDUUID clears the value of the "plan_id_uuid" field.
+func (_u *PaymentOrderUpdate) ClearPlanIDUUID() *PaymentOrderUpdate {
+	_u.mutation.ClearPlanIDUUID()
+	return _u
+}
+
+// SetAmountIdr sets the "amount_idr" field.
+func (_u *PaymentOrderUpdate) SetAmountIdr(v int64) *PaymentOrderUpdate {
+	_u.mutation.ResetAmountIdr()
+	_u.mutation.SetAmountIdr(v)
+	return _u
+}
+
+// SetNillableAmountIdr sets the "amount_idr" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableAmountIdr(v *int64) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetAmountIdr(*v)
+	}
+	return _u
+}
+
+// AddAmountIdr adds value to the "amount_idr" field.
+func (_u *PaymentOrderUpdate) AddAmountIdr(v int64) *PaymentOrderUpdate {
+	_u.mutation.AddAmountIdr(v)
+	return _u
+}
+
+// ClearAmountIdr clears the value of the "amount_idr" field.
+func (_u *PaymentOrderUpdate) ClearAmountIdr() *PaymentOrderUpdate {
+	_u.mutation.ClearAmountIdr()
+	return _u
+}
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (_u *PaymentOrderUpdate) SetIdempotencyKey(v string) *PaymentOrderUpdate {
+	_u.mutation.SetIdempotencyKey(v)
+	return _u
+}
+
+// SetNillableIdempotencyKey sets the "idempotency_key" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableIdempotencyKey(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetIdempotencyKey(*v)
+	}
+	return _u
+}
+
+// ClearIdempotencyKey clears the value of the "idempotency_key" field.
+func (_u *PaymentOrderUpdate) ClearIdempotencyKey() *PaymentOrderUpdate {
+	_u.mutation.ClearIdempotencyKey()
+	return _u
+}
+
+// SetAsset sets the "asset" field.
+func (_u *PaymentOrderUpdate) SetAsset(v string) *PaymentOrderUpdate {
+	_u.mutation.SetAsset(v)
+	return _u
+}
+
+// SetNillableAsset sets the "asset" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableAsset(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetAsset(*v)
+	}
+	return _u
+}
+
+// SetNetwork sets the "network" field.
+func (_u *PaymentOrderUpdate) SetNetwork(v string) *PaymentOrderUpdate {
+	_u.mutation.SetNetwork(v)
+	return _u
+}
+
+// SetNillableNetwork sets the "network" field if the given value is not nil.
+func (_u *PaymentOrderUpdate) SetNillableNetwork(v *string) *PaymentOrderUpdate {
+	if v != nil {
+		_u.SetNetwork(*v)
+	}
+	return _u
+}
+
 // SetClientIP sets the "client_ip" field.
 func (_u *PaymentOrderUpdate) SetClientIP(v string) *PaymentOrderUpdate {
 	_u.mutation.SetClientIP(v)
@@ -821,6 +1004,36 @@ func (_u *PaymentOrderUpdate) check() error {
 	if v, ok := _u.mutation.RefundRequestedBy(); ok {
 		if err := paymentorder.RefundRequestedByValidator(v); err != nil {
 			return &ValidationError{Name: "refund_requested_by", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.refund_requested_by": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.PaymentMethod(); ok {
+		if err := paymentorder.PaymentMethodValidator(v); err != nil {
+			return &ValidationError{Name: "payment_method", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.payment_method": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.QrisPaymentRef(); ok {
+		if err := paymentorder.QrisPaymentRefValidator(v); err != nil {
+			return &ValidationError{Name: "qris_payment_ref", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.qris_payment_ref": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.QrisStatus(); ok {
+		if err := paymentorder.QrisStatusValidator(v); err != nil {
+			return &ValidationError{Name: "qris_status", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.qris_status": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.IdempotencyKey(); ok {
+		if err := paymentorder.IdempotencyKeyValidator(v); err != nil {
+			return &ValidationError{Name: "idempotency_key", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.idempotency_key": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.Asset(); ok {
+		if err := paymentorder.AssetValidator(v); err != nil {
+			return &ValidationError{Name: "asset", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.asset": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.Network(); ok {
+		if err := paymentorder.NetworkValidator(v); err != nil {
+			return &ValidationError{Name: "network", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.network": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.ClientIP(); ok {
@@ -1027,6 +1240,57 @@ func (_u *PaymentOrderUpdate) sqlSave(ctx context.Context) (_node int, err error
 	}
 	if _u.mutation.FailedReasonCleared() {
 		_spec.ClearField(paymentorder.FieldFailedReason, field.TypeString)
+	}
+	if value, ok := _u.mutation.PaymentMethod(); ok {
+		_spec.SetField(paymentorder.FieldPaymentMethod, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.QrisPaymentID(); ok {
+		_spec.SetField(paymentorder.FieldQrisPaymentID, field.TypeString, value)
+	}
+	if _u.mutation.QrisPaymentIDCleared() {
+		_spec.ClearField(paymentorder.FieldQrisPaymentID, field.TypeString)
+	}
+	if value, ok := _u.mutation.QrisPaymentRef(); ok {
+		_spec.SetField(paymentorder.FieldQrisPaymentRef, field.TypeString, value)
+	}
+	if _u.mutation.QrisPaymentRefCleared() {
+		_spec.ClearField(paymentorder.FieldQrisPaymentRef, field.TypeString)
+	}
+	if value, ok := _u.mutation.QrisExpiresAt(); ok {
+		_spec.SetField(paymentorder.FieldQrisExpiresAt, field.TypeTime, value)
+	}
+	if _u.mutation.QrisExpiresAtCleared() {
+		_spec.ClearField(paymentorder.FieldQrisExpiresAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.QrisStatus(); ok {
+		_spec.SetField(paymentorder.FieldQrisStatus, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.PlanIDUUID(); ok {
+		_spec.SetField(paymentorder.FieldPlanIDUUID, field.TypeString, value)
+	}
+	if _u.mutation.PlanIDUUIDCleared() {
+		_spec.ClearField(paymentorder.FieldPlanIDUUID, field.TypeString)
+	}
+	if value, ok := _u.mutation.AmountIdr(); ok {
+		_spec.SetField(paymentorder.FieldAmountIdr, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedAmountIdr(); ok {
+		_spec.AddField(paymentorder.FieldAmountIdr, field.TypeInt64, value)
+	}
+	if _u.mutation.AmountIdrCleared() {
+		_spec.ClearField(paymentorder.FieldAmountIdr, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.IdempotencyKey(); ok {
+		_spec.SetField(paymentorder.FieldIdempotencyKey, field.TypeString, value)
+	}
+	if _u.mutation.IdempotencyKeyCleared() {
+		_spec.ClearField(paymentorder.FieldIdempotencyKey, field.TypeString)
+	}
+	if value, ok := _u.mutation.Asset(); ok {
+		_spec.SetField(paymentorder.FieldAsset, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Network(); ok {
+		_spec.SetField(paymentorder.FieldNetwork, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.ClientIP(); ok {
 		_spec.SetField(paymentorder.FieldClientIP, field.TypeString, value)
@@ -1723,6 +1987,189 @@ func (_u *PaymentOrderUpdateOne) ClearFailedReason() *PaymentOrderUpdateOne {
 	return _u
 }
 
+// SetPaymentMethod sets the "payment_method" field.
+func (_u *PaymentOrderUpdateOne) SetPaymentMethod(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetPaymentMethod(v)
+	return _u
+}
+
+// SetNillablePaymentMethod sets the "payment_method" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillablePaymentMethod(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetPaymentMethod(*v)
+	}
+	return _u
+}
+
+// SetQrisPaymentID sets the "qris_payment_id" field.
+func (_u *PaymentOrderUpdateOne) SetQrisPaymentID(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetQrisPaymentID(v)
+	return _u
+}
+
+// SetNillableQrisPaymentID sets the "qris_payment_id" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableQrisPaymentID(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetQrisPaymentID(*v)
+	}
+	return _u
+}
+
+// ClearQrisPaymentID clears the value of the "qris_payment_id" field.
+func (_u *PaymentOrderUpdateOne) ClearQrisPaymentID() *PaymentOrderUpdateOne {
+	_u.mutation.ClearQrisPaymentID()
+	return _u
+}
+
+// SetQrisPaymentRef sets the "qris_payment_ref" field.
+func (_u *PaymentOrderUpdateOne) SetQrisPaymentRef(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetQrisPaymentRef(v)
+	return _u
+}
+
+// SetNillableQrisPaymentRef sets the "qris_payment_ref" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableQrisPaymentRef(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetQrisPaymentRef(*v)
+	}
+	return _u
+}
+
+// ClearQrisPaymentRef clears the value of the "qris_payment_ref" field.
+func (_u *PaymentOrderUpdateOne) ClearQrisPaymentRef() *PaymentOrderUpdateOne {
+	_u.mutation.ClearQrisPaymentRef()
+	return _u
+}
+
+// SetQrisExpiresAt sets the "qris_expires_at" field.
+func (_u *PaymentOrderUpdateOne) SetQrisExpiresAt(v time.Time) *PaymentOrderUpdateOne {
+	_u.mutation.SetQrisExpiresAt(v)
+	return _u
+}
+
+// SetNillableQrisExpiresAt sets the "qris_expires_at" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableQrisExpiresAt(v *time.Time) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetQrisExpiresAt(*v)
+	}
+	return _u
+}
+
+// ClearQrisExpiresAt clears the value of the "qris_expires_at" field.
+func (_u *PaymentOrderUpdateOne) ClearQrisExpiresAt() *PaymentOrderUpdateOne {
+	_u.mutation.ClearQrisExpiresAt()
+	return _u
+}
+
+// SetQrisStatus sets the "qris_status" field.
+func (_u *PaymentOrderUpdateOne) SetQrisStatus(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetQrisStatus(v)
+	return _u
+}
+
+// SetNillableQrisStatus sets the "qris_status" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableQrisStatus(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetQrisStatus(*v)
+	}
+	return _u
+}
+
+// SetPlanIDUUID sets the "plan_id_uuid" field.
+func (_u *PaymentOrderUpdateOne) SetPlanIDUUID(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetPlanIDUUID(v)
+	return _u
+}
+
+// SetNillablePlanIDUUID sets the "plan_id_uuid" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillablePlanIDUUID(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetPlanIDUUID(*v)
+	}
+	return _u
+}
+
+// ClearPlanIDUUID clears the value of the "plan_id_uuid" field.
+func (_u *PaymentOrderUpdateOne) ClearPlanIDUUID() *PaymentOrderUpdateOne {
+	_u.mutation.ClearPlanIDUUID()
+	return _u
+}
+
+// SetAmountIdr sets the "amount_idr" field.
+func (_u *PaymentOrderUpdateOne) SetAmountIdr(v int64) *PaymentOrderUpdateOne {
+	_u.mutation.ResetAmountIdr()
+	_u.mutation.SetAmountIdr(v)
+	return _u
+}
+
+// SetNillableAmountIdr sets the "amount_idr" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableAmountIdr(v *int64) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetAmountIdr(*v)
+	}
+	return _u
+}
+
+// AddAmountIdr adds value to the "amount_idr" field.
+func (_u *PaymentOrderUpdateOne) AddAmountIdr(v int64) *PaymentOrderUpdateOne {
+	_u.mutation.AddAmountIdr(v)
+	return _u
+}
+
+// ClearAmountIdr clears the value of the "amount_idr" field.
+func (_u *PaymentOrderUpdateOne) ClearAmountIdr() *PaymentOrderUpdateOne {
+	_u.mutation.ClearAmountIdr()
+	return _u
+}
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (_u *PaymentOrderUpdateOne) SetIdempotencyKey(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetIdempotencyKey(v)
+	return _u
+}
+
+// SetNillableIdempotencyKey sets the "idempotency_key" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableIdempotencyKey(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetIdempotencyKey(*v)
+	}
+	return _u
+}
+
+// ClearIdempotencyKey clears the value of the "idempotency_key" field.
+func (_u *PaymentOrderUpdateOne) ClearIdempotencyKey() *PaymentOrderUpdateOne {
+	_u.mutation.ClearIdempotencyKey()
+	return _u
+}
+
+// SetAsset sets the "asset" field.
+func (_u *PaymentOrderUpdateOne) SetAsset(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetAsset(v)
+	return _u
+}
+
+// SetNillableAsset sets the "asset" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableAsset(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetAsset(*v)
+	}
+	return _u
+}
+
+// SetNetwork sets the "network" field.
+func (_u *PaymentOrderUpdateOne) SetNetwork(v string) *PaymentOrderUpdateOne {
+	_u.mutation.SetNetwork(v)
+	return _u
+}
+
+// SetNillableNetwork sets the "network" field if the given value is not nil.
+func (_u *PaymentOrderUpdateOne) SetNillableNetwork(v *string) *PaymentOrderUpdateOne {
+	if v != nil {
+		_u.SetNetwork(*v)
+	}
+	return _u
+}
+
 // SetClientIP sets the "client_ip" field.
 func (_u *PaymentOrderUpdateOne) SetClientIP(v string) *PaymentOrderUpdateOne {
 	_u.mutation.SetClientIP(v)
@@ -1897,6 +2344,36 @@ func (_u *PaymentOrderUpdateOne) check() error {
 	if v, ok := _u.mutation.RefundRequestedBy(); ok {
 		if err := paymentorder.RefundRequestedByValidator(v); err != nil {
 			return &ValidationError{Name: "refund_requested_by", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.refund_requested_by": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.PaymentMethod(); ok {
+		if err := paymentorder.PaymentMethodValidator(v); err != nil {
+			return &ValidationError{Name: "payment_method", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.payment_method": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.QrisPaymentRef(); ok {
+		if err := paymentorder.QrisPaymentRefValidator(v); err != nil {
+			return &ValidationError{Name: "qris_payment_ref", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.qris_payment_ref": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.QrisStatus(); ok {
+		if err := paymentorder.QrisStatusValidator(v); err != nil {
+			return &ValidationError{Name: "qris_status", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.qris_status": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.IdempotencyKey(); ok {
+		if err := paymentorder.IdempotencyKeyValidator(v); err != nil {
+			return &ValidationError{Name: "idempotency_key", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.idempotency_key": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.Asset(); ok {
+		if err := paymentorder.AssetValidator(v); err != nil {
+			return &ValidationError{Name: "asset", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.asset": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.Network(); ok {
+		if err := paymentorder.NetworkValidator(v); err != nil {
+			return &ValidationError{Name: "network", err: fmt.Errorf(`ent: validator failed for field "PaymentOrder.network": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.ClientIP(); ok {
@@ -2120,6 +2597,57 @@ func (_u *PaymentOrderUpdateOne) sqlSave(ctx context.Context) (_node *PaymentOrd
 	}
 	if _u.mutation.FailedReasonCleared() {
 		_spec.ClearField(paymentorder.FieldFailedReason, field.TypeString)
+	}
+	if value, ok := _u.mutation.PaymentMethod(); ok {
+		_spec.SetField(paymentorder.FieldPaymentMethod, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.QrisPaymentID(); ok {
+		_spec.SetField(paymentorder.FieldQrisPaymentID, field.TypeString, value)
+	}
+	if _u.mutation.QrisPaymentIDCleared() {
+		_spec.ClearField(paymentorder.FieldQrisPaymentID, field.TypeString)
+	}
+	if value, ok := _u.mutation.QrisPaymentRef(); ok {
+		_spec.SetField(paymentorder.FieldQrisPaymentRef, field.TypeString, value)
+	}
+	if _u.mutation.QrisPaymentRefCleared() {
+		_spec.ClearField(paymentorder.FieldQrisPaymentRef, field.TypeString)
+	}
+	if value, ok := _u.mutation.QrisExpiresAt(); ok {
+		_spec.SetField(paymentorder.FieldQrisExpiresAt, field.TypeTime, value)
+	}
+	if _u.mutation.QrisExpiresAtCleared() {
+		_spec.ClearField(paymentorder.FieldQrisExpiresAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.QrisStatus(); ok {
+		_spec.SetField(paymentorder.FieldQrisStatus, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.PlanIDUUID(); ok {
+		_spec.SetField(paymentorder.FieldPlanIDUUID, field.TypeString, value)
+	}
+	if _u.mutation.PlanIDUUIDCleared() {
+		_spec.ClearField(paymentorder.FieldPlanIDUUID, field.TypeString)
+	}
+	if value, ok := _u.mutation.AmountIdr(); ok {
+		_spec.SetField(paymentorder.FieldAmountIdr, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedAmountIdr(); ok {
+		_spec.AddField(paymentorder.FieldAmountIdr, field.TypeInt64, value)
+	}
+	if _u.mutation.AmountIdrCleared() {
+		_spec.ClearField(paymentorder.FieldAmountIdr, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.IdempotencyKey(); ok {
+		_spec.SetField(paymentorder.FieldIdempotencyKey, field.TypeString, value)
+	}
+	if _u.mutation.IdempotencyKeyCleared() {
+		_spec.ClearField(paymentorder.FieldIdempotencyKey, field.TypeString)
+	}
+	if value, ok := _u.mutation.Asset(); ok {
+		_spec.SetField(paymentorder.FieldAsset, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Network(); ok {
+		_spec.SetField(paymentorder.FieldNetwork, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.ClientIP(); ok {
 		_spec.SetField(paymentorder.FieldClientIP, field.TypeString, value)

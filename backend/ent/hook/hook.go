@@ -321,6 +321,18 @@ func (f ProxyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProxyMutation", m)
 }
 
+// The QrisPaymentFunc type is an adapter to allow the use of ordinary
+// function as QrisPayment mutator.
+type QrisPaymentFunc func(context.Context, *ent.QrisPaymentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f QrisPaymentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.QrisPaymentMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.QrisPaymentMutation", m)
+}
+
 // The RedeemCodeFunc type is an adapter to allow the use of ordinary
 // function as RedeemCode mutator.
 type RedeemCodeFunc func(context.Context, *ent.RedeemCodeMutation) (ent.Value, error)

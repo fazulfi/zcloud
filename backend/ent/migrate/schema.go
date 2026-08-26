@@ -1151,11 +1151,22 @@ var (
 		{Name: "completed_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "failed_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "failed_reason", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "text"}},
+		{Name: "payment_method", Type: field.TypeString, Size: 20, Default: "qris"},
+		{Name: "qris_payment_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "qris_payment_ref", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "qris_expires_at", Type: field.TypeTime, Nullable: true, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "qris_status", Type: field.TypeString, Size: 20, Default: "pending"},
+		{Name: "plan_id_uuid", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "amount_idr", Type: field.TypeInt64, Nullable: true},
+		{Name: "idempotency_key", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "asset", Type: field.TypeString, Size: 20, Default: "IDR"},
+		{Name: "network", Type: field.TypeString, Size: 20, Default: "QRIS"},
 		{Name: "client_ip", Type: field.TypeString, Size: 50},
 		{Name: "src_host", Type: field.TypeString, Size: 255},
 		{Name: "src_url", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "text"}},
 		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
 		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "qris_payment_payment_orders", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
 		{Name: "user_id", Type: field.TypeInt64},
 	}
 	// PaymentOrdersTable holds the schema information for the "payment_orders" table.
@@ -1165,8 +1176,14 @@ var (
 		PrimaryKey: []*schema.Column{PaymentOrdersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
+				Symbol:     "payment_orders_qris_payments_payment_orders",
+				Columns:    []*schema.Column{PaymentOrdersColumns[49]},
+				RefColumns: []*schema.Column{QrisPaymentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:     "payment_orders_users_payment_orders",
-				Columns:    []*schema.Column{PaymentOrdersColumns[39]},
+				Columns:    []*schema.Column{PaymentOrdersColumns[50]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -1183,7 +1200,7 @@ var (
 			{
 				Name:    "paymentorder_user_id",
 				Unique:  false,
-				Columns: []*schema.Column{PaymentOrdersColumns[39]},
+				Columns: []*schema.Column{PaymentOrdersColumns[50]},
 			},
 			{
 				Name:    "paymentorder_status",
@@ -1198,7 +1215,7 @@ var (
 			{
 				Name:    "paymentorder_created_at",
 				Unique:  false,
-				Columns: []*schema.Column{PaymentOrdersColumns[37]},
+				Columns: []*schema.Column{PaymentOrdersColumns[47]},
 			},
 			{
 				Name:    "paymentorder_paid_at",
@@ -1444,6 +1461,44 @@ var (
 				Name:    "proxy_backup_proxy_id",
 				Unique:  false,
 				Columns: []*schema.Column{ProxiesColumns[14]},
+			},
+		},
+	}
+	// QrisPaymentsColumns holds the columns for the "qris_payments" table.
+	QrisPaymentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "user_id", Type: field.TypeInt64},
+		{Name: "amount_idr", Type: field.TypeInt64},
+		{Name: "payment_ref", Type: field.TypeString, Unique: true, Size: 100},
+		{Name: "qr_string", Type: field.TypeString, SchemaType: map[string]string{"postgres": "text"}},
+		{Name: "image_base64", Type: field.TypeString, SchemaType: map[string]string{"postgres": "text"}},
+		{Name: "expires_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "status", Type: field.TypeString, Size: 20, Default: "pending"},
+		{Name: "gomerch_payload", Type: field.TypeJSON, Nullable: true, SchemaType: map[string]string{"postgres": "jsonb"}},
+		{Name: "idempotency_key", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+	}
+	// QrisPaymentsTable holds the schema information for the "qris_payments" table.
+	QrisPaymentsTable = &schema.Table{
+		Name:       "qris_payments",
+		Columns:    QrisPaymentsColumns,
+		PrimaryKey: []*schema.Column{QrisPaymentsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "qrispayment_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{QrisPaymentsColumns[1]},
+			},
+			{
+				Name:    "qrispayment_status",
+				Unique:  false,
+				Columns: []*schema.Column{QrisPaymentsColumns[7]},
+			},
+			{
+				Name:    "qrispayment_payment_ref",
+				Unique:  true,
+				Columns: []*schema.Column{QrisPaymentsColumns[3]},
 			},
 		},
 	}
@@ -2109,6 +2164,7 @@ var (
 		PromoCodesTable,
 		PromoCodeUsagesTable,
 		ProxiesTable,
+		QrisPaymentsTable,
 		RedeemCodesTable,
 		SecuritySecretsTable,
 		SettingsTable,
@@ -2202,7 +2258,8 @@ func init() {
 	PaymentAuditLogsTable.Annotation = &entsql.Annotation{
 		Table: "payment_audit_logs",
 	}
-	PaymentOrdersTable.ForeignKeys[0].RefTable = UsersTable
+	PaymentOrdersTable.ForeignKeys[0].RefTable = QrisPaymentsTable
+	PaymentOrdersTable.ForeignKeys[1].RefTable = UsersTable
 	PaymentOrdersTable.Annotation = &entsql.Annotation{
 		Table: "payment_orders",
 	}
@@ -2224,6 +2281,9 @@ func init() {
 	ProxiesTable.ForeignKeys[0].RefTable = ProxiesTable
 	ProxiesTable.Annotation = &entsql.Annotation{
 		Table: "proxies",
+	}
+	QrisPaymentsTable.Annotation = &entsql.Annotation{
+		Table: "qris_payments",
 	}
 	RedeemCodesTable.ForeignKeys[0].RefTable = GroupsTable
 	RedeemCodesTable.ForeignKeys[1].RefTable = UsersTable

@@ -39,6 +39,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/promocode"
 	"github.com/Wei-Shaw/sub2api/ent/promocodeusage"
 	"github.com/Wei-Shaw/sub2api/ent/proxy"
+	"github.com/Wei-Shaw/sub2api/ent/qrispayment"
 	"github.com/Wei-Shaw/sub2api/ent/redeemcode"
 	"github.com/Wei-Shaw/sub2api/ent/securitysecret"
 	"github.com/Wei-Shaw/sub2api/ent/setting"
@@ -90,6 +91,7 @@ const (
 	TypePromoCode                     = "PromoCode"
 	TypePromoCodeUsage                = "PromoCodeUsage"
 	TypeProxy                         = "Proxy"
+	TypeQrisPayment                   = "QrisPayment"
 	TypeRedeemCode                    = "RedeemCode"
 	TypeSecuritySecret                = "SecuritySecret"
 	TypeSetting                       = "Setting"
@@ -29928,6 +29930,17 @@ type PaymentOrderMutation struct {
 	completed_at             *time.Time
 	failed_at                *time.Time
 	failed_reason            *string
+	payment_method           *string
+	qris_payment_id          *string
+	qris_payment_ref         *string
+	qris_expires_at          *time.Time
+	qris_status              *string
+	plan_id_uuid             *string
+	amount_idr               *int64
+	addamount_idr            *int64
+	idempotency_key          *string
+	asset                    *string
+	network                  *string
 	client_ip                *string
 	src_host                 *string
 	src_url                  *string
@@ -31653,6 +31666,465 @@ func (m *PaymentOrderMutation) ResetFailedReason() {
 	delete(m.clearedFields, paymentorder.FieldFailedReason)
 }
 
+// SetPaymentMethod sets the "payment_method" field.
+func (m *PaymentOrderMutation) SetPaymentMethod(s string) {
+	m.payment_method = &s
+}
+
+// PaymentMethod returns the value of the "payment_method" field in the mutation.
+func (m *PaymentOrderMutation) PaymentMethod() (r string, exists bool) {
+	v := m.payment_method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPaymentMethod returns the old "payment_method" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldPaymentMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPaymentMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPaymentMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPaymentMethod: %w", err)
+	}
+	return oldValue.PaymentMethod, nil
+}
+
+// ResetPaymentMethod resets all changes to the "payment_method" field.
+func (m *PaymentOrderMutation) ResetPaymentMethod() {
+	m.payment_method = nil
+}
+
+// SetQrisPaymentID sets the "qris_payment_id" field.
+func (m *PaymentOrderMutation) SetQrisPaymentID(s string) {
+	m.qris_payment_id = &s
+}
+
+// QrisPaymentID returns the value of the "qris_payment_id" field in the mutation.
+func (m *PaymentOrderMutation) QrisPaymentID() (r string, exists bool) {
+	v := m.qris_payment_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQrisPaymentID returns the old "qris_payment_id" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldQrisPaymentID(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQrisPaymentID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQrisPaymentID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQrisPaymentID: %w", err)
+	}
+	return oldValue.QrisPaymentID, nil
+}
+
+// ClearQrisPaymentID clears the value of the "qris_payment_id" field.
+func (m *PaymentOrderMutation) ClearQrisPaymentID() {
+	m.qris_payment_id = nil
+	m.clearedFields[paymentorder.FieldQrisPaymentID] = struct{}{}
+}
+
+// QrisPaymentIDCleared returns if the "qris_payment_id" field was cleared in this mutation.
+func (m *PaymentOrderMutation) QrisPaymentIDCleared() bool {
+	_, ok := m.clearedFields[paymentorder.FieldQrisPaymentID]
+	return ok
+}
+
+// ResetQrisPaymentID resets all changes to the "qris_payment_id" field.
+func (m *PaymentOrderMutation) ResetQrisPaymentID() {
+	m.qris_payment_id = nil
+	delete(m.clearedFields, paymentorder.FieldQrisPaymentID)
+}
+
+// SetQrisPaymentRef sets the "qris_payment_ref" field.
+func (m *PaymentOrderMutation) SetQrisPaymentRef(s string) {
+	m.qris_payment_ref = &s
+}
+
+// QrisPaymentRef returns the value of the "qris_payment_ref" field in the mutation.
+func (m *PaymentOrderMutation) QrisPaymentRef() (r string, exists bool) {
+	v := m.qris_payment_ref
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQrisPaymentRef returns the old "qris_payment_ref" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldQrisPaymentRef(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQrisPaymentRef is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQrisPaymentRef requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQrisPaymentRef: %w", err)
+	}
+	return oldValue.QrisPaymentRef, nil
+}
+
+// ClearQrisPaymentRef clears the value of the "qris_payment_ref" field.
+func (m *PaymentOrderMutation) ClearQrisPaymentRef() {
+	m.qris_payment_ref = nil
+	m.clearedFields[paymentorder.FieldQrisPaymentRef] = struct{}{}
+}
+
+// QrisPaymentRefCleared returns if the "qris_payment_ref" field was cleared in this mutation.
+func (m *PaymentOrderMutation) QrisPaymentRefCleared() bool {
+	_, ok := m.clearedFields[paymentorder.FieldQrisPaymentRef]
+	return ok
+}
+
+// ResetQrisPaymentRef resets all changes to the "qris_payment_ref" field.
+func (m *PaymentOrderMutation) ResetQrisPaymentRef() {
+	m.qris_payment_ref = nil
+	delete(m.clearedFields, paymentorder.FieldQrisPaymentRef)
+}
+
+// SetQrisExpiresAt sets the "qris_expires_at" field.
+func (m *PaymentOrderMutation) SetQrisExpiresAt(t time.Time) {
+	m.qris_expires_at = &t
+}
+
+// QrisExpiresAt returns the value of the "qris_expires_at" field in the mutation.
+func (m *PaymentOrderMutation) QrisExpiresAt() (r time.Time, exists bool) {
+	v := m.qris_expires_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQrisExpiresAt returns the old "qris_expires_at" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldQrisExpiresAt(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQrisExpiresAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQrisExpiresAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQrisExpiresAt: %w", err)
+	}
+	return oldValue.QrisExpiresAt, nil
+}
+
+// ClearQrisExpiresAt clears the value of the "qris_expires_at" field.
+func (m *PaymentOrderMutation) ClearQrisExpiresAt() {
+	m.qris_expires_at = nil
+	m.clearedFields[paymentorder.FieldQrisExpiresAt] = struct{}{}
+}
+
+// QrisExpiresAtCleared returns if the "qris_expires_at" field was cleared in this mutation.
+func (m *PaymentOrderMutation) QrisExpiresAtCleared() bool {
+	_, ok := m.clearedFields[paymentorder.FieldQrisExpiresAt]
+	return ok
+}
+
+// ResetQrisExpiresAt resets all changes to the "qris_expires_at" field.
+func (m *PaymentOrderMutation) ResetQrisExpiresAt() {
+	m.qris_expires_at = nil
+	delete(m.clearedFields, paymentorder.FieldQrisExpiresAt)
+}
+
+// SetQrisStatus sets the "qris_status" field.
+func (m *PaymentOrderMutation) SetQrisStatus(s string) {
+	m.qris_status = &s
+}
+
+// QrisStatus returns the value of the "qris_status" field in the mutation.
+func (m *PaymentOrderMutation) QrisStatus() (r string, exists bool) {
+	v := m.qris_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQrisStatus returns the old "qris_status" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldQrisStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQrisStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQrisStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQrisStatus: %w", err)
+	}
+	return oldValue.QrisStatus, nil
+}
+
+// ResetQrisStatus resets all changes to the "qris_status" field.
+func (m *PaymentOrderMutation) ResetQrisStatus() {
+	m.qris_status = nil
+}
+
+// SetPlanIDUUID sets the "plan_id_uuid" field.
+func (m *PaymentOrderMutation) SetPlanIDUUID(s string) {
+	m.plan_id_uuid = &s
+}
+
+// PlanIDUUID returns the value of the "plan_id_uuid" field in the mutation.
+func (m *PaymentOrderMutation) PlanIDUUID() (r string, exists bool) {
+	v := m.plan_id_uuid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlanIDUUID returns the old "plan_id_uuid" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldPlanIDUUID(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlanIDUUID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlanIDUUID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlanIDUUID: %w", err)
+	}
+	return oldValue.PlanIDUUID, nil
+}
+
+// ClearPlanIDUUID clears the value of the "plan_id_uuid" field.
+func (m *PaymentOrderMutation) ClearPlanIDUUID() {
+	m.plan_id_uuid = nil
+	m.clearedFields[paymentorder.FieldPlanIDUUID] = struct{}{}
+}
+
+// PlanIDUUIDCleared returns if the "plan_id_uuid" field was cleared in this mutation.
+func (m *PaymentOrderMutation) PlanIDUUIDCleared() bool {
+	_, ok := m.clearedFields[paymentorder.FieldPlanIDUUID]
+	return ok
+}
+
+// ResetPlanIDUUID resets all changes to the "plan_id_uuid" field.
+func (m *PaymentOrderMutation) ResetPlanIDUUID() {
+	m.plan_id_uuid = nil
+	delete(m.clearedFields, paymentorder.FieldPlanIDUUID)
+}
+
+// SetAmountIdr sets the "amount_idr" field.
+func (m *PaymentOrderMutation) SetAmountIdr(i int64) {
+	m.amount_idr = &i
+	m.addamount_idr = nil
+}
+
+// AmountIdr returns the value of the "amount_idr" field in the mutation.
+func (m *PaymentOrderMutation) AmountIdr() (r int64, exists bool) {
+	v := m.amount_idr
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAmountIdr returns the old "amount_idr" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldAmountIdr(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAmountIdr is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAmountIdr requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAmountIdr: %w", err)
+	}
+	return oldValue.AmountIdr, nil
+}
+
+// AddAmountIdr adds i to the "amount_idr" field.
+func (m *PaymentOrderMutation) AddAmountIdr(i int64) {
+	if m.addamount_idr != nil {
+		*m.addamount_idr += i
+	} else {
+		m.addamount_idr = &i
+	}
+}
+
+// AddedAmountIdr returns the value that was added to the "amount_idr" field in this mutation.
+func (m *PaymentOrderMutation) AddedAmountIdr() (r int64, exists bool) {
+	v := m.addamount_idr
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearAmountIdr clears the value of the "amount_idr" field.
+func (m *PaymentOrderMutation) ClearAmountIdr() {
+	m.amount_idr = nil
+	m.addamount_idr = nil
+	m.clearedFields[paymentorder.FieldAmountIdr] = struct{}{}
+}
+
+// AmountIdrCleared returns if the "amount_idr" field was cleared in this mutation.
+func (m *PaymentOrderMutation) AmountIdrCleared() bool {
+	_, ok := m.clearedFields[paymentorder.FieldAmountIdr]
+	return ok
+}
+
+// ResetAmountIdr resets all changes to the "amount_idr" field.
+func (m *PaymentOrderMutation) ResetAmountIdr() {
+	m.amount_idr = nil
+	m.addamount_idr = nil
+	delete(m.clearedFields, paymentorder.FieldAmountIdr)
+}
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (m *PaymentOrderMutation) SetIdempotencyKey(s string) {
+	m.idempotency_key = &s
+}
+
+// IdempotencyKey returns the value of the "idempotency_key" field in the mutation.
+func (m *PaymentOrderMutation) IdempotencyKey() (r string, exists bool) {
+	v := m.idempotency_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIdempotencyKey returns the old "idempotency_key" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldIdempotencyKey(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIdempotencyKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIdempotencyKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIdempotencyKey: %w", err)
+	}
+	return oldValue.IdempotencyKey, nil
+}
+
+// ClearIdempotencyKey clears the value of the "idempotency_key" field.
+func (m *PaymentOrderMutation) ClearIdempotencyKey() {
+	m.idempotency_key = nil
+	m.clearedFields[paymentorder.FieldIdempotencyKey] = struct{}{}
+}
+
+// IdempotencyKeyCleared returns if the "idempotency_key" field was cleared in this mutation.
+func (m *PaymentOrderMutation) IdempotencyKeyCleared() bool {
+	_, ok := m.clearedFields[paymentorder.FieldIdempotencyKey]
+	return ok
+}
+
+// ResetIdempotencyKey resets all changes to the "idempotency_key" field.
+func (m *PaymentOrderMutation) ResetIdempotencyKey() {
+	m.idempotency_key = nil
+	delete(m.clearedFields, paymentorder.FieldIdempotencyKey)
+}
+
+// SetAsset sets the "asset" field.
+func (m *PaymentOrderMutation) SetAsset(s string) {
+	m.asset = &s
+}
+
+// Asset returns the value of the "asset" field in the mutation.
+func (m *PaymentOrderMutation) Asset() (r string, exists bool) {
+	v := m.asset
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAsset returns the old "asset" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldAsset(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAsset is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAsset requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAsset: %w", err)
+	}
+	return oldValue.Asset, nil
+}
+
+// ResetAsset resets all changes to the "asset" field.
+func (m *PaymentOrderMutation) ResetAsset() {
+	m.asset = nil
+}
+
+// SetNetwork sets the "network" field.
+func (m *PaymentOrderMutation) SetNetwork(s string) {
+	m.network = &s
+}
+
+// Network returns the value of the "network" field in the mutation.
+func (m *PaymentOrderMutation) Network() (r string, exists bool) {
+	v := m.network
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNetwork returns the old "network" field's value of the PaymentOrder entity.
+// If the PaymentOrder object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentOrderMutation) OldNetwork(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNetwork is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNetwork requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNetwork: %w", err)
+	}
+	return oldValue.Network, nil
+}
+
+// ResetNetwork resets all changes to the "network" field.
+func (m *PaymentOrderMutation) ResetNetwork() {
+	m.network = nil
+}
+
 // SetClientIP sets the "client_ip" field.
 func (m *PaymentOrderMutation) SetClientIP(s string) {
 	m.client_ip = &s
@@ -31907,7 +32379,7 @@ func (m *PaymentOrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentOrderMutation) Fields() []string {
-	fields := make([]string, 0, 39)
+	fields := make([]string, 0, 49)
 	if m.user != nil {
 		fields = append(fields, paymentorder.FieldUserID)
 	}
@@ -32010,6 +32482,36 @@ func (m *PaymentOrderMutation) Fields() []string {
 	if m.failed_reason != nil {
 		fields = append(fields, paymentorder.FieldFailedReason)
 	}
+	if m.payment_method != nil {
+		fields = append(fields, paymentorder.FieldPaymentMethod)
+	}
+	if m.qris_payment_id != nil {
+		fields = append(fields, paymentorder.FieldQrisPaymentID)
+	}
+	if m.qris_payment_ref != nil {
+		fields = append(fields, paymentorder.FieldQrisPaymentRef)
+	}
+	if m.qris_expires_at != nil {
+		fields = append(fields, paymentorder.FieldQrisExpiresAt)
+	}
+	if m.qris_status != nil {
+		fields = append(fields, paymentorder.FieldQrisStatus)
+	}
+	if m.plan_id_uuid != nil {
+		fields = append(fields, paymentorder.FieldPlanIDUUID)
+	}
+	if m.amount_idr != nil {
+		fields = append(fields, paymentorder.FieldAmountIdr)
+	}
+	if m.idempotency_key != nil {
+		fields = append(fields, paymentorder.FieldIdempotencyKey)
+	}
+	if m.asset != nil {
+		fields = append(fields, paymentorder.FieldAsset)
+	}
+	if m.network != nil {
+		fields = append(fields, paymentorder.FieldNetwork)
+	}
 	if m.client_ip != nil {
 		fields = append(fields, paymentorder.FieldClientIP)
 	}
@@ -32101,6 +32603,26 @@ func (m *PaymentOrderMutation) Field(name string) (ent.Value, bool) {
 		return m.FailedAt()
 	case paymentorder.FieldFailedReason:
 		return m.FailedReason()
+	case paymentorder.FieldPaymentMethod:
+		return m.PaymentMethod()
+	case paymentorder.FieldQrisPaymentID:
+		return m.QrisPaymentID()
+	case paymentorder.FieldQrisPaymentRef:
+		return m.QrisPaymentRef()
+	case paymentorder.FieldQrisExpiresAt:
+		return m.QrisExpiresAt()
+	case paymentorder.FieldQrisStatus:
+		return m.QrisStatus()
+	case paymentorder.FieldPlanIDUUID:
+		return m.PlanIDUUID()
+	case paymentorder.FieldAmountIdr:
+		return m.AmountIdr()
+	case paymentorder.FieldIdempotencyKey:
+		return m.IdempotencyKey()
+	case paymentorder.FieldAsset:
+		return m.Asset()
+	case paymentorder.FieldNetwork:
+		return m.Network()
 	case paymentorder.FieldClientIP:
 		return m.ClientIP()
 	case paymentorder.FieldSrcHost:
@@ -32188,6 +32710,26 @@ func (m *PaymentOrderMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldFailedAt(ctx)
 	case paymentorder.FieldFailedReason:
 		return m.OldFailedReason(ctx)
+	case paymentorder.FieldPaymentMethod:
+		return m.OldPaymentMethod(ctx)
+	case paymentorder.FieldQrisPaymentID:
+		return m.OldQrisPaymentID(ctx)
+	case paymentorder.FieldQrisPaymentRef:
+		return m.OldQrisPaymentRef(ctx)
+	case paymentorder.FieldQrisExpiresAt:
+		return m.OldQrisExpiresAt(ctx)
+	case paymentorder.FieldQrisStatus:
+		return m.OldQrisStatus(ctx)
+	case paymentorder.FieldPlanIDUUID:
+		return m.OldPlanIDUUID(ctx)
+	case paymentorder.FieldAmountIdr:
+		return m.OldAmountIdr(ctx)
+	case paymentorder.FieldIdempotencyKey:
+		return m.OldIdempotencyKey(ctx)
+	case paymentorder.FieldAsset:
+		return m.OldAsset(ctx)
+	case paymentorder.FieldNetwork:
+		return m.OldNetwork(ctx)
 	case paymentorder.FieldClientIP:
 		return m.OldClientIP(ctx)
 	case paymentorder.FieldSrcHost:
@@ -32445,6 +32987,76 @@ func (m *PaymentOrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetFailedReason(v)
 		return nil
+	case paymentorder.FieldPaymentMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPaymentMethod(v)
+		return nil
+	case paymentorder.FieldQrisPaymentID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQrisPaymentID(v)
+		return nil
+	case paymentorder.FieldQrisPaymentRef:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQrisPaymentRef(v)
+		return nil
+	case paymentorder.FieldQrisExpiresAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQrisExpiresAt(v)
+		return nil
+	case paymentorder.FieldQrisStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQrisStatus(v)
+		return nil
+	case paymentorder.FieldPlanIDUUID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlanIDUUID(v)
+		return nil
+	case paymentorder.FieldAmountIdr:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAmountIdr(v)
+		return nil
+	case paymentorder.FieldIdempotencyKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIdempotencyKey(v)
+		return nil
+	case paymentorder.FieldAsset:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAsset(v)
+		return nil
+	case paymentorder.FieldNetwork:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNetwork(v)
+		return nil
 	case paymentorder.FieldClientIP:
 		v, ok := value.(string)
 		if !ok {
@@ -32509,6 +33121,9 @@ func (m *PaymentOrderMutation) AddedFields() []string {
 	if m.addrefund_amount != nil {
 		fields = append(fields, paymentorder.FieldRefundAmount)
 	}
+	if m.addamount_idr != nil {
+		fields = append(fields, paymentorder.FieldAmountIdr)
+	}
 	return fields
 }
 
@@ -32531,6 +33146,8 @@ func (m *PaymentOrderMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedSubscriptionDays()
 	case paymentorder.FieldRefundAmount:
 		return m.AddedRefundAmount()
+	case paymentorder.FieldAmountIdr:
+		return m.AddedAmountIdr()
 	}
 	return nil, false
 }
@@ -32588,6 +33205,13 @@ func (m *PaymentOrderMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddRefundAmount(v)
+		return nil
+	case paymentorder.FieldAmountIdr:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAmountIdr(v)
 		return nil
 	}
 	return fmt.Errorf("unknown PaymentOrder numeric field %s", name)
@@ -32653,6 +33277,24 @@ func (m *PaymentOrderMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(paymentorder.FieldFailedReason) {
 		fields = append(fields, paymentorder.FieldFailedReason)
+	}
+	if m.FieldCleared(paymentorder.FieldQrisPaymentID) {
+		fields = append(fields, paymentorder.FieldQrisPaymentID)
+	}
+	if m.FieldCleared(paymentorder.FieldQrisPaymentRef) {
+		fields = append(fields, paymentorder.FieldQrisPaymentRef)
+	}
+	if m.FieldCleared(paymentorder.FieldQrisExpiresAt) {
+		fields = append(fields, paymentorder.FieldQrisExpiresAt)
+	}
+	if m.FieldCleared(paymentorder.FieldPlanIDUUID) {
+		fields = append(fields, paymentorder.FieldPlanIDUUID)
+	}
+	if m.FieldCleared(paymentorder.FieldAmountIdr) {
+		fields = append(fields, paymentorder.FieldAmountIdr)
+	}
+	if m.FieldCleared(paymentorder.FieldIdempotencyKey) {
+		fields = append(fields, paymentorder.FieldIdempotencyKey)
 	}
 	if m.FieldCleared(paymentorder.FieldSrcURL) {
 		fields = append(fields, paymentorder.FieldSrcURL)
@@ -32727,6 +33369,24 @@ func (m *PaymentOrderMutation) ClearField(name string) error {
 		return nil
 	case paymentorder.FieldFailedReason:
 		m.ClearFailedReason()
+		return nil
+	case paymentorder.FieldQrisPaymentID:
+		m.ClearQrisPaymentID()
+		return nil
+	case paymentorder.FieldQrisPaymentRef:
+		m.ClearQrisPaymentRef()
+		return nil
+	case paymentorder.FieldQrisExpiresAt:
+		m.ClearQrisExpiresAt()
+		return nil
+	case paymentorder.FieldPlanIDUUID:
+		m.ClearPlanIDUUID()
+		return nil
+	case paymentorder.FieldAmountIdr:
+		m.ClearAmountIdr()
+		return nil
+	case paymentorder.FieldIdempotencyKey:
+		m.ClearIdempotencyKey()
 		return nil
 	case paymentorder.FieldSrcURL:
 		m.ClearSrcURL()
@@ -32840,6 +33500,36 @@ func (m *PaymentOrderMutation) ResetField(name string) error {
 		return nil
 	case paymentorder.FieldFailedReason:
 		m.ResetFailedReason()
+		return nil
+	case paymentorder.FieldPaymentMethod:
+		m.ResetPaymentMethod()
+		return nil
+	case paymentorder.FieldQrisPaymentID:
+		m.ResetQrisPaymentID()
+		return nil
+	case paymentorder.FieldQrisPaymentRef:
+		m.ResetQrisPaymentRef()
+		return nil
+	case paymentorder.FieldQrisExpiresAt:
+		m.ResetQrisExpiresAt()
+		return nil
+	case paymentorder.FieldQrisStatus:
+		m.ResetQrisStatus()
+		return nil
+	case paymentorder.FieldPlanIDUUID:
+		m.ResetPlanIDUUID()
+		return nil
+	case paymentorder.FieldAmountIdr:
+		m.ResetAmountIdr()
+		return nil
+	case paymentorder.FieldIdempotencyKey:
+		m.ResetIdempotencyKey()
+		return nil
+	case paymentorder.FieldAsset:
+		m.ResetAsset()
+		return nil
+	case paymentorder.FieldNetwork:
+		m.ResetNetwork()
 		return nil
 	case paymentorder.FieldClientIP:
 		m.ResetClientIP()
@@ -38479,6 +39169,1081 @@ func (m *ProxyMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Proxy edge %s", name)
+}
+
+// QrisPaymentMutation represents an operation that mutates the QrisPayment nodes in the graph.
+type QrisPaymentMutation struct {
+	config
+	op                    Op
+	typ                   string
+	id                    *string
+	user_id               *int64
+	adduser_id            *int64
+	amount_idr            *int64
+	addamount_idr         *int64
+	payment_ref           *string
+	qr_string             *string
+	image_base64          *string
+	expires_at            *time.Time
+	status                *string
+	gomerch_payload       *map[string]interface{}
+	idempotency_key       *string
+	created_at            *time.Time
+	updated_at            *time.Time
+	clearedFields         map[string]struct{}
+	payment_orders        map[int64]struct{}
+	removedpayment_orders map[int64]struct{}
+	clearedpayment_orders bool
+	done                  bool
+	oldValue              func(context.Context) (*QrisPayment, error)
+	predicates            []predicate.QrisPayment
+}
+
+var _ ent.Mutation = (*QrisPaymentMutation)(nil)
+
+// qrispaymentOption allows management of the mutation configuration using functional options.
+type qrispaymentOption func(*QrisPaymentMutation)
+
+// newQrisPaymentMutation creates new mutation for the QrisPayment entity.
+func newQrisPaymentMutation(c config, op Op, opts ...qrispaymentOption) *QrisPaymentMutation {
+	m := &QrisPaymentMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeQrisPayment,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withQrisPaymentID sets the ID field of the mutation.
+func withQrisPaymentID(id string) qrispaymentOption {
+	return func(m *QrisPaymentMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *QrisPayment
+		)
+		m.oldValue = func(ctx context.Context) (*QrisPayment, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().QrisPayment.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withQrisPayment sets the old QrisPayment of the mutation.
+func withQrisPayment(node *QrisPayment) qrispaymentOption {
+	return func(m *QrisPaymentMutation) {
+		m.oldValue = func(context.Context) (*QrisPayment, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m QrisPaymentMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m QrisPaymentMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of QrisPayment entities.
+func (m *QrisPaymentMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *QrisPaymentMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *QrisPaymentMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().QrisPayment.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetUserID sets the "user_id" field.
+func (m *QrisPaymentMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *QrisPaymentMutation) UserID() (r int64, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldUserID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// AddUserID adds i to the "user_id" field.
+func (m *QrisPaymentMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *QrisPaymentMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *QrisPaymentMutation) ResetUserID() {
+	m.user_id = nil
+	m.adduser_id = nil
+}
+
+// SetAmountIdr sets the "amount_idr" field.
+func (m *QrisPaymentMutation) SetAmountIdr(i int64) {
+	m.amount_idr = &i
+	m.addamount_idr = nil
+}
+
+// AmountIdr returns the value of the "amount_idr" field in the mutation.
+func (m *QrisPaymentMutation) AmountIdr() (r int64, exists bool) {
+	v := m.amount_idr
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAmountIdr returns the old "amount_idr" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldAmountIdr(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAmountIdr is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAmountIdr requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAmountIdr: %w", err)
+	}
+	return oldValue.AmountIdr, nil
+}
+
+// AddAmountIdr adds i to the "amount_idr" field.
+func (m *QrisPaymentMutation) AddAmountIdr(i int64) {
+	if m.addamount_idr != nil {
+		*m.addamount_idr += i
+	} else {
+		m.addamount_idr = &i
+	}
+}
+
+// AddedAmountIdr returns the value that was added to the "amount_idr" field in this mutation.
+func (m *QrisPaymentMutation) AddedAmountIdr() (r int64, exists bool) {
+	v := m.addamount_idr
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAmountIdr resets all changes to the "amount_idr" field.
+func (m *QrisPaymentMutation) ResetAmountIdr() {
+	m.amount_idr = nil
+	m.addamount_idr = nil
+}
+
+// SetPaymentRef sets the "payment_ref" field.
+func (m *QrisPaymentMutation) SetPaymentRef(s string) {
+	m.payment_ref = &s
+}
+
+// PaymentRef returns the value of the "payment_ref" field in the mutation.
+func (m *QrisPaymentMutation) PaymentRef() (r string, exists bool) {
+	v := m.payment_ref
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPaymentRef returns the old "payment_ref" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldPaymentRef(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPaymentRef is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPaymentRef requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPaymentRef: %w", err)
+	}
+	return oldValue.PaymentRef, nil
+}
+
+// ResetPaymentRef resets all changes to the "payment_ref" field.
+func (m *QrisPaymentMutation) ResetPaymentRef() {
+	m.payment_ref = nil
+}
+
+// SetQrString sets the "qr_string" field.
+func (m *QrisPaymentMutation) SetQrString(s string) {
+	m.qr_string = &s
+}
+
+// QrString returns the value of the "qr_string" field in the mutation.
+func (m *QrisPaymentMutation) QrString() (r string, exists bool) {
+	v := m.qr_string
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQrString returns the old "qr_string" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldQrString(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQrString is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQrString requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQrString: %w", err)
+	}
+	return oldValue.QrString, nil
+}
+
+// ResetQrString resets all changes to the "qr_string" field.
+func (m *QrisPaymentMutation) ResetQrString() {
+	m.qr_string = nil
+}
+
+// SetImageBase64 sets the "image_base64" field.
+func (m *QrisPaymentMutation) SetImageBase64(s string) {
+	m.image_base64 = &s
+}
+
+// ImageBase64 returns the value of the "image_base64" field in the mutation.
+func (m *QrisPaymentMutation) ImageBase64() (r string, exists bool) {
+	v := m.image_base64
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImageBase64 returns the old "image_base64" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldImageBase64(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImageBase64 is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImageBase64 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImageBase64: %w", err)
+	}
+	return oldValue.ImageBase64, nil
+}
+
+// ResetImageBase64 resets all changes to the "image_base64" field.
+func (m *QrisPaymentMutation) ResetImageBase64() {
+	m.image_base64 = nil
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (m *QrisPaymentMutation) SetExpiresAt(t time.Time) {
+	m.expires_at = &t
+}
+
+// ExpiresAt returns the value of the "expires_at" field in the mutation.
+func (m *QrisPaymentMutation) ExpiresAt() (r time.Time, exists bool) {
+	v := m.expires_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExpiresAt returns the old "expires_at" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldExpiresAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExpiresAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExpiresAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExpiresAt: %w", err)
+	}
+	return oldValue.ExpiresAt, nil
+}
+
+// ResetExpiresAt resets all changes to the "expires_at" field.
+func (m *QrisPaymentMutation) ResetExpiresAt() {
+	m.expires_at = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *QrisPaymentMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *QrisPaymentMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *QrisPaymentMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetGomerchPayload sets the "gomerch_payload" field.
+func (m *QrisPaymentMutation) SetGomerchPayload(value map[string]interface{}) {
+	m.gomerch_payload = &value
+}
+
+// GomerchPayload returns the value of the "gomerch_payload" field in the mutation.
+func (m *QrisPaymentMutation) GomerchPayload() (r map[string]interface{}, exists bool) {
+	v := m.gomerch_payload
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGomerchPayload returns the old "gomerch_payload" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldGomerchPayload(ctx context.Context) (v map[string]interface{}, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGomerchPayload is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGomerchPayload requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGomerchPayload: %w", err)
+	}
+	return oldValue.GomerchPayload, nil
+}
+
+// ClearGomerchPayload clears the value of the "gomerch_payload" field.
+func (m *QrisPaymentMutation) ClearGomerchPayload() {
+	m.gomerch_payload = nil
+	m.clearedFields[qrispayment.FieldGomerchPayload] = struct{}{}
+}
+
+// GomerchPayloadCleared returns if the "gomerch_payload" field was cleared in this mutation.
+func (m *QrisPaymentMutation) GomerchPayloadCleared() bool {
+	_, ok := m.clearedFields[qrispayment.FieldGomerchPayload]
+	return ok
+}
+
+// ResetGomerchPayload resets all changes to the "gomerch_payload" field.
+func (m *QrisPaymentMutation) ResetGomerchPayload() {
+	m.gomerch_payload = nil
+	delete(m.clearedFields, qrispayment.FieldGomerchPayload)
+}
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (m *QrisPaymentMutation) SetIdempotencyKey(s string) {
+	m.idempotency_key = &s
+}
+
+// IdempotencyKey returns the value of the "idempotency_key" field in the mutation.
+func (m *QrisPaymentMutation) IdempotencyKey() (r string, exists bool) {
+	v := m.idempotency_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIdempotencyKey returns the old "idempotency_key" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldIdempotencyKey(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIdempotencyKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIdempotencyKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIdempotencyKey: %w", err)
+	}
+	return oldValue.IdempotencyKey, nil
+}
+
+// ClearIdempotencyKey clears the value of the "idempotency_key" field.
+func (m *QrisPaymentMutation) ClearIdempotencyKey() {
+	m.idempotency_key = nil
+	m.clearedFields[qrispayment.FieldIdempotencyKey] = struct{}{}
+}
+
+// IdempotencyKeyCleared returns if the "idempotency_key" field was cleared in this mutation.
+func (m *QrisPaymentMutation) IdempotencyKeyCleared() bool {
+	_, ok := m.clearedFields[qrispayment.FieldIdempotencyKey]
+	return ok
+}
+
+// ResetIdempotencyKey resets all changes to the "idempotency_key" field.
+func (m *QrisPaymentMutation) ResetIdempotencyKey() {
+	m.idempotency_key = nil
+	delete(m.clearedFields, qrispayment.FieldIdempotencyKey)
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *QrisPaymentMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *QrisPaymentMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *QrisPaymentMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *QrisPaymentMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *QrisPaymentMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the QrisPayment entity.
+// If the QrisPayment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *QrisPaymentMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *QrisPaymentMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// AddPaymentOrderIDs adds the "payment_orders" edge to the PaymentOrder entity by ids.
+func (m *QrisPaymentMutation) AddPaymentOrderIDs(ids ...int64) {
+	if m.payment_orders == nil {
+		m.payment_orders = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.payment_orders[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPaymentOrders clears the "payment_orders" edge to the PaymentOrder entity.
+func (m *QrisPaymentMutation) ClearPaymentOrders() {
+	m.clearedpayment_orders = true
+}
+
+// PaymentOrdersCleared reports if the "payment_orders" edge to the PaymentOrder entity was cleared.
+func (m *QrisPaymentMutation) PaymentOrdersCleared() bool {
+	return m.clearedpayment_orders
+}
+
+// RemovePaymentOrderIDs removes the "payment_orders" edge to the PaymentOrder entity by IDs.
+func (m *QrisPaymentMutation) RemovePaymentOrderIDs(ids ...int64) {
+	if m.removedpayment_orders == nil {
+		m.removedpayment_orders = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.payment_orders, ids[i])
+		m.removedpayment_orders[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPaymentOrders returns the removed IDs of the "payment_orders" edge to the PaymentOrder entity.
+func (m *QrisPaymentMutation) RemovedPaymentOrdersIDs() (ids []int64) {
+	for id := range m.removedpayment_orders {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PaymentOrdersIDs returns the "payment_orders" edge IDs in the mutation.
+func (m *QrisPaymentMutation) PaymentOrdersIDs() (ids []int64) {
+	for id := range m.payment_orders {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPaymentOrders resets all changes to the "payment_orders" edge.
+func (m *QrisPaymentMutation) ResetPaymentOrders() {
+	m.payment_orders = nil
+	m.clearedpayment_orders = false
+	m.removedpayment_orders = nil
+}
+
+// Where appends a list predicates to the QrisPaymentMutation builder.
+func (m *QrisPaymentMutation) Where(ps ...predicate.QrisPayment) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the QrisPaymentMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *QrisPaymentMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.QrisPayment, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *QrisPaymentMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *QrisPaymentMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (QrisPayment).
+func (m *QrisPaymentMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *QrisPaymentMutation) Fields() []string {
+	fields := make([]string, 0, 11)
+	if m.user_id != nil {
+		fields = append(fields, qrispayment.FieldUserID)
+	}
+	if m.amount_idr != nil {
+		fields = append(fields, qrispayment.FieldAmountIdr)
+	}
+	if m.payment_ref != nil {
+		fields = append(fields, qrispayment.FieldPaymentRef)
+	}
+	if m.qr_string != nil {
+		fields = append(fields, qrispayment.FieldQrString)
+	}
+	if m.image_base64 != nil {
+		fields = append(fields, qrispayment.FieldImageBase64)
+	}
+	if m.expires_at != nil {
+		fields = append(fields, qrispayment.FieldExpiresAt)
+	}
+	if m.status != nil {
+		fields = append(fields, qrispayment.FieldStatus)
+	}
+	if m.gomerch_payload != nil {
+		fields = append(fields, qrispayment.FieldGomerchPayload)
+	}
+	if m.idempotency_key != nil {
+		fields = append(fields, qrispayment.FieldIdempotencyKey)
+	}
+	if m.created_at != nil {
+		fields = append(fields, qrispayment.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, qrispayment.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *QrisPaymentMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case qrispayment.FieldUserID:
+		return m.UserID()
+	case qrispayment.FieldAmountIdr:
+		return m.AmountIdr()
+	case qrispayment.FieldPaymentRef:
+		return m.PaymentRef()
+	case qrispayment.FieldQrString:
+		return m.QrString()
+	case qrispayment.FieldImageBase64:
+		return m.ImageBase64()
+	case qrispayment.FieldExpiresAt:
+		return m.ExpiresAt()
+	case qrispayment.FieldStatus:
+		return m.Status()
+	case qrispayment.FieldGomerchPayload:
+		return m.GomerchPayload()
+	case qrispayment.FieldIdempotencyKey:
+		return m.IdempotencyKey()
+	case qrispayment.FieldCreatedAt:
+		return m.CreatedAt()
+	case qrispayment.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *QrisPaymentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case qrispayment.FieldUserID:
+		return m.OldUserID(ctx)
+	case qrispayment.FieldAmountIdr:
+		return m.OldAmountIdr(ctx)
+	case qrispayment.FieldPaymentRef:
+		return m.OldPaymentRef(ctx)
+	case qrispayment.FieldQrString:
+		return m.OldQrString(ctx)
+	case qrispayment.FieldImageBase64:
+		return m.OldImageBase64(ctx)
+	case qrispayment.FieldExpiresAt:
+		return m.OldExpiresAt(ctx)
+	case qrispayment.FieldStatus:
+		return m.OldStatus(ctx)
+	case qrispayment.FieldGomerchPayload:
+		return m.OldGomerchPayload(ctx)
+	case qrispayment.FieldIdempotencyKey:
+		return m.OldIdempotencyKey(ctx)
+	case qrispayment.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case qrispayment.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown QrisPayment field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *QrisPaymentMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case qrispayment.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case qrispayment.FieldAmountIdr:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAmountIdr(v)
+		return nil
+	case qrispayment.FieldPaymentRef:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPaymentRef(v)
+		return nil
+	case qrispayment.FieldQrString:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQrString(v)
+		return nil
+	case qrispayment.FieldImageBase64:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImageBase64(v)
+		return nil
+	case qrispayment.FieldExpiresAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExpiresAt(v)
+		return nil
+	case qrispayment.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case qrispayment.FieldGomerchPayload:
+		v, ok := value.(map[string]interface{})
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGomerchPayload(v)
+		return nil
+	case qrispayment.FieldIdempotencyKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIdempotencyKey(v)
+		return nil
+	case qrispayment.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case qrispayment.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown QrisPayment field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *QrisPaymentMutation) AddedFields() []string {
+	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, qrispayment.FieldUserID)
+	}
+	if m.addamount_idr != nil {
+		fields = append(fields, qrispayment.FieldAmountIdr)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *QrisPaymentMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case qrispayment.FieldUserID:
+		return m.AddedUserID()
+	case qrispayment.FieldAmountIdr:
+		return m.AddedAmountIdr()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *QrisPaymentMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case qrispayment.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
+	case qrispayment.FieldAmountIdr:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAmountIdr(v)
+		return nil
+	}
+	return fmt.Errorf("unknown QrisPayment numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *QrisPaymentMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(qrispayment.FieldGomerchPayload) {
+		fields = append(fields, qrispayment.FieldGomerchPayload)
+	}
+	if m.FieldCleared(qrispayment.FieldIdempotencyKey) {
+		fields = append(fields, qrispayment.FieldIdempotencyKey)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *QrisPaymentMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *QrisPaymentMutation) ClearField(name string) error {
+	switch name {
+	case qrispayment.FieldGomerchPayload:
+		m.ClearGomerchPayload()
+		return nil
+	case qrispayment.FieldIdempotencyKey:
+		m.ClearIdempotencyKey()
+		return nil
+	}
+	return fmt.Errorf("unknown QrisPayment nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *QrisPaymentMutation) ResetField(name string) error {
+	switch name {
+	case qrispayment.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case qrispayment.FieldAmountIdr:
+		m.ResetAmountIdr()
+		return nil
+	case qrispayment.FieldPaymentRef:
+		m.ResetPaymentRef()
+		return nil
+	case qrispayment.FieldQrString:
+		m.ResetQrString()
+		return nil
+	case qrispayment.FieldImageBase64:
+		m.ResetImageBase64()
+		return nil
+	case qrispayment.FieldExpiresAt:
+		m.ResetExpiresAt()
+		return nil
+	case qrispayment.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case qrispayment.FieldGomerchPayload:
+		m.ResetGomerchPayload()
+		return nil
+	case qrispayment.FieldIdempotencyKey:
+		m.ResetIdempotencyKey()
+		return nil
+	case qrispayment.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case qrispayment.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown QrisPayment field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *QrisPaymentMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.payment_orders != nil {
+		edges = append(edges, qrispayment.EdgePaymentOrders)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *QrisPaymentMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case qrispayment.EdgePaymentOrders:
+		ids := make([]ent.Value, 0, len(m.payment_orders))
+		for id := range m.payment_orders {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *QrisPaymentMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedpayment_orders != nil {
+		edges = append(edges, qrispayment.EdgePaymentOrders)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *QrisPaymentMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case qrispayment.EdgePaymentOrders:
+		ids := make([]ent.Value, 0, len(m.removedpayment_orders))
+		for id := range m.removedpayment_orders {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *QrisPaymentMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedpayment_orders {
+		edges = append(edges, qrispayment.EdgePaymentOrders)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *QrisPaymentMutation) EdgeCleared(name string) bool {
+	switch name {
+	case qrispayment.EdgePaymentOrders:
+		return m.clearedpayment_orders
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *QrisPaymentMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown QrisPayment unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *QrisPaymentMutation) ResetEdge(name string) error {
+	switch name {
+	case qrispayment.EdgePaymentOrders:
+		m.ResetPaymentOrders()
+		return nil
+	}
+	return fmt.Errorf("unknown QrisPayment edge %s", name)
 }
 
 // RedeemCodeMutation represents an operation that mutates the RedeemCode nodes in the graph.
