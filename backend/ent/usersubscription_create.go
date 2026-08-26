@@ -79,6 +79,76 @@ func (_c *UserSubscriptionCreate) SetGroupID(v int64) *UserSubscriptionCreate {
 	return _c
 }
 
+// SetModelID sets the "model_id" field.
+func (_c *UserSubscriptionCreate) SetModelID(v string) *UserSubscriptionCreate {
+	_c.mutation.SetModelID(v)
+	return _c
+}
+
+// SetNillableModelID sets the "model_id" field if the given value is not nil.
+func (_c *UserSubscriptionCreate) SetNillableModelID(v *string) *UserSubscriptionCreate {
+	if v != nil {
+		_c.SetModelID(*v)
+	}
+	return _c
+}
+
+// SetPurchasedTokens sets the "purchased_tokens" field.
+func (_c *UserSubscriptionCreate) SetPurchasedTokens(v int64) *UserSubscriptionCreate {
+	_c.mutation.SetPurchasedTokens(v)
+	return _c
+}
+
+// SetNillablePurchasedTokens sets the "purchased_tokens" field if the given value is not nil.
+func (_c *UserSubscriptionCreate) SetNillablePurchasedTokens(v *int64) *UserSubscriptionCreate {
+	if v != nil {
+		_c.SetPurchasedTokens(*v)
+	}
+	return _c
+}
+
+// SetTokenExpiryAt sets the "token_expiry_at" field.
+func (_c *UserSubscriptionCreate) SetTokenExpiryAt(v time.Time) *UserSubscriptionCreate {
+	_c.mutation.SetTokenExpiryAt(v)
+	return _c
+}
+
+// SetNillableTokenExpiryAt sets the "token_expiry_at" field if the given value is not nil.
+func (_c *UserSubscriptionCreate) SetNillableTokenExpiryAt(v *time.Time) *UserSubscriptionCreate {
+	if v != nil {
+		_c.SetTokenExpiryAt(*v)
+	}
+	return _c
+}
+
+// SetCreditLedgerID sets the "credit_ledger_id" field.
+func (_c *UserSubscriptionCreate) SetCreditLedgerID(v string) *UserSubscriptionCreate {
+	_c.mutation.SetCreditLedgerID(v)
+	return _c
+}
+
+// SetNillableCreditLedgerID sets the "credit_ledger_id" field if the given value is not nil.
+func (_c *UserSubscriptionCreate) SetNillableCreditLedgerID(v *string) *UserSubscriptionCreate {
+	if v != nil {
+		_c.SetCreditLedgerID(*v)
+	}
+	return _c
+}
+
+// SetPlanNameSnapshot sets the "plan_name_snapshot" field.
+func (_c *UserSubscriptionCreate) SetPlanNameSnapshot(v string) *UserSubscriptionCreate {
+	_c.mutation.SetPlanNameSnapshot(v)
+	return _c
+}
+
+// SetNillablePlanNameSnapshot sets the "plan_name_snapshot" field if the given value is not nil.
+func (_c *UserSubscriptionCreate) SetNillablePlanNameSnapshot(v *string) *UserSubscriptionCreate {
+	if v != nil {
+		_c.SetPlanNameSnapshot(*v)
+	}
+	return _c
+}
+
 // SetStartsAt sets the "starts_at" field.
 func (_c *UserSubscriptionCreate) SetStartsAt(v time.Time) *UserSubscriptionCreate {
 	_c.mutation.SetStartsAt(v)
@@ -366,6 +436,11 @@ func (_c *UserSubscriptionCreate) check() error {
 	if _, ok := _c.mutation.GroupID(); !ok {
 		return &ValidationError{Name: "group_id", err: errors.New(`ent: missing required field "UserSubscription.group_id"`)}
 	}
+	if v, ok := _c.mutation.PlanNameSnapshot(); ok {
+		if err := usersubscription.PlanNameSnapshotValidator(v); err != nil {
+			return &ValidationError{Name: "plan_name_snapshot", err: fmt.Errorf(`ent: validator failed for field "UserSubscription.plan_name_snapshot": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.StartsAt(); !ok {
 		return &ValidationError{Name: "starts_at", err: errors.New(`ent: missing required field "UserSubscription.starts_at"`)}
 	}
@@ -436,6 +511,26 @@ func (_c *UserSubscriptionCreate) createSpec() (*UserSubscription, *sqlgraph.Cre
 	if value, ok := _c.mutation.DeletedAt(); ok {
 		_spec.SetField(usersubscription.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if value, ok := _c.mutation.ModelID(); ok {
+		_spec.SetField(usersubscription.FieldModelID, field.TypeString, value)
+		_node.ModelID = &value
+	}
+	if value, ok := _c.mutation.PurchasedTokens(); ok {
+		_spec.SetField(usersubscription.FieldPurchasedTokens, field.TypeInt64, value)
+		_node.PurchasedTokens = &value
+	}
+	if value, ok := _c.mutation.TokenExpiryAt(); ok {
+		_spec.SetField(usersubscription.FieldTokenExpiryAt, field.TypeTime, value)
+		_node.TokenExpiryAt = &value
+	}
+	if value, ok := _c.mutation.CreditLedgerID(); ok {
+		_spec.SetField(usersubscription.FieldCreditLedgerID, field.TypeString, value)
+		_node.CreditLedgerID = &value
+	}
+	if value, ok := _c.mutation.PlanNameSnapshot(); ok {
+		_spec.SetField(usersubscription.FieldPlanNameSnapshot, field.TypeString, value)
+		_node.PlanNameSnapshot = &value
 	}
 	if value, ok := _c.mutation.StartsAt(); ok {
 		_spec.SetField(usersubscription.FieldStartsAt, field.TypeTime, value)
@@ -651,6 +746,102 @@ func (u *UserSubscriptionUpsert) SetGroupID(v int64) *UserSubscriptionUpsert {
 // UpdateGroupID sets the "group_id" field to the value that was provided on create.
 func (u *UserSubscriptionUpsert) UpdateGroupID() *UserSubscriptionUpsert {
 	u.SetExcluded(usersubscription.FieldGroupID)
+	return u
+}
+
+// SetModelID sets the "model_id" field.
+func (u *UserSubscriptionUpsert) SetModelID(v string) *UserSubscriptionUpsert {
+	u.Set(usersubscription.FieldModelID, v)
+	return u
+}
+
+// UpdateModelID sets the "model_id" field to the value that was provided on create.
+func (u *UserSubscriptionUpsert) UpdateModelID() *UserSubscriptionUpsert {
+	u.SetExcluded(usersubscription.FieldModelID)
+	return u
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (u *UserSubscriptionUpsert) ClearModelID() *UserSubscriptionUpsert {
+	u.SetNull(usersubscription.FieldModelID)
+	return u
+}
+
+// SetPurchasedTokens sets the "purchased_tokens" field.
+func (u *UserSubscriptionUpsert) SetPurchasedTokens(v int64) *UserSubscriptionUpsert {
+	u.Set(usersubscription.FieldPurchasedTokens, v)
+	return u
+}
+
+// UpdatePurchasedTokens sets the "purchased_tokens" field to the value that was provided on create.
+func (u *UserSubscriptionUpsert) UpdatePurchasedTokens() *UserSubscriptionUpsert {
+	u.SetExcluded(usersubscription.FieldPurchasedTokens)
+	return u
+}
+
+// AddPurchasedTokens adds v to the "purchased_tokens" field.
+func (u *UserSubscriptionUpsert) AddPurchasedTokens(v int64) *UserSubscriptionUpsert {
+	u.Add(usersubscription.FieldPurchasedTokens, v)
+	return u
+}
+
+// ClearPurchasedTokens clears the value of the "purchased_tokens" field.
+func (u *UserSubscriptionUpsert) ClearPurchasedTokens() *UserSubscriptionUpsert {
+	u.SetNull(usersubscription.FieldPurchasedTokens)
+	return u
+}
+
+// SetTokenExpiryAt sets the "token_expiry_at" field.
+func (u *UserSubscriptionUpsert) SetTokenExpiryAt(v time.Time) *UserSubscriptionUpsert {
+	u.Set(usersubscription.FieldTokenExpiryAt, v)
+	return u
+}
+
+// UpdateTokenExpiryAt sets the "token_expiry_at" field to the value that was provided on create.
+func (u *UserSubscriptionUpsert) UpdateTokenExpiryAt() *UserSubscriptionUpsert {
+	u.SetExcluded(usersubscription.FieldTokenExpiryAt)
+	return u
+}
+
+// ClearTokenExpiryAt clears the value of the "token_expiry_at" field.
+func (u *UserSubscriptionUpsert) ClearTokenExpiryAt() *UserSubscriptionUpsert {
+	u.SetNull(usersubscription.FieldTokenExpiryAt)
+	return u
+}
+
+// SetCreditLedgerID sets the "credit_ledger_id" field.
+func (u *UserSubscriptionUpsert) SetCreditLedgerID(v string) *UserSubscriptionUpsert {
+	u.Set(usersubscription.FieldCreditLedgerID, v)
+	return u
+}
+
+// UpdateCreditLedgerID sets the "credit_ledger_id" field to the value that was provided on create.
+func (u *UserSubscriptionUpsert) UpdateCreditLedgerID() *UserSubscriptionUpsert {
+	u.SetExcluded(usersubscription.FieldCreditLedgerID)
+	return u
+}
+
+// ClearCreditLedgerID clears the value of the "credit_ledger_id" field.
+func (u *UserSubscriptionUpsert) ClearCreditLedgerID() *UserSubscriptionUpsert {
+	u.SetNull(usersubscription.FieldCreditLedgerID)
+	return u
+}
+
+// SetPlanNameSnapshot sets the "plan_name_snapshot" field.
+func (u *UserSubscriptionUpsert) SetPlanNameSnapshot(v string) *UserSubscriptionUpsert {
+	u.Set(usersubscription.FieldPlanNameSnapshot, v)
+	return u
+}
+
+// UpdatePlanNameSnapshot sets the "plan_name_snapshot" field to the value that was provided on create.
+func (u *UserSubscriptionUpsert) UpdatePlanNameSnapshot() *UserSubscriptionUpsert {
+	u.SetExcluded(usersubscription.FieldPlanNameSnapshot)
+	return u
+}
+
+// ClearPlanNameSnapshot clears the value of the "plan_name_snapshot" field.
+func (u *UserSubscriptionUpsert) ClearPlanNameSnapshot() *UserSubscriptionUpsert {
+	u.SetNull(usersubscription.FieldPlanNameSnapshot)
 	return u
 }
 
@@ -951,6 +1142,118 @@ func (u *UserSubscriptionUpsertOne) SetGroupID(v int64) *UserSubscriptionUpsertO
 func (u *UserSubscriptionUpsertOne) UpdateGroupID() *UserSubscriptionUpsertOne {
 	return u.Update(func(s *UserSubscriptionUpsert) {
 		s.UpdateGroupID()
+	})
+}
+
+// SetModelID sets the "model_id" field.
+func (u *UserSubscriptionUpsertOne) SetModelID(v string) *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetModelID(v)
+	})
+}
+
+// UpdateModelID sets the "model_id" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertOne) UpdateModelID() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdateModelID()
+	})
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (u *UserSubscriptionUpsertOne) ClearModelID() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearModelID()
+	})
+}
+
+// SetPurchasedTokens sets the "purchased_tokens" field.
+func (u *UserSubscriptionUpsertOne) SetPurchasedTokens(v int64) *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetPurchasedTokens(v)
+	})
+}
+
+// AddPurchasedTokens adds v to the "purchased_tokens" field.
+func (u *UserSubscriptionUpsertOne) AddPurchasedTokens(v int64) *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.AddPurchasedTokens(v)
+	})
+}
+
+// UpdatePurchasedTokens sets the "purchased_tokens" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertOne) UpdatePurchasedTokens() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdatePurchasedTokens()
+	})
+}
+
+// ClearPurchasedTokens clears the value of the "purchased_tokens" field.
+func (u *UserSubscriptionUpsertOne) ClearPurchasedTokens() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearPurchasedTokens()
+	})
+}
+
+// SetTokenExpiryAt sets the "token_expiry_at" field.
+func (u *UserSubscriptionUpsertOne) SetTokenExpiryAt(v time.Time) *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetTokenExpiryAt(v)
+	})
+}
+
+// UpdateTokenExpiryAt sets the "token_expiry_at" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertOne) UpdateTokenExpiryAt() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdateTokenExpiryAt()
+	})
+}
+
+// ClearTokenExpiryAt clears the value of the "token_expiry_at" field.
+func (u *UserSubscriptionUpsertOne) ClearTokenExpiryAt() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearTokenExpiryAt()
+	})
+}
+
+// SetCreditLedgerID sets the "credit_ledger_id" field.
+func (u *UserSubscriptionUpsertOne) SetCreditLedgerID(v string) *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetCreditLedgerID(v)
+	})
+}
+
+// UpdateCreditLedgerID sets the "credit_ledger_id" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertOne) UpdateCreditLedgerID() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdateCreditLedgerID()
+	})
+}
+
+// ClearCreditLedgerID clears the value of the "credit_ledger_id" field.
+func (u *UserSubscriptionUpsertOne) ClearCreditLedgerID() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearCreditLedgerID()
+	})
+}
+
+// SetPlanNameSnapshot sets the "plan_name_snapshot" field.
+func (u *UserSubscriptionUpsertOne) SetPlanNameSnapshot(v string) *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetPlanNameSnapshot(v)
+	})
+}
+
+// UpdatePlanNameSnapshot sets the "plan_name_snapshot" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertOne) UpdatePlanNameSnapshot() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdatePlanNameSnapshot()
+	})
+}
+
+// ClearPlanNameSnapshot clears the value of the "plan_name_snapshot" field.
+func (u *UserSubscriptionUpsertOne) ClearPlanNameSnapshot() *UserSubscriptionUpsertOne {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearPlanNameSnapshot()
 	})
 }
 
@@ -1449,6 +1752,118 @@ func (u *UserSubscriptionUpsertBulk) SetGroupID(v int64) *UserSubscriptionUpsert
 func (u *UserSubscriptionUpsertBulk) UpdateGroupID() *UserSubscriptionUpsertBulk {
 	return u.Update(func(s *UserSubscriptionUpsert) {
 		s.UpdateGroupID()
+	})
+}
+
+// SetModelID sets the "model_id" field.
+func (u *UserSubscriptionUpsertBulk) SetModelID(v string) *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetModelID(v)
+	})
+}
+
+// UpdateModelID sets the "model_id" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertBulk) UpdateModelID() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdateModelID()
+	})
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (u *UserSubscriptionUpsertBulk) ClearModelID() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearModelID()
+	})
+}
+
+// SetPurchasedTokens sets the "purchased_tokens" field.
+func (u *UserSubscriptionUpsertBulk) SetPurchasedTokens(v int64) *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetPurchasedTokens(v)
+	})
+}
+
+// AddPurchasedTokens adds v to the "purchased_tokens" field.
+func (u *UserSubscriptionUpsertBulk) AddPurchasedTokens(v int64) *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.AddPurchasedTokens(v)
+	})
+}
+
+// UpdatePurchasedTokens sets the "purchased_tokens" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertBulk) UpdatePurchasedTokens() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdatePurchasedTokens()
+	})
+}
+
+// ClearPurchasedTokens clears the value of the "purchased_tokens" field.
+func (u *UserSubscriptionUpsertBulk) ClearPurchasedTokens() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearPurchasedTokens()
+	})
+}
+
+// SetTokenExpiryAt sets the "token_expiry_at" field.
+func (u *UserSubscriptionUpsertBulk) SetTokenExpiryAt(v time.Time) *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetTokenExpiryAt(v)
+	})
+}
+
+// UpdateTokenExpiryAt sets the "token_expiry_at" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertBulk) UpdateTokenExpiryAt() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdateTokenExpiryAt()
+	})
+}
+
+// ClearTokenExpiryAt clears the value of the "token_expiry_at" field.
+func (u *UserSubscriptionUpsertBulk) ClearTokenExpiryAt() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearTokenExpiryAt()
+	})
+}
+
+// SetCreditLedgerID sets the "credit_ledger_id" field.
+func (u *UserSubscriptionUpsertBulk) SetCreditLedgerID(v string) *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetCreditLedgerID(v)
+	})
+}
+
+// UpdateCreditLedgerID sets the "credit_ledger_id" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertBulk) UpdateCreditLedgerID() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdateCreditLedgerID()
+	})
+}
+
+// ClearCreditLedgerID clears the value of the "credit_ledger_id" field.
+func (u *UserSubscriptionUpsertBulk) ClearCreditLedgerID() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearCreditLedgerID()
+	})
+}
+
+// SetPlanNameSnapshot sets the "plan_name_snapshot" field.
+func (u *UserSubscriptionUpsertBulk) SetPlanNameSnapshot(v string) *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.SetPlanNameSnapshot(v)
+	})
+}
+
+// UpdatePlanNameSnapshot sets the "plan_name_snapshot" field to the value that was provided on create.
+func (u *UserSubscriptionUpsertBulk) UpdatePlanNameSnapshot() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.UpdatePlanNameSnapshot()
+	})
+}
+
+// ClearPlanNameSnapshot clears the value of the "plan_name_snapshot" field.
+func (u *UserSubscriptionUpsertBulk) ClearPlanNameSnapshot() *UserSubscriptionUpsertBulk {
+	return u.Update(func(s *UserSubscriptionUpsert) {
+		s.ClearPlanNameSnapshot()
 	})
 }
 
