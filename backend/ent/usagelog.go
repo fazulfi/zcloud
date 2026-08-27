@@ -77,6 +77,34 @@ type UsageLog struct {
 	TotalCost float64 `json:"total_cost,omitempty"`
 	// ActualCost holds the value of the "actual_cost" field.
 	ActualCost float64 `json:"actual_cost,omitempty"`
+	// DisplayInputCost holds the value of the "display_input_cost" field.
+	DisplayInputCost float64 `json:"display_input_cost,omitempty"`
+	// DisplayOutputCost holds the value of the "display_output_cost" field.
+	DisplayOutputCost float64 `json:"display_output_cost,omitempty"`
+	// DisplayCacheReadCost holds the value of the "display_cache_read_cost" field.
+	DisplayCacheReadCost float64 `json:"display_cache_read_cost,omitempty"`
+	// DisplayCacheWriteCost holds the value of the "display_cache_write_cost" field.
+	DisplayCacheWriteCost float64 `json:"display_cache_write_cost,omitempty"`
+	// DisplayTotalCost holds the value of the "display_total_cost" field.
+	DisplayTotalCost float64 `json:"display_total_cost,omitempty"`
+	// DisplayBlendCost holds the value of the "display_blend_cost" field.
+	DisplayBlendCost float64 `json:"display_blend_cost,omitempty"`
+	// CostInput holds the value of the "cost_input" field.
+	CostInput float64 `json:"cost_input,omitempty"`
+	// CostOutput holds the value of the "cost_output" field.
+	CostOutput float64 `json:"cost_output,omitempty"`
+	// CostCacheRead holds the value of the "cost_cache_read" field.
+	CostCacheRead float64 `json:"cost_cache_read,omitempty"`
+	// CostCacheWrite holds the value of the "cost_cache_write" field.
+	CostCacheWrite float64 `json:"cost_cache_write,omitempty"`
+	// CostTotal holds the value of the "cost_total" field.
+	CostTotal float64 `json:"cost_total,omitempty"`
+	// CostSupplierCode holds the value of the "cost_supplier_code" field.
+	CostSupplierCode string `json:"cost_supplier_code,omitempty"`
+	// PricingVersion holds the value of the "pricing_version" field.
+	PricingVersion int `json:"pricing_version,omitempty"`
+	// ReservationStatus holds the value of the "reservation_status" field.
+	ReservationStatus string `json:"reservation_status,omitempty"`
 	// RateMultiplier holds the value of the "rate_multiplier" field.
 	RateMultiplier float64 `json:"rate_multiplier,omitempty"`
 	// Whether long-context pricing changed token prices for this request
@@ -204,11 +232,11 @@ func (*UsageLog) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case usagelog.FieldUpstreamModelMismatch, usagelog.FieldLongContextBillingApplied, usagelog.FieldStream, usagelog.FieldCacheTTLOverridden:
 			values[i] = new(sql.NullBool)
-		case usagelog.FieldInputCost, usagelog.FieldOutputCost, usagelog.FieldCacheCreationCost, usagelog.FieldCacheReadCost, usagelog.FieldTotalCost, usagelog.FieldActualCost, usagelog.FieldRateMultiplier, usagelog.FieldAccountRateMultiplier:
+		case usagelog.FieldInputCost, usagelog.FieldOutputCost, usagelog.FieldCacheCreationCost, usagelog.FieldCacheReadCost, usagelog.FieldTotalCost, usagelog.FieldActualCost, usagelog.FieldDisplayInputCost, usagelog.FieldDisplayOutputCost, usagelog.FieldDisplayCacheReadCost, usagelog.FieldDisplayCacheWriteCost, usagelog.FieldDisplayTotalCost, usagelog.FieldDisplayBlendCost, usagelog.FieldCostInput, usagelog.FieldCostOutput, usagelog.FieldCostCacheRead, usagelog.FieldCostCacheWrite, usagelog.FieldCostTotal, usagelog.FieldRateMultiplier, usagelog.FieldAccountRateMultiplier:
 			values[i] = new(sql.NullFloat64)
-		case usagelog.FieldID, usagelog.FieldUserID, usagelog.FieldAPIKeyID, usagelog.FieldAccountID, usagelog.FieldChannelID, usagelog.FieldGroupID, usagelog.FieldSubscriptionID, usagelog.FieldInputTokens, usagelog.FieldOutputTokens, usagelog.FieldCacheCreationTokens, usagelog.FieldCacheReadTokens, usagelog.FieldCacheCreation5mTokens, usagelog.FieldCacheCreation1hTokens, usagelog.FieldBillingType, usagelog.FieldDurationMs, usagelog.FieldFirstTokenMs, usagelog.FieldImageCount, usagelog.FieldVideoCount, usagelog.FieldVideoDurationSeconds:
+		case usagelog.FieldID, usagelog.FieldUserID, usagelog.FieldAPIKeyID, usagelog.FieldAccountID, usagelog.FieldChannelID, usagelog.FieldGroupID, usagelog.FieldSubscriptionID, usagelog.FieldInputTokens, usagelog.FieldOutputTokens, usagelog.FieldCacheCreationTokens, usagelog.FieldCacheReadTokens, usagelog.FieldCacheCreation5mTokens, usagelog.FieldCacheCreation1hTokens, usagelog.FieldPricingVersion, usagelog.FieldBillingType, usagelog.FieldDurationMs, usagelog.FieldFirstTokenMs, usagelog.FieldImageCount, usagelog.FieldVideoCount, usagelog.FieldVideoDurationSeconds:
 			values[i] = new(sql.NullInt64)
-		case usagelog.FieldRequestID, usagelog.FieldModel, usagelog.FieldRequestedModel, usagelog.FieldUpstreamModel, usagelog.FieldUpstreamResponseModel, usagelog.FieldModelMappingChain, usagelog.FieldBillingTier, usagelog.FieldBillingMode, usagelog.FieldUserAgent, usagelog.FieldIPAddress, usagelog.FieldImageSize, usagelog.FieldImageInputSize, usagelog.FieldImageOutputSize, usagelog.FieldImageSizeSource, usagelog.FieldVideoResolution:
+		case usagelog.FieldRequestID, usagelog.FieldModel, usagelog.FieldRequestedModel, usagelog.FieldUpstreamModel, usagelog.FieldUpstreamResponseModel, usagelog.FieldModelMappingChain, usagelog.FieldBillingTier, usagelog.FieldBillingMode, usagelog.FieldCostSupplierCode, usagelog.FieldReservationStatus, usagelog.FieldUserAgent, usagelog.FieldIPAddress, usagelog.FieldImageSize, usagelog.FieldImageInputSize, usagelog.FieldImageOutputSize, usagelog.FieldImageSizeSource, usagelog.FieldVideoResolution:
 			values[i] = new(sql.NullString)
 		case usagelog.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -404,6 +432,90 @@ func (_m *UsageLog) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field actual_cost", values[i])
 			} else if value.Valid {
 				_m.ActualCost = value.Float64
+			}
+		case usagelog.FieldDisplayInputCost:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_input_cost", values[i])
+			} else if value.Valid {
+				_m.DisplayInputCost = value.Float64
+			}
+		case usagelog.FieldDisplayOutputCost:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_output_cost", values[i])
+			} else if value.Valid {
+				_m.DisplayOutputCost = value.Float64
+			}
+		case usagelog.FieldDisplayCacheReadCost:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_cache_read_cost", values[i])
+			} else if value.Valid {
+				_m.DisplayCacheReadCost = value.Float64
+			}
+		case usagelog.FieldDisplayCacheWriteCost:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_cache_write_cost", values[i])
+			} else if value.Valid {
+				_m.DisplayCacheWriteCost = value.Float64
+			}
+		case usagelog.FieldDisplayTotalCost:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_total_cost", values[i])
+			} else if value.Valid {
+				_m.DisplayTotalCost = value.Float64
+			}
+		case usagelog.FieldDisplayBlendCost:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_blend_cost", values[i])
+			} else if value.Valid {
+				_m.DisplayBlendCost = value.Float64
+			}
+		case usagelog.FieldCostInput:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field cost_input", values[i])
+			} else if value.Valid {
+				_m.CostInput = value.Float64
+			}
+		case usagelog.FieldCostOutput:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field cost_output", values[i])
+			} else if value.Valid {
+				_m.CostOutput = value.Float64
+			}
+		case usagelog.FieldCostCacheRead:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field cost_cache_read", values[i])
+			} else if value.Valid {
+				_m.CostCacheRead = value.Float64
+			}
+		case usagelog.FieldCostCacheWrite:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field cost_cache_write", values[i])
+			} else if value.Valid {
+				_m.CostCacheWrite = value.Float64
+			}
+		case usagelog.FieldCostTotal:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field cost_total", values[i])
+			} else if value.Valid {
+				_m.CostTotal = value.Float64
+			}
+		case usagelog.FieldCostSupplierCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cost_supplier_code", values[i])
+			} else if value.Valid {
+				_m.CostSupplierCode = value.String
+			}
+		case usagelog.FieldPricingVersion:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field pricing_version", values[i])
+			} else if value.Valid {
+				_m.PricingVersion = int(value.Int64)
+			}
+		case usagelog.FieldReservationStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field reservation_status", values[i])
+			} else if value.Valid {
+				_m.ReservationStatus = value.String
 			}
 		case usagelog.FieldRateMultiplier:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -699,6 +811,48 @@ func (_m *UsageLog) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("actual_cost=")
 	builder.WriteString(fmt.Sprintf("%v", _m.ActualCost))
+	builder.WriteString(", ")
+	builder.WriteString("display_input_cost=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayInputCost))
+	builder.WriteString(", ")
+	builder.WriteString("display_output_cost=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayOutputCost))
+	builder.WriteString(", ")
+	builder.WriteString("display_cache_read_cost=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayCacheReadCost))
+	builder.WriteString(", ")
+	builder.WriteString("display_cache_write_cost=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayCacheWriteCost))
+	builder.WriteString(", ")
+	builder.WriteString("display_total_cost=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayTotalCost))
+	builder.WriteString(", ")
+	builder.WriteString("display_blend_cost=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayBlendCost))
+	builder.WriteString(", ")
+	builder.WriteString("cost_input=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CostInput))
+	builder.WriteString(", ")
+	builder.WriteString("cost_output=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CostOutput))
+	builder.WriteString(", ")
+	builder.WriteString("cost_cache_read=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CostCacheRead))
+	builder.WriteString(", ")
+	builder.WriteString("cost_cache_write=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CostCacheWrite))
+	builder.WriteString(", ")
+	builder.WriteString("cost_total=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CostTotal))
+	builder.WriteString(", ")
+	builder.WriteString("cost_supplier_code=")
+	builder.WriteString(_m.CostSupplierCode)
+	builder.WriteString(", ")
+	builder.WriteString("pricing_version=")
+	builder.WriteString(fmt.Sprintf("%v", _m.PricingVersion))
+	builder.WriteString(", ")
+	builder.WriteString("reservation_status=")
+	builder.WriteString(_m.ReservationStatus)
 	builder.WriteString(", ")
 	builder.WriteString("rate_multiplier=")
 	builder.WriteString(fmt.Sprintf("%v", _m.RateMultiplier))

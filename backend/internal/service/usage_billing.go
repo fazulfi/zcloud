@@ -9,6 +9,8 @@ import (
 	"math"
 	"strings"
 
+	"entgo.io/ent/dialect/sql"
+	dbent "github.com/Wei-Shaw/sub2api/ent"
 	"github.com/shopspring/decimal"
 )
 
@@ -223,4 +225,81 @@ type UsageBillingRepository interface {
 	ReserveBatchImageBalance(ctx context.Context, cmd *BatchImageBalanceHoldCommand) (*BatchImageBalanceHoldResult, error)
 	CaptureBatchImageBalance(ctx context.Context, cmd *BatchImageBalanceHoldCommand) (*BatchImageBalanceHoldResult, error)
 	ReleaseBatchImageBalance(ctx context.Context, cmd *BatchImageBalanceHoldCommand) (*BatchImageBalanceHoldResult, error)
+}
+
+// UpsertUsageModelSnapshot rolls a request's dual-meter amounts into the
+// per-user per-model snapshot (M1.7). Idempotent by request_id: callers
+// dedupe before invoking, the row key is (user_id, model, pricing_version).
+func UpsertUsageModelSnapshot(ctx context.Context, client *dbent.Client, snap *UsageModelSnapshot) error {
+	if client == nil || snap == nil || snap.UserID <= 0 || strings.TrimSpace(snap.Model) == "" {
+		return nil
+	}
+	create := client.UsageModelSnapshot.Create().
+		SetUserID(snap.UserID).
+		SetModel(strings.TrimSpace(snap.Model)).
+		SetPricingVersion(snap.PricingVersion).
+		SetDisplayInputCost(snap.DisplayInputCost).
+		SetDisplayOutputCost(snap.DisplayOutputCost).
+		SetDisplayCacheReadCost(snap.DisplayCacheReadCost).
+		SetDisplayCacheWriteCost(snap.DisplayCacheWriteCost).
+		SetDisplayTotalCost(snap.DisplayTotalCost).
+		SetDisplayBlendCost(snap.DisplayBlendCost).
+		SetCostInput(snap.CostInput).
+		SetCostOutput(snap.CostOutput).
+		SetCostCacheRead(snap.CostCacheRead).
+		SetCostCacheWrite(snap.CostCacheWrite).
+		SetCostTotal(snap.CostTotal).
+		SetCostSupplierCode(strings.TrimSpace(snap.CostSupplierCode)).
+		SetInputTokens(snap.InputTokens).
+		SetOutputTokens(snap.OutputTokens).
+		SetCacheReadTokens(snap.CacheReadTokens).
+		SetCacheWriteTokens(snap.CacheWriteTokens).
+		SetUsageModelPct(snap.UsageModelPct).
+		OnConflict(
+			sql.ConflictColumns("user_id", "model", "pricing_version"),
+		).
+		UpdateNewValues().
+		AddDisplayInputCost(snap.DisplayInputCost).
+		AddDisplayOutputCost(snap.DisplayOutputCost).
+		AddDisplayCacheReadCost(snap.DisplayCacheReadCost).
+		AddDisplayCacheWriteCost(snap.DisplayCacheWriteCost).
+		AddDisplayTotalCost(snap.DisplayTotalCost).
+		AddDisplayBlendCost(snap.DisplayBlendCost).
+		AddCostInput(snap.CostInput).
+		AddCostOutput(snap.CostOutput).
+		AddCostCacheRead(snap.CostCacheRead).
+		AddCostCacheWrite(snap.CostCacheWrite).
+		AddCostTotal(snap.CostTotal).
+		SetCostSupplierCode(strings.TrimSpace(snap.CostSupplierCode)).
+		AddInputTokens(snap.InputTokens).
+		AddOutputTokens(snap.OutputTokens).
+		AddCacheReadTokens(snap.CacheReadTokens).
+		AddCacheWriteTokens(snap.CacheWriteTokens).
+		SetUsageModelPct(snap.UsageModelPct)
+	err := create.Exec(ctx)
+	return err
+}
+
+// UsageModelSnapshot is the service-level per-user per-model dual meter rollup.
+type UsageModelSnapshot struct {
+	UserID                int64
+	Model                 string
+	PricingVersion        int
+	DisplayInputCost      float64
+	DisplayOutputCost     float64
+	DisplayCacheReadCost  float64
+	DisplayCacheWriteCost float64
+	DisplayTotalCost      float64
+	DisplayBlendCost      float64
+	CostInput             float64
+	CostOutput            float64
+	CostCacheRead         float64
+	CostCacheWrite        float64
+	CostTotal             float64
+	CostSupplierCode      string
+	InputTokens           int64
+	OutputTokens          int64
+	CacheReadTokens       int64
+	CacheWriteTokens      int64
+	UsageModelPct         float64
 }

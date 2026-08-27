@@ -10,6 +10,8 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/logger"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/timezone"
+	"github.com/Wei-Shaw/sub2api/zcloud/billing"
+	"github.com/shopspring/decimal"
 )
 
 func (s *GatewayService) getUserGroupRateMultiplier(ctx context.Context, userID, groupID int64, groupDefaultMultiplier float64) float64 {
@@ -873,6 +875,10 @@ func (s *GatewayService) recordUsageCore(ctx context.Context, input *recordUsage
 	accountRateMultiplier := account.BillingRateMultiplier()
 	usageLog := s.buildRecordUsageLog(ctx, input, result, apiKey, user, account, subscription,
 		requestedModel, multiplier, imageMultiplier, accountRateMultiplier, billingType, cacheTTLOverridden, cost, opts)
+	usageLog.PricingVersion = GatewayTokenRequestPricingVersionFromContext(ctx)
+	if usageLog.PricingVersion > 0 {
+		usageLog.ReservationStatus = string(billing.ReservationPending)
+	}
 
 	// 计算账号统计定价费用（使用最终上游模型匹配自定义规则）
 	if apiKey.GroupID != nil {
@@ -909,6 +915,23 @@ func (s *GatewayService) recordUsageCore(ctx context.Context, input *recordUsage
 		}
 	}
 	requestID := usageLog.RequestID
+	reservationActive := s.reservationRepo != nil && requestID != "" && cost != nil
+	var reservationReq billing.ReservationRequest
+	if reservationActive {
+		reservationReq = billing.ReservationRequest{
+			RequestID: requestID, UserID: user.ID, AccountID: account.ID,
+			ModelID: result.Model, Model: requestedModel, Fingerprint: input.RequestPayloadHash,
+			Cost: decimal.NewFromFloat(cost.ActualCost), PricingAt: pricingAt,
+			PricingVersion: usageLog.PricingVersion,
+		}
+		reservation, err := s.reservationRepo.Reserve(ctx, reservationReq)
+		if err != nil {
+			return err
+		}
+		if reservation.Overdrawn {
+			usageLog.ActualCost = 0
+		}
+	}
 	_, billingErr := applyUsageBilling(ctx, requestID, usageLog, &postUsageBillingParams{
 		Cost:                  cost,
 		User:                  user,
@@ -923,13 +946,62 @@ func (s *GatewayService) recordUsageCore(ctx context.Context, input *recordUsage
 	}, s.billingDeps(), s.usageBillingRepo)
 
 	if billingErr != nil {
+		if reservationActive {
+			reservationCtx, cancel := detachedBillingContext(ctx)
+			_, _ = s.reservationRepo.Release(reservationCtx, reservationReq)
+			cancel()
+		}
 		usageLog.ActualCost = 0
 		writeUsageLogBestEffort(ctx, s.usageLogRepo, usageLog, "service.gateway")
 		return billingErr
 	}
+	if reservationActive {
+		reservationCtx, cancel := detachedBillingContext(ctx)
+		if _, err := s.reservationRepo.Finalize(reservationCtx, reservationReq); err != nil {
+			cancel()
+			return err
+		}
+		cancel()
+		usageLog.ReservationStatus = string(billing.ReservationFinalized)
+	}
 	writeUsageLogBestEffort(ctx, s.usageLogRepo, usageLog, "service.gateway")
+	s.upsertUsageModelSnapshot(ctx, usageLog)
 
 	return nil
+}
+
+// upsertUsageModelSnapshot 汇总每个用户+模型+定价版本的用量快照 (M1.7)。
+// snapshotRepo 为 nil 时跳过 (测试或未启用)。
+func (s *GatewayService) upsertUsageModelSnapshot(ctx context.Context, usageLog *UsageLog) {
+	if s.snapshotRepo == nil || usageLog == nil || usageLog.UserID == 0 || usageLog.Model == "" {
+		return
+	}
+	snap := &UsageModelSnapshot{
+		UserID:                usageLog.UserID,
+		Model:                 usageLog.Model,
+		PricingVersion:        usageLog.PricingVersion,
+		DisplayInputCost:      usageLog.DisplayInputCost,
+		DisplayOutputCost:     usageLog.DisplayOutputCost,
+		DisplayCacheReadCost:  usageLog.DisplayCacheReadCost,
+		DisplayCacheWriteCost: usageLog.DisplayCacheWriteCost,
+		DisplayTotalCost:      usageLog.DisplayTotalCost,
+		DisplayBlendCost:      usageLog.DisplayBlendCost,
+		CostInput:             usageLog.CostInput,
+		CostOutput:            usageLog.CostOutput,
+		CostCacheRead:         usageLog.CostCacheRead,
+		CostCacheWrite:        usageLog.CostCacheWrite,
+		CostTotal:             usageLog.CostTotal,
+		CostSupplierCode:      usageLog.CostSupplierCode,
+		InputTokens:           int64(usageLog.InputTokens),
+		OutputTokens:          int64(usageLog.OutputTokens),
+		CacheReadTokens:       int64(usageLog.CacheReadTokens),
+		CacheWriteTokens:      int64(usageLog.CacheCreationTokens),
+	}
+	snapCtx, cancel := detachedBillingContext(ctx)
+	defer cancel()
+	if err := s.snapshotRepo.Upsert(snapCtx, snap); err != nil {
+		logger.LegacyPrintf("service.gateway", "[M1.7] usage model snapshot upsert failed: user=%d model=%s err=%v", usageLog.UserID, usageLog.Model, err)
+	}
 }
 
 // calculateRecordUsageCost 根据请求类型和选项计算费用。

@@ -45,6 +45,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/tlsfingerprintprofile"
 	"github.com/Wei-Shaw/sub2api/ent/usagecleanuptask"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
+	"github.com/Wei-Shaw/sub2api/ent/usagemodelsnapshot"
 	"github.com/Wei-Shaw/sub2api/ent/user"
 	"github.com/Wei-Shaw/sub2api/ent/userallowedgroup"
 	"github.com/Wei-Shaw/sub2api/ent/userattributedefinition"
@@ -2287,66 +2288,233 @@ func init() {
 	usagelogDescActualCost := usagelogFields[26].Descriptor()
 	// usagelog.DefaultActualCost holds the default value on creation for the actual_cost field.
 	usagelog.DefaultActualCost = usagelogDescActualCost.Default.(float64)
+	// usagelogDescDisplayInputCost is the schema descriptor for display_input_cost field.
+	usagelogDescDisplayInputCost := usagelogFields[27].Descriptor()
+	// usagelog.DefaultDisplayInputCost holds the default value on creation for the display_input_cost field.
+	usagelog.DefaultDisplayInputCost = usagelogDescDisplayInputCost.Default.(float64)
+	// usagelogDescDisplayOutputCost is the schema descriptor for display_output_cost field.
+	usagelogDescDisplayOutputCost := usagelogFields[28].Descriptor()
+	// usagelog.DefaultDisplayOutputCost holds the default value on creation for the display_output_cost field.
+	usagelog.DefaultDisplayOutputCost = usagelogDescDisplayOutputCost.Default.(float64)
+	// usagelogDescDisplayCacheReadCost is the schema descriptor for display_cache_read_cost field.
+	usagelogDescDisplayCacheReadCost := usagelogFields[29].Descriptor()
+	// usagelog.DefaultDisplayCacheReadCost holds the default value on creation for the display_cache_read_cost field.
+	usagelog.DefaultDisplayCacheReadCost = usagelogDescDisplayCacheReadCost.Default.(float64)
+	// usagelogDescDisplayCacheWriteCost is the schema descriptor for display_cache_write_cost field.
+	usagelogDescDisplayCacheWriteCost := usagelogFields[30].Descriptor()
+	// usagelog.DefaultDisplayCacheWriteCost holds the default value on creation for the display_cache_write_cost field.
+	usagelog.DefaultDisplayCacheWriteCost = usagelogDescDisplayCacheWriteCost.Default.(float64)
+	// usagelogDescDisplayTotalCost is the schema descriptor for display_total_cost field.
+	usagelogDescDisplayTotalCost := usagelogFields[31].Descriptor()
+	// usagelog.DefaultDisplayTotalCost holds the default value on creation for the display_total_cost field.
+	usagelog.DefaultDisplayTotalCost = usagelogDescDisplayTotalCost.Default.(float64)
+	// usagelogDescDisplayBlendCost is the schema descriptor for display_blend_cost field.
+	usagelogDescDisplayBlendCost := usagelogFields[32].Descriptor()
+	// usagelog.DefaultDisplayBlendCost holds the default value on creation for the display_blend_cost field.
+	usagelog.DefaultDisplayBlendCost = usagelogDescDisplayBlendCost.Default.(float64)
+	// usagelogDescCostInput is the schema descriptor for cost_input field.
+	usagelogDescCostInput := usagelogFields[33].Descriptor()
+	// usagelog.DefaultCostInput holds the default value on creation for the cost_input field.
+	usagelog.DefaultCostInput = usagelogDescCostInput.Default.(float64)
+	// usagelogDescCostOutput is the schema descriptor for cost_output field.
+	usagelogDescCostOutput := usagelogFields[34].Descriptor()
+	// usagelog.DefaultCostOutput holds the default value on creation for the cost_output field.
+	usagelog.DefaultCostOutput = usagelogDescCostOutput.Default.(float64)
+	// usagelogDescCostCacheRead is the schema descriptor for cost_cache_read field.
+	usagelogDescCostCacheRead := usagelogFields[35].Descriptor()
+	// usagelog.DefaultCostCacheRead holds the default value on creation for the cost_cache_read field.
+	usagelog.DefaultCostCacheRead = usagelogDescCostCacheRead.Default.(float64)
+	// usagelogDescCostCacheWrite is the schema descriptor for cost_cache_write field.
+	usagelogDescCostCacheWrite := usagelogFields[36].Descriptor()
+	// usagelog.DefaultCostCacheWrite holds the default value on creation for the cost_cache_write field.
+	usagelog.DefaultCostCacheWrite = usagelogDescCostCacheWrite.Default.(float64)
+	// usagelogDescCostTotal is the schema descriptor for cost_total field.
+	usagelogDescCostTotal := usagelogFields[37].Descriptor()
+	// usagelog.DefaultCostTotal holds the default value on creation for the cost_total field.
+	usagelog.DefaultCostTotal = usagelogDescCostTotal.Default.(float64)
+	// usagelogDescCostSupplierCode is the schema descriptor for cost_supplier_code field.
+	usagelogDescCostSupplierCode := usagelogFields[38].Descriptor()
+	// usagelog.DefaultCostSupplierCode holds the default value on creation for the cost_supplier_code field.
+	usagelog.DefaultCostSupplierCode = usagelogDescCostSupplierCode.Default.(string)
+	// usagelog.CostSupplierCodeValidator is a validator for the "cost_supplier_code" field. It is called by the builders before save.
+	usagelog.CostSupplierCodeValidator = usagelogDescCostSupplierCode.Validators[0].(func(string) error)
+	// usagelogDescPricingVersion is the schema descriptor for pricing_version field.
+	usagelogDescPricingVersion := usagelogFields[39].Descriptor()
+	// usagelog.DefaultPricingVersion holds the default value on creation for the pricing_version field.
+	usagelog.DefaultPricingVersion = usagelogDescPricingVersion.Default.(int)
+	// usagelogDescReservationStatus is the schema descriptor for reservation_status field.
+	usagelogDescReservationStatus := usagelogFields[40].Descriptor()
+	// usagelog.DefaultReservationStatus holds the default value on creation for the reservation_status field.
+	usagelog.DefaultReservationStatus = usagelogDescReservationStatus.Default.(string)
+	// usagelog.ReservationStatusValidator is a validator for the "reservation_status" field. It is called by the builders before save.
+	usagelog.ReservationStatusValidator = usagelogDescReservationStatus.Validators[0].(func(string) error)
 	// usagelogDescRateMultiplier is the schema descriptor for rate_multiplier field.
-	usagelogDescRateMultiplier := usagelogFields[27].Descriptor()
+	usagelogDescRateMultiplier := usagelogFields[41].Descriptor()
 	// usagelog.DefaultRateMultiplier holds the default value on creation for the rate_multiplier field.
 	usagelog.DefaultRateMultiplier = usagelogDescRateMultiplier.Default.(float64)
 	// usagelogDescLongContextBillingApplied is the schema descriptor for long_context_billing_applied field.
-	usagelogDescLongContextBillingApplied := usagelogFields[28].Descriptor()
+	usagelogDescLongContextBillingApplied := usagelogFields[42].Descriptor()
 	// usagelog.DefaultLongContextBillingApplied holds the default value on creation for the long_context_billing_applied field.
 	usagelog.DefaultLongContextBillingApplied = usagelogDescLongContextBillingApplied.Default.(bool)
 	// usagelogDescBillingType is the schema descriptor for billing_type field.
-	usagelogDescBillingType := usagelogFields[30].Descriptor()
+	usagelogDescBillingType := usagelogFields[44].Descriptor()
 	// usagelog.DefaultBillingType holds the default value on creation for the billing_type field.
 	usagelog.DefaultBillingType = usagelogDescBillingType.Default.(int8)
 	// usagelogDescStream is the schema descriptor for stream field.
-	usagelogDescStream := usagelogFields[31].Descriptor()
+	usagelogDescStream := usagelogFields[45].Descriptor()
 	// usagelog.DefaultStream holds the default value on creation for the stream field.
 	usagelog.DefaultStream = usagelogDescStream.Default.(bool)
 	// usagelogDescUserAgent is the schema descriptor for user_agent field.
-	usagelogDescUserAgent := usagelogFields[34].Descriptor()
+	usagelogDescUserAgent := usagelogFields[48].Descriptor()
 	// usagelog.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	usagelog.UserAgentValidator = usagelogDescUserAgent.Validators[0].(func(string) error)
 	// usagelogDescIPAddress is the schema descriptor for ip_address field.
-	usagelogDescIPAddress := usagelogFields[35].Descriptor()
+	usagelogDescIPAddress := usagelogFields[49].Descriptor()
 	// usagelog.IPAddressValidator is a validator for the "ip_address" field. It is called by the builders before save.
 	usagelog.IPAddressValidator = usagelogDescIPAddress.Validators[0].(func(string) error)
 	// usagelogDescImageCount is the schema descriptor for image_count field.
-	usagelogDescImageCount := usagelogFields[36].Descriptor()
+	usagelogDescImageCount := usagelogFields[50].Descriptor()
 	// usagelog.DefaultImageCount holds the default value on creation for the image_count field.
 	usagelog.DefaultImageCount = usagelogDescImageCount.Default.(int)
 	// usagelogDescImageSize is the schema descriptor for image_size field.
-	usagelogDescImageSize := usagelogFields[37].Descriptor()
+	usagelogDescImageSize := usagelogFields[51].Descriptor()
 	// usagelog.ImageSizeValidator is a validator for the "image_size" field. It is called by the builders before save.
 	usagelog.ImageSizeValidator = usagelogDescImageSize.Validators[0].(func(string) error)
 	// usagelogDescImageInputSize is the schema descriptor for image_input_size field.
-	usagelogDescImageInputSize := usagelogFields[38].Descriptor()
+	usagelogDescImageInputSize := usagelogFields[52].Descriptor()
 	// usagelog.ImageInputSizeValidator is a validator for the "image_input_size" field. It is called by the builders before save.
 	usagelog.ImageInputSizeValidator = usagelogDescImageInputSize.Validators[0].(func(string) error)
 	// usagelogDescImageOutputSize is the schema descriptor for image_output_size field.
-	usagelogDescImageOutputSize := usagelogFields[39].Descriptor()
+	usagelogDescImageOutputSize := usagelogFields[53].Descriptor()
 	// usagelog.ImageOutputSizeValidator is a validator for the "image_output_size" field. It is called by the builders before save.
 	usagelog.ImageOutputSizeValidator = usagelogDescImageOutputSize.Validators[0].(func(string) error)
 	// usagelogDescImageSizeSource is the schema descriptor for image_size_source field.
-	usagelogDescImageSizeSource := usagelogFields[40].Descriptor()
+	usagelogDescImageSizeSource := usagelogFields[54].Descriptor()
 	// usagelog.ImageSizeSourceValidator is a validator for the "image_size_source" field. It is called by the builders before save.
 	usagelog.ImageSizeSourceValidator = usagelogDescImageSizeSource.Validators[0].(func(string) error)
 	// usagelogDescVideoCount is the schema descriptor for video_count field.
-	usagelogDescVideoCount := usagelogFields[42].Descriptor()
+	usagelogDescVideoCount := usagelogFields[56].Descriptor()
 	// usagelog.DefaultVideoCount holds the default value on creation for the video_count field.
 	usagelog.DefaultVideoCount = usagelogDescVideoCount.Default.(int)
 	// usagelogDescVideoResolution is the schema descriptor for video_resolution field.
-	usagelogDescVideoResolution := usagelogFields[43].Descriptor()
+	usagelogDescVideoResolution := usagelogFields[57].Descriptor()
 	// usagelog.VideoResolutionValidator is a validator for the "video_resolution" field. It is called by the builders before save.
 	usagelog.VideoResolutionValidator = usagelogDescVideoResolution.Validators[0].(func(string) error)
 	// usagelogDescCacheTTLOverridden is the schema descriptor for cache_ttl_overridden field.
-	usagelogDescCacheTTLOverridden := usagelogFields[45].Descriptor()
+	usagelogDescCacheTTLOverridden := usagelogFields[59].Descriptor()
 	// usagelog.DefaultCacheTTLOverridden holds the default value on creation for the cache_ttl_overridden field.
 	usagelog.DefaultCacheTTLOverridden = usagelogDescCacheTTLOverridden.Default.(bool)
 	// usagelogDescCreatedAt is the schema descriptor for created_at field.
-	usagelogDescCreatedAt := usagelogFields[46].Descriptor()
+	usagelogDescCreatedAt := usagelogFields[60].Descriptor()
 	// usagelog.DefaultCreatedAt holds the default value on creation for the created_at field.
 	usagelog.DefaultCreatedAt = usagelogDescCreatedAt.Default.(func() time.Time)
+	usagemodelsnapshotMixin := schema.UsageModelSnapshot{}.Mixin()
+	usagemodelsnapshotMixinFields0 := usagemodelsnapshotMixin[0].Fields()
+	_ = usagemodelsnapshotMixinFields0
+	usagemodelsnapshotFields := schema.UsageModelSnapshot{}.Fields()
+	_ = usagemodelsnapshotFields
+	// usagemodelsnapshotDescCreateTime is the schema descriptor for create_time field.
+	usagemodelsnapshotDescCreateTime := usagemodelsnapshotMixinFields0[0].Descriptor()
+	// usagemodelsnapshot.DefaultCreateTime holds the default value on creation for the create_time field.
+	usagemodelsnapshot.DefaultCreateTime = usagemodelsnapshotDescCreateTime.Default.(func() time.Time)
+	// usagemodelsnapshotDescUpdateTime is the schema descriptor for update_time field.
+	usagemodelsnapshotDescUpdateTime := usagemodelsnapshotMixinFields0[1].Descriptor()
+	// usagemodelsnapshot.DefaultUpdateTime holds the default value on creation for the update_time field.
+	usagemodelsnapshot.DefaultUpdateTime = usagemodelsnapshotDescUpdateTime.Default.(func() time.Time)
+	// usagemodelsnapshot.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	usagemodelsnapshot.UpdateDefaultUpdateTime = usagemodelsnapshotDescUpdateTime.UpdateDefault.(func() time.Time)
+	// usagemodelsnapshotDescModel is the schema descriptor for model field.
+	usagemodelsnapshotDescModel := usagemodelsnapshotFields[1].Descriptor()
+	// usagemodelsnapshot.ModelValidator is a validator for the "model" field. It is called by the builders before save.
+	usagemodelsnapshot.ModelValidator = func() func(string) error {
+		validators := usagemodelsnapshotDescModel.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(model string) error {
+			for _, fn := range fns {
+				if err := fn(model); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// usagemodelsnapshotDescPricingVersion is the schema descriptor for pricing_version field.
+	usagemodelsnapshotDescPricingVersion := usagemodelsnapshotFields[2].Descriptor()
+	// usagemodelsnapshot.DefaultPricingVersion holds the default value on creation for the pricing_version field.
+	usagemodelsnapshot.DefaultPricingVersion = usagemodelsnapshotDescPricingVersion.Default.(int)
+	// usagemodelsnapshotDescDisplayInputCost is the schema descriptor for display_input_cost field.
+	usagemodelsnapshotDescDisplayInputCost := usagemodelsnapshotFields[3].Descriptor()
+	// usagemodelsnapshot.DefaultDisplayInputCost holds the default value on creation for the display_input_cost field.
+	usagemodelsnapshot.DefaultDisplayInputCost = usagemodelsnapshotDescDisplayInputCost.Default.(float64)
+	// usagemodelsnapshotDescDisplayOutputCost is the schema descriptor for display_output_cost field.
+	usagemodelsnapshotDescDisplayOutputCost := usagemodelsnapshotFields[4].Descriptor()
+	// usagemodelsnapshot.DefaultDisplayOutputCost holds the default value on creation for the display_output_cost field.
+	usagemodelsnapshot.DefaultDisplayOutputCost = usagemodelsnapshotDescDisplayOutputCost.Default.(float64)
+	// usagemodelsnapshotDescDisplayCacheReadCost is the schema descriptor for display_cache_read_cost field.
+	usagemodelsnapshotDescDisplayCacheReadCost := usagemodelsnapshotFields[5].Descriptor()
+	// usagemodelsnapshot.DefaultDisplayCacheReadCost holds the default value on creation for the display_cache_read_cost field.
+	usagemodelsnapshot.DefaultDisplayCacheReadCost = usagemodelsnapshotDescDisplayCacheReadCost.Default.(float64)
+	// usagemodelsnapshotDescDisplayCacheWriteCost is the schema descriptor for display_cache_write_cost field.
+	usagemodelsnapshotDescDisplayCacheWriteCost := usagemodelsnapshotFields[6].Descriptor()
+	// usagemodelsnapshot.DefaultDisplayCacheWriteCost holds the default value on creation for the display_cache_write_cost field.
+	usagemodelsnapshot.DefaultDisplayCacheWriteCost = usagemodelsnapshotDescDisplayCacheWriteCost.Default.(float64)
+	// usagemodelsnapshotDescDisplayTotalCost is the schema descriptor for display_total_cost field.
+	usagemodelsnapshotDescDisplayTotalCost := usagemodelsnapshotFields[7].Descriptor()
+	// usagemodelsnapshot.DefaultDisplayTotalCost holds the default value on creation for the display_total_cost field.
+	usagemodelsnapshot.DefaultDisplayTotalCost = usagemodelsnapshotDescDisplayTotalCost.Default.(float64)
+	// usagemodelsnapshotDescDisplayBlendCost is the schema descriptor for display_blend_cost field.
+	usagemodelsnapshotDescDisplayBlendCost := usagemodelsnapshotFields[8].Descriptor()
+	// usagemodelsnapshot.DefaultDisplayBlendCost holds the default value on creation for the display_blend_cost field.
+	usagemodelsnapshot.DefaultDisplayBlendCost = usagemodelsnapshotDescDisplayBlendCost.Default.(float64)
+	// usagemodelsnapshotDescCostInput is the schema descriptor for cost_input field.
+	usagemodelsnapshotDescCostInput := usagemodelsnapshotFields[9].Descriptor()
+	// usagemodelsnapshot.DefaultCostInput holds the default value on creation for the cost_input field.
+	usagemodelsnapshot.DefaultCostInput = usagemodelsnapshotDescCostInput.Default.(float64)
+	// usagemodelsnapshotDescCostOutput is the schema descriptor for cost_output field.
+	usagemodelsnapshotDescCostOutput := usagemodelsnapshotFields[10].Descriptor()
+	// usagemodelsnapshot.DefaultCostOutput holds the default value on creation for the cost_output field.
+	usagemodelsnapshot.DefaultCostOutput = usagemodelsnapshotDescCostOutput.Default.(float64)
+	// usagemodelsnapshotDescCostCacheRead is the schema descriptor for cost_cache_read field.
+	usagemodelsnapshotDescCostCacheRead := usagemodelsnapshotFields[11].Descriptor()
+	// usagemodelsnapshot.DefaultCostCacheRead holds the default value on creation for the cost_cache_read field.
+	usagemodelsnapshot.DefaultCostCacheRead = usagemodelsnapshotDescCostCacheRead.Default.(float64)
+	// usagemodelsnapshotDescCostCacheWrite is the schema descriptor for cost_cache_write field.
+	usagemodelsnapshotDescCostCacheWrite := usagemodelsnapshotFields[12].Descriptor()
+	// usagemodelsnapshot.DefaultCostCacheWrite holds the default value on creation for the cost_cache_write field.
+	usagemodelsnapshot.DefaultCostCacheWrite = usagemodelsnapshotDescCostCacheWrite.Default.(float64)
+	// usagemodelsnapshotDescCostTotal is the schema descriptor for cost_total field.
+	usagemodelsnapshotDescCostTotal := usagemodelsnapshotFields[13].Descriptor()
+	// usagemodelsnapshot.DefaultCostTotal holds the default value on creation for the cost_total field.
+	usagemodelsnapshot.DefaultCostTotal = usagemodelsnapshotDescCostTotal.Default.(float64)
+	// usagemodelsnapshotDescCostSupplierCode is the schema descriptor for cost_supplier_code field.
+	usagemodelsnapshotDescCostSupplierCode := usagemodelsnapshotFields[14].Descriptor()
+	// usagemodelsnapshot.DefaultCostSupplierCode holds the default value on creation for the cost_supplier_code field.
+	usagemodelsnapshot.DefaultCostSupplierCode = usagemodelsnapshotDescCostSupplierCode.Default.(string)
+	// usagemodelsnapshot.CostSupplierCodeValidator is a validator for the "cost_supplier_code" field. It is called by the builders before save.
+	usagemodelsnapshot.CostSupplierCodeValidator = usagemodelsnapshotDescCostSupplierCode.Validators[0].(func(string) error)
+	// usagemodelsnapshotDescInputTokens is the schema descriptor for input_tokens field.
+	usagemodelsnapshotDescInputTokens := usagemodelsnapshotFields[15].Descriptor()
+	// usagemodelsnapshot.DefaultInputTokens holds the default value on creation for the input_tokens field.
+	usagemodelsnapshot.DefaultInputTokens = usagemodelsnapshotDescInputTokens.Default.(int64)
+	// usagemodelsnapshotDescOutputTokens is the schema descriptor for output_tokens field.
+	usagemodelsnapshotDescOutputTokens := usagemodelsnapshotFields[16].Descriptor()
+	// usagemodelsnapshot.DefaultOutputTokens holds the default value on creation for the output_tokens field.
+	usagemodelsnapshot.DefaultOutputTokens = usagemodelsnapshotDescOutputTokens.Default.(int64)
+	// usagemodelsnapshotDescCacheReadTokens is the schema descriptor for cache_read_tokens field.
+	usagemodelsnapshotDescCacheReadTokens := usagemodelsnapshotFields[17].Descriptor()
+	// usagemodelsnapshot.DefaultCacheReadTokens holds the default value on creation for the cache_read_tokens field.
+	usagemodelsnapshot.DefaultCacheReadTokens = usagemodelsnapshotDescCacheReadTokens.Default.(int64)
+	// usagemodelsnapshotDescCacheWriteTokens is the schema descriptor for cache_write_tokens field.
+	usagemodelsnapshotDescCacheWriteTokens := usagemodelsnapshotFields[18].Descriptor()
+	// usagemodelsnapshot.DefaultCacheWriteTokens holds the default value on creation for the cache_write_tokens field.
+	usagemodelsnapshot.DefaultCacheWriteTokens = usagemodelsnapshotDescCacheWriteTokens.Default.(int64)
+	// usagemodelsnapshotDescUsageModelPct is the schema descriptor for usage_model_pct field.
+	usagemodelsnapshotDescUsageModelPct := usagemodelsnapshotFields[19].Descriptor()
+	// usagemodelsnapshot.DefaultUsageModelPct holds the default value on creation for the usage_model_pct field.
+	usagemodelsnapshot.DefaultUsageModelPct = usagemodelsnapshotDescUsageModelPct.Default.(float64)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks1 := userMixin[1].Hooks()
 	user.Hooks[0] = userMixinHooks1[0]

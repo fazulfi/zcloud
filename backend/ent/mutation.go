@@ -52,6 +52,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/ent/tlsfingerprintprofile"
 	"github.com/Wei-Shaw/sub2api/ent/usagecleanuptask"
 	"github.com/Wei-Shaw/sub2api/ent/usagelog"
+	"github.com/Wei-Shaw/sub2api/ent/usagemodelsnapshot"
 	"github.com/Wei-Shaw/sub2api/ent/user"
 	"github.com/Wei-Shaw/sub2api/ent/userallowedgroup"
 	"github.com/Wei-Shaw/sub2api/ent/userattributedefinition"
@@ -109,6 +110,7 @@ const (
 	TypeTLSFingerprintProfile         = "TLSFingerprintProfile"
 	TypeUsageCleanupTask              = "UsageCleanupTask"
 	TypeUsageLog                      = "UsageLog"
+	TypeUsageModelSnapshot            = "UsageModelSnapshot"
 	TypeUser                          = "User"
 	TypeUserAllowedGroup              = "UserAllowedGroup"
 	TypeUserAttributeDefinition       = "UserAttributeDefinition"
@@ -51238,6 +51240,32 @@ type UsageLogMutation struct {
 	addtotal_cost                *float64
 	actual_cost                  *float64
 	addactual_cost               *float64
+	display_input_cost           *float64
+	adddisplay_input_cost        *float64
+	display_output_cost          *float64
+	adddisplay_output_cost       *float64
+	display_cache_read_cost      *float64
+	adddisplay_cache_read_cost   *float64
+	display_cache_write_cost     *float64
+	adddisplay_cache_write_cost  *float64
+	display_total_cost           *float64
+	adddisplay_total_cost        *float64
+	display_blend_cost           *float64
+	adddisplay_blend_cost        *float64
+	cost_input                   *float64
+	addcost_input                *float64
+	cost_output                  *float64
+	addcost_output               *float64
+	cost_cache_read              *float64
+	addcost_cache_read           *float64
+	cost_cache_write             *float64
+	addcost_cache_write          *float64
+	cost_total                   *float64
+	addcost_total                *float64
+	cost_supplier_code           *string
+	pricing_version              *int
+	addpricing_version           *int
+	reservation_status           *string
 	rate_multiplier              *float64
 	addrate_multiplier           *float64
 	long_context_billing_applied *bool
@@ -52743,6 +52771,750 @@ func (m *UsageLogMutation) ResetActualCost() {
 	m.addactual_cost = nil
 }
 
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (m *UsageLogMutation) SetDisplayInputCost(f float64) {
+	m.display_input_cost = &f
+	m.adddisplay_input_cost = nil
+}
+
+// DisplayInputCost returns the value of the "display_input_cost" field in the mutation.
+func (m *UsageLogMutation) DisplayInputCost() (r float64, exists bool) {
+	v := m.display_input_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayInputCost returns the old "display_input_cost" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldDisplayInputCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayInputCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayInputCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayInputCost: %w", err)
+	}
+	return oldValue.DisplayInputCost, nil
+}
+
+// AddDisplayInputCost adds f to the "display_input_cost" field.
+func (m *UsageLogMutation) AddDisplayInputCost(f float64) {
+	if m.adddisplay_input_cost != nil {
+		*m.adddisplay_input_cost += f
+	} else {
+		m.adddisplay_input_cost = &f
+	}
+}
+
+// AddedDisplayInputCost returns the value that was added to the "display_input_cost" field in this mutation.
+func (m *UsageLogMutation) AddedDisplayInputCost() (r float64, exists bool) {
+	v := m.adddisplay_input_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayInputCost resets all changes to the "display_input_cost" field.
+func (m *UsageLogMutation) ResetDisplayInputCost() {
+	m.display_input_cost = nil
+	m.adddisplay_input_cost = nil
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (m *UsageLogMutation) SetDisplayOutputCost(f float64) {
+	m.display_output_cost = &f
+	m.adddisplay_output_cost = nil
+}
+
+// DisplayOutputCost returns the value of the "display_output_cost" field in the mutation.
+func (m *UsageLogMutation) DisplayOutputCost() (r float64, exists bool) {
+	v := m.display_output_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayOutputCost returns the old "display_output_cost" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldDisplayOutputCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayOutputCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayOutputCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayOutputCost: %w", err)
+	}
+	return oldValue.DisplayOutputCost, nil
+}
+
+// AddDisplayOutputCost adds f to the "display_output_cost" field.
+func (m *UsageLogMutation) AddDisplayOutputCost(f float64) {
+	if m.adddisplay_output_cost != nil {
+		*m.adddisplay_output_cost += f
+	} else {
+		m.adddisplay_output_cost = &f
+	}
+}
+
+// AddedDisplayOutputCost returns the value that was added to the "display_output_cost" field in this mutation.
+func (m *UsageLogMutation) AddedDisplayOutputCost() (r float64, exists bool) {
+	v := m.adddisplay_output_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayOutputCost resets all changes to the "display_output_cost" field.
+func (m *UsageLogMutation) ResetDisplayOutputCost() {
+	m.display_output_cost = nil
+	m.adddisplay_output_cost = nil
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (m *UsageLogMutation) SetDisplayCacheReadCost(f float64) {
+	m.display_cache_read_cost = &f
+	m.adddisplay_cache_read_cost = nil
+}
+
+// DisplayCacheReadCost returns the value of the "display_cache_read_cost" field in the mutation.
+func (m *UsageLogMutation) DisplayCacheReadCost() (r float64, exists bool) {
+	v := m.display_cache_read_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayCacheReadCost returns the old "display_cache_read_cost" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldDisplayCacheReadCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayCacheReadCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayCacheReadCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayCacheReadCost: %w", err)
+	}
+	return oldValue.DisplayCacheReadCost, nil
+}
+
+// AddDisplayCacheReadCost adds f to the "display_cache_read_cost" field.
+func (m *UsageLogMutation) AddDisplayCacheReadCost(f float64) {
+	if m.adddisplay_cache_read_cost != nil {
+		*m.adddisplay_cache_read_cost += f
+	} else {
+		m.adddisplay_cache_read_cost = &f
+	}
+}
+
+// AddedDisplayCacheReadCost returns the value that was added to the "display_cache_read_cost" field in this mutation.
+func (m *UsageLogMutation) AddedDisplayCacheReadCost() (r float64, exists bool) {
+	v := m.adddisplay_cache_read_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayCacheReadCost resets all changes to the "display_cache_read_cost" field.
+func (m *UsageLogMutation) ResetDisplayCacheReadCost() {
+	m.display_cache_read_cost = nil
+	m.adddisplay_cache_read_cost = nil
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (m *UsageLogMutation) SetDisplayCacheWriteCost(f float64) {
+	m.display_cache_write_cost = &f
+	m.adddisplay_cache_write_cost = nil
+}
+
+// DisplayCacheWriteCost returns the value of the "display_cache_write_cost" field in the mutation.
+func (m *UsageLogMutation) DisplayCacheWriteCost() (r float64, exists bool) {
+	v := m.display_cache_write_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayCacheWriteCost returns the old "display_cache_write_cost" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldDisplayCacheWriteCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayCacheWriteCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayCacheWriteCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayCacheWriteCost: %w", err)
+	}
+	return oldValue.DisplayCacheWriteCost, nil
+}
+
+// AddDisplayCacheWriteCost adds f to the "display_cache_write_cost" field.
+func (m *UsageLogMutation) AddDisplayCacheWriteCost(f float64) {
+	if m.adddisplay_cache_write_cost != nil {
+		*m.adddisplay_cache_write_cost += f
+	} else {
+		m.adddisplay_cache_write_cost = &f
+	}
+}
+
+// AddedDisplayCacheWriteCost returns the value that was added to the "display_cache_write_cost" field in this mutation.
+func (m *UsageLogMutation) AddedDisplayCacheWriteCost() (r float64, exists bool) {
+	v := m.adddisplay_cache_write_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayCacheWriteCost resets all changes to the "display_cache_write_cost" field.
+func (m *UsageLogMutation) ResetDisplayCacheWriteCost() {
+	m.display_cache_write_cost = nil
+	m.adddisplay_cache_write_cost = nil
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (m *UsageLogMutation) SetDisplayTotalCost(f float64) {
+	m.display_total_cost = &f
+	m.adddisplay_total_cost = nil
+}
+
+// DisplayTotalCost returns the value of the "display_total_cost" field in the mutation.
+func (m *UsageLogMutation) DisplayTotalCost() (r float64, exists bool) {
+	v := m.display_total_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayTotalCost returns the old "display_total_cost" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldDisplayTotalCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayTotalCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayTotalCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayTotalCost: %w", err)
+	}
+	return oldValue.DisplayTotalCost, nil
+}
+
+// AddDisplayTotalCost adds f to the "display_total_cost" field.
+func (m *UsageLogMutation) AddDisplayTotalCost(f float64) {
+	if m.adddisplay_total_cost != nil {
+		*m.adddisplay_total_cost += f
+	} else {
+		m.adddisplay_total_cost = &f
+	}
+}
+
+// AddedDisplayTotalCost returns the value that was added to the "display_total_cost" field in this mutation.
+func (m *UsageLogMutation) AddedDisplayTotalCost() (r float64, exists bool) {
+	v := m.adddisplay_total_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayTotalCost resets all changes to the "display_total_cost" field.
+func (m *UsageLogMutation) ResetDisplayTotalCost() {
+	m.display_total_cost = nil
+	m.adddisplay_total_cost = nil
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (m *UsageLogMutation) SetDisplayBlendCost(f float64) {
+	m.display_blend_cost = &f
+	m.adddisplay_blend_cost = nil
+}
+
+// DisplayBlendCost returns the value of the "display_blend_cost" field in the mutation.
+func (m *UsageLogMutation) DisplayBlendCost() (r float64, exists bool) {
+	v := m.display_blend_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayBlendCost returns the old "display_blend_cost" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldDisplayBlendCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayBlendCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayBlendCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayBlendCost: %w", err)
+	}
+	return oldValue.DisplayBlendCost, nil
+}
+
+// AddDisplayBlendCost adds f to the "display_blend_cost" field.
+func (m *UsageLogMutation) AddDisplayBlendCost(f float64) {
+	if m.adddisplay_blend_cost != nil {
+		*m.adddisplay_blend_cost += f
+	} else {
+		m.adddisplay_blend_cost = &f
+	}
+}
+
+// AddedDisplayBlendCost returns the value that was added to the "display_blend_cost" field in this mutation.
+func (m *UsageLogMutation) AddedDisplayBlendCost() (r float64, exists bool) {
+	v := m.adddisplay_blend_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayBlendCost resets all changes to the "display_blend_cost" field.
+func (m *UsageLogMutation) ResetDisplayBlendCost() {
+	m.display_blend_cost = nil
+	m.adddisplay_blend_cost = nil
+}
+
+// SetCostInput sets the "cost_input" field.
+func (m *UsageLogMutation) SetCostInput(f float64) {
+	m.cost_input = &f
+	m.addcost_input = nil
+}
+
+// CostInput returns the value of the "cost_input" field in the mutation.
+func (m *UsageLogMutation) CostInput() (r float64, exists bool) {
+	v := m.cost_input
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostInput returns the old "cost_input" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldCostInput(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostInput is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostInput requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostInput: %w", err)
+	}
+	return oldValue.CostInput, nil
+}
+
+// AddCostInput adds f to the "cost_input" field.
+func (m *UsageLogMutation) AddCostInput(f float64) {
+	if m.addcost_input != nil {
+		*m.addcost_input += f
+	} else {
+		m.addcost_input = &f
+	}
+}
+
+// AddedCostInput returns the value that was added to the "cost_input" field in this mutation.
+func (m *UsageLogMutation) AddedCostInput() (r float64, exists bool) {
+	v := m.addcost_input
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostInput resets all changes to the "cost_input" field.
+func (m *UsageLogMutation) ResetCostInput() {
+	m.cost_input = nil
+	m.addcost_input = nil
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (m *UsageLogMutation) SetCostOutput(f float64) {
+	m.cost_output = &f
+	m.addcost_output = nil
+}
+
+// CostOutput returns the value of the "cost_output" field in the mutation.
+func (m *UsageLogMutation) CostOutput() (r float64, exists bool) {
+	v := m.cost_output
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostOutput returns the old "cost_output" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldCostOutput(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostOutput is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostOutput requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostOutput: %w", err)
+	}
+	return oldValue.CostOutput, nil
+}
+
+// AddCostOutput adds f to the "cost_output" field.
+func (m *UsageLogMutation) AddCostOutput(f float64) {
+	if m.addcost_output != nil {
+		*m.addcost_output += f
+	} else {
+		m.addcost_output = &f
+	}
+}
+
+// AddedCostOutput returns the value that was added to the "cost_output" field in this mutation.
+func (m *UsageLogMutation) AddedCostOutput() (r float64, exists bool) {
+	v := m.addcost_output
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostOutput resets all changes to the "cost_output" field.
+func (m *UsageLogMutation) ResetCostOutput() {
+	m.cost_output = nil
+	m.addcost_output = nil
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (m *UsageLogMutation) SetCostCacheRead(f float64) {
+	m.cost_cache_read = &f
+	m.addcost_cache_read = nil
+}
+
+// CostCacheRead returns the value of the "cost_cache_read" field in the mutation.
+func (m *UsageLogMutation) CostCacheRead() (r float64, exists bool) {
+	v := m.cost_cache_read
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostCacheRead returns the old "cost_cache_read" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldCostCacheRead(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostCacheRead is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostCacheRead requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostCacheRead: %w", err)
+	}
+	return oldValue.CostCacheRead, nil
+}
+
+// AddCostCacheRead adds f to the "cost_cache_read" field.
+func (m *UsageLogMutation) AddCostCacheRead(f float64) {
+	if m.addcost_cache_read != nil {
+		*m.addcost_cache_read += f
+	} else {
+		m.addcost_cache_read = &f
+	}
+}
+
+// AddedCostCacheRead returns the value that was added to the "cost_cache_read" field in this mutation.
+func (m *UsageLogMutation) AddedCostCacheRead() (r float64, exists bool) {
+	v := m.addcost_cache_read
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostCacheRead resets all changes to the "cost_cache_read" field.
+func (m *UsageLogMutation) ResetCostCacheRead() {
+	m.cost_cache_read = nil
+	m.addcost_cache_read = nil
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (m *UsageLogMutation) SetCostCacheWrite(f float64) {
+	m.cost_cache_write = &f
+	m.addcost_cache_write = nil
+}
+
+// CostCacheWrite returns the value of the "cost_cache_write" field in the mutation.
+func (m *UsageLogMutation) CostCacheWrite() (r float64, exists bool) {
+	v := m.cost_cache_write
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostCacheWrite returns the old "cost_cache_write" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldCostCacheWrite(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostCacheWrite is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostCacheWrite requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostCacheWrite: %w", err)
+	}
+	return oldValue.CostCacheWrite, nil
+}
+
+// AddCostCacheWrite adds f to the "cost_cache_write" field.
+func (m *UsageLogMutation) AddCostCacheWrite(f float64) {
+	if m.addcost_cache_write != nil {
+		*m.addcost_cache_write += f
+	} else {
+		m.addcost_cache_write = &f
+	}
+}
+
+// AddedCostCacheWrite returns the value that was added to the "cost_cache_write" field in this mutation.
+func (m *UsageLogMutation) AddedCostCacheWrite() (r float64, exists bool) {
+	v := m.addcost_cache_write
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostCacheWrite resets all changes to the "cost_cache_write" field.
+func (m *UsageLogMutation) ResetCostCacheWrite() {
+	m.cost_cache_write = nil
+	m.addcost_cache_write = nil
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (m *UsageLogMutation) SetCostTotal(f float64) {
+	m.cost_total = &f
+	m.addcost_total = nil
+}
+
+// CostTotal returns the value of the "cost_total" field in the mutation.
+func (m *UsageLogMutation) CostTotal() (r float64, exists bool) {
+	v := m.cost_total
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostTotal returns the old "cost_total" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldCostTotal(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostTotal is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostTotal requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostTotal: %w", err)
+	}
+	return oldValue.CostTotal, nil
+}
+
+// AddCostTotal adds f to the "cost_total" field.
+func (m *UsageLogMutation) AddCostTotal(f float64) {
+	if m.addcost_total != nil {
+		*m.addcost_total += f
+	} else {
+		m.addcost_total = &f
+	}
+}
+
+// AddedCostTotal returns the value that was added to the "cost_total" field in this mutation.
+func (m *UsageLogMutation) AddedCostTotal() (r float64, exists bool) {
+	v := m.addcost_total
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostTotal resets all changes to the "cost_total" field.
+func (m *UsageLogMutation) ResetCostTotal() {
+	m.cost_total = nil
+	m.addcost_total = nil
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (m *UsageLogMutation) SetCostSupplierCode(s string) {
+	m.cost_supplier_code = &s
+}
+
+// CostSupplierCode returns the value of the "cost_supplier_code" field in the mutation.
+func (m *UsageLogMutation) CostSupplierCode() (r string, exists bool) {
+	v := m.cost_supplier_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostSupplierCode returns the old "cost_supplier_code" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldCostSupplierCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostSupplierCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostSupplierCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostSupplierCode: %w", err)
+	}
+	return oldValue.CostSupplierCode, nil
+}
+
+// ResetCostSupplierCode resets all changes to the "cost_supplier_code" field.
+func (m *UsageLogMutation) ResetCostSupplierCode() {
+	m.cost_supplier_code = nil
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (m *UsageLogMutation) SetPricingVersion(i int) {
+	m.pricing_version = &i
+	m.addpricing_version = nil
+}
+
+// PricingVersion returns the value of the "pricing_version" field in the mutation.
+func (m *UsageLogMutation) PricingVersion() (r int, exists bool) {
+	v := m.pricing_version
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPricingVersion returns the old "pricing_version" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldPricingVersion(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPricingVersion is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPricingVersion requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPricingVersion: %w", err)
+	}
+	return oldValue.PricingVersion, nil
+}
+
+// AddPricingVersion adds i to the "pricing_version" field.
+func (m *UsageLogMutation) AddPricingVersion(i int) {
+	if m.addpricing_version != nil {
+		*m.addpricing_version += i
+	} else {
+		m.addpricing_version = &i
+	}
+}
+
+// AddedPricingVersion returns the value that was added to the "pricing_version" field in this mutation.
+func (m *UsageLogMutation) AddedPricingVersion() (r int, exists bool) {
+	v := m.addpricing_version
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPricingVersion resets all changes to the "pricing_version" field.
+func (m *UsageLogMutation) ResetPricingVersion() {
+	m.pricing_version = nil
+	m.addpricing_version = nil
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (m *UsageLogMutation) SetReservationStatus(s string) {
+	m.reservation_status = &s
+}
+
+// ReservationStatus returns the value of the "reservation_status" field in the mutation.
+func (m *UsageLogMutation) ReservationStatus() (r string, exists bool) {
+	v := m.reservation_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReservationStatus returns the old "reservation_status" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldReservationStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReservationStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReservationStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReservationStatus: %w", err)
+	}
+	return oldValue.ReservationStatus, nil
+}
+
+// ResetReservationStatus resets all changes to the "reservation_status" field.
+func (m *UsageLogMutation) ResetReservationStatus() {
+	m.reservation_status = nil
+}
+
 // SetRateMultiplier sets the "rate_multiplier" field.
 func (m *UsageLogMutation) SetRateMultiplier(f float64) {
 	m.rate_multiplier = &f
@@ -53952,7 +54724,7 @@ func (m *UsageLogMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UsageLogMutation) Fields() []string {
-	fields := make([]string, 0, 47)
+	fields := make([]string, 0, 61)
 	if m.user != nil {
 		fields = append(fields, usagelog.FieldUserID)
 	}
@@ -54033,6 +54805,48 @@ func (m *UsageLogMutation) Fields() []string {
 	}
 	if m.actual_cost != nil {
 		fields = append(fields, usagelog.FieldActualCost)
+	}
+	if m.display_input_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayInputCost)
+	}
+	if m.display_output_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayOutputCost)
+	}
+	if m.display_cache_read_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayCacheReadCost)
+	}
+	if m.display_cache_write_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayCacheWriteCost)
+	}
+	if m.display_total_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayTotalCost)
+	}
+	if m.display_blend_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayBlendCost)
+	}
+	if m.cost_input != nil {
+		fields = append(fields, usagelog.FieldCostInput)
+	}
+	if m.cost_output != nil {
+		fields = append(fields, usagelog.FieldCostOutput)
+	}
+	if m.cost_cache_read != nil {
+		fields = append(fields, usagelog.FieldCostCacheRead)
+	}
+	if m.cost_cache_write != nil {
+		fields = append(fields, usagelog.FieldCostCacheWrite)
+	}
+	if m.cost_total != nil {
+		fields = append(fields, usagelog.FieldCostTotal)
+	}
+	if m.cost_supplier_code != nil {
+		fields = append(fields, usagelog.FieldCostSupplierCode)
+	}
+	if m.pricing_version != nil {
+		fields = append(fields, usagelog.FieldPricingVersion)
+	}
+	if m.reservation_status != nil {
+		fields = append(fields, usagelog.FieldReservationStatus)
 	}
 	if m.rate_multiplier != nil {
 		fields = append(fields, usagelog.FieldRateMultiplier)
@@ -54156,6 +54970,34 @@ func (m *UsageLogMutation) Field(name string) (ent.Value, bool) {
 		return m.TotalCost()
 	case usagelog.FieldActualCost:
 		return m.ActualCost()
+	case usagelog.FieldDisplayInputCost:
+		return m.DisplayInputCost()
+	case usagelog.FieldDisplayOutputCost:
+		return m.DisplayOutputCost()
+	case usagelog.FieldDisplayCacheReadCost:
+		return m.DisplayCacheReadCost()
+	case usagelog.FieldDisplayCacheWriteCost:
+		return m.DisplayCacheWriteCost()
+	case usagelog.FieldDisplayTotalCost:
+		return m.DisplayTotalCost()
+	case usagelog.FieldDisplayBlendCost:
+		return m.DisplayBlendCost()
+	case usagelog.FieldCostInput:
+		return m.CostInput()
+	case usagelog.FieldCostOutput:
+		return m.CostOutput()
+	case usagelog.FieldCostCacheRead:
+		return m.CostCacheRead()
+	case usagelog.FieldCostCacheWrite:
+		return m.CostCacheWrite()
+	case usagelog.FieldCostTotal:
+		return m.CostTotal()
+	case usagelog.FieldCostSupplierCode:
+		return m.CostSupplierCode()
+	case usagelog.FieldPricingVersion:
+		return m.PricingVersion()
+	case usagelog.FieldReservationStatus:
+		return m.ReservationStatus()
 	case usagelog.FieldRateMultiplier:
 		return m.RateMultiplier()
 	case usagelog.FieldLongContextBillingApplied:
@@ -54259,6 +55101,34 @@ func (m *UsageLogMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldTotalCost(ctx)
 	case usagelog.FieldActualCost:
 		return m.OldActualCost(ctx)
+	case usagelog.FieldDisplayInputCost:
+		return m.OldDisplayInputCost(ctx)
+	case usagelog.FieldDisplayOutputCost:
+		return m.OldDisplayOutputCost(ctx)
+	case usagelog.FieldDisplayCacheReadCost:
+		return m.OldDisplayCacheReadCost(ctx)
+	case usagelog.FieldDisplayCacheWriteCost:
+		return m.OldDisplayCacheWriteCost(ctx)
+	case usagelog.FieldDisplayTotalCost:
+		return m.OldDisplayTotalCost(ctx)
+	case usagelog.FieldDisplayBlendCost:
+		return m.OldDisplayBlendCost(ctx)
+	case usagelog.FieldCostInput:
+		return m.OldCostInput(ctx)
+	case usagelog.FieldCostOutput:
+		return m.OldCostOutput(ctx)
+	case usagelog.FieldCostCacheRead:
+		return m.OldCostCacheRead(ctx)
+	case usagelog.FieldCostCacheWrite:
+		return m.OldCostCacheWrite(ctx)
+	case usagelog.FieldCostTotal:
+		return m.OldCostTotal(ctx)
+	case usagelog.FieldCostSupplierCode:
+		return m.OldCostSupplierCode(ctx)
+	case usagelog.FieldPricingVersion:
+		return m.OldPricingVersion(ctx)
+	case usagelog.FieldReservationStatus:
+		return m.OldReservationStatus(ctx)
 	case usagelog.FieldRateMultiplier:
 		return m.OldRateMultiplier(ctx)
 	case usagelog.FieldLongContextBillingApplied:
@@ -54497,6 +55367,104 @@ func (m *UsageLogMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetActualCost(v)
 		return nil
+	case usagelog.FieldDisplayInputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayInputCost(v)
+		return nil
+	case usagelog.FieldDisplayOutputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayOutputCost(v)
+		return nil
+	case usagelog.FieldDisplayCacheReadCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayCacheReadCost(v)
+		return nil
+	case usagelog.FieldDisplayCacheWriteCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayCacheWriteCost(v)
+		return nil
+	case usagelog.FieldDisplayTotalCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayTotalCost(v)
+		return nil
+	case usagelog.FieldDisplayBlendCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayBlendCost(v)
+		return nil
+	case usagelog.FieldCostInput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostInput(v)
+		return nil
+	case usagelog.FieldCostOutput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostOutput(v)
+		return nil
+	case usagelog.FieldCostCacheRead:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostCacheRead(v)
+		return nil
+	case usagelog.FieldCostCacheWrite:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostCacheWrite(v)
+		return nil
+	case usagelog.FieldCostTotal:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostTotal(v)
+		return nil
+	case usagelog.FieldCostSupplierCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostSupplierCode(v)
+		return nil
+	case usagelog.FieldPricingVersion:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPricingVersion(v)
+		return nil
+	case usagelog.FieldReservationStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReservationStatus(v)
+		return nil
 	case usagelog.FieldRateMultiplier:
 		v, ok := value.(float64)
 		if !ok {
@@ -54684,6 +55652,42 @@ func (m *UsageLogMutation) AddedFields() []string {
 	if m.addactual_cost != nil {
 		fields = append(fields, usagelog.FieldActualCost)
 	}
+	if m.adddisplay_input_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayInputCost)
+	}
+	if m.adddisplay_output_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayOutputCost)
+	}
+	if m.adddisplay_cache_read_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayCacheReadCost)
+	}
+	if m.adddisplay_cache_write_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayCacheWriteCost)
+	}
+	if m.adddisplay_total_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayTotalCost)
+	}
+	if m.adddisplay_blend_cost != nil {
+		fields = append(fields, usagelog.FieldDisplayBlendCost)
+	}
+	if m.addcost_input != nil {
+		fields = append(fields, usagelog.FieldCostInput)
+	}
+	if m.addcost_output != nil {
+		fields = append(fields, usagelog.FieldCostOutput)
+	}
+	if m.addcost_cache_read != nil {
+		fields = append(fields, usagelog.FieldCostCacheRead)
+	}
+	if m.addcost_cache_write != nil {
+		fields = append(fields, usagelog.FieldCostCacheWrite)
+	}
+	if m.addcost_total != nil {
+		fields = append(fields, usagelog.FieldCostTotal)
+	}
+	if m.addpricing_version != nil {
+		fields = append(fields, usagelog.FieldPricingVersion)
+	}
 	if m.addrate_multiplier != nil {
 		fields = append(fields, usagelog.FieldRateMultiplier)
 	}
@@ -54742,6 +55746,30 @@ func (m *UsageLogMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedTotalCost()
 	case usagelog.FieldActualCost:
 		return m.AddedActualCost()
+	case usagelog.FieldDisplayInputCost:
+		return m.AddedDisplayInputCost()
+	case usagelog.FieldDisplayOutputCost:
+		return m.AddedDisplayOutputCost()
+	case usagelog.FieldDisplayCacheReadCost:
+		return m.AddedDisplayCacheReadCost()
+	case usagelog.FieldDisplayCacheWriteCost:
+		return m.AddedDisplayCacheWriteCost()
+	case usagelog.FieldDisplayTotalCost:
+		return m.AddedDisplayTotalCost()
+	case usagelog.FieldDisplayBlendCost:
+		return m.AddedDisplayBlendCost()
+	case usagelog.FieldCostInput:
+		return m.AddedCostInput()
+	case usagelog.FieldCostOutput:
+		return m.AddedCostOutput()
+	case usagelog.FieldCostCacheRead:
+		return m.AddedCostCacheRead()
+	case usagelog.FieldCostCacheWrite:
+		return m.AddedCostCacheWrite()
+	case usagelog.FieldCostTotal:
+		return m.AddedCostTotal()
+	case usagelog.FieldPricingVersion:
+		return m.AddedPricingVersion()
 	case usagelog.FieldRateMultiplier:
 		return m.AddedRateMultiplier()
 	case usagelog.FieldAccountRateMultiplier:
@@ -54857,6 +55885,90 @@ func (m *UsageLogMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddActualCost(v)
+		return nil
+	case usagelog.FieldDisplayInputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayInputCost(v)
+		return nil
+	case usagelog.FieldDisplayOutputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayOutputCost(v)
+		return nil
+	case usagelog.FieldDisplayCacheReadCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayCacheReadCost(v)
+		return nil
+	case usagelog.FieldDisplayCacheWriteCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayCacheWriteCost(v)
+		return nil
+	case usagelog.FieldDisplayTotalCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayTotalCost(v)
+		return nil
+	case usagelog.FieldDisplayBlendCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayBlendCost(v)
+		return nil
+	case usagelog.FieldCostInput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostInput(v)
+		return nil
+	case usagelog.FieldCostOutput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostOutput(v)
+		return nil
+	case usagelog.FieldCostCacheRead:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostCacheRead(v)
+		return nil
+	case usagelog.FieldCostCacheWrite:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostCacheWrite(v)
+		return nil
+	case usagelog.FieldCostTotal:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostTotal(v)
+		return nil
+	case usagelog.FieldPricingVersion:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPricingVersion(v)
 		return nil
 	case usagelog.FieldRateMultiplier:
 		v, ok := value.(float64)
@@ -55157,6 +56269,48 @@ func (m *UsageLogMutation) ResetField(name string) error {
 	case usagelog.FieldActualCost:
 		m.ResetActualCost()
 		return nil
+	case usagelog.FieldDisplayInputCost:
+		m.ResetDisplayInputCost()
+		return nil
+	case usagelog.FieldDisplayOutputCost:
+		m.ResetDisplayOutputCost()
+		return nil
+	case usagelog.FieldDisplayCacheReadCost:
+		m.ResetDisplayCacheReadCost()
+		return nil
+	case usagelog.FieldDisplayCacheWriteCost:
+		m.ResetDisplayCacheWriteCost()
+		return nil
+	case usagelog.FieldDisplayTotalCost:
+		m.ResetDisplayTotalCost()
+		return nil
+	case usagelog.FieldDisplayBlendCost:
+		m.ResetDisplayBlendCost()
+		return nil
+	case usagelog.FieldCostInput:
+		m.ResetCostInput()
+		return nil
+	case usagelog.FieldCostOutput:
+		m.ResetCostOutput()
+		return nil
+	case usagelog.FieldCostCacheRead:
+		m.ResetCostCacheRead()
+		return nil
+	case usagelog.FieldCostCacheWrite:
+		m.ResetCostCacheWrite()
+		return nil
+	case usagelog.FieldCostTotal:
+		m.ResetCostTotal()
+		return nil
+	case usagelog.FieldCostSupplierCode:
+		m.ResetCostSupplierCode()
+		return nil
+	case usagelog.FieldPricingVersion:
+		m.ResetPricingVersion()
+		return nil
+	case usagelog.FieldReservationStatus:
+		m.ResetReservationStatus()
+		return nil
 	case usagelog.FieldRateMultiplier:
 		m.ResetRateMultiplier()
 		return nil
@@ -55365,6 +56519,2063 @@ func (m *UsageLogMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown UsageLog edge %s", name)
+}
+
+// UsageModelSnapshotMutation represents an operation that mutates the UsageModelSnapshot nodes in the graph.
+type UsageModelSnapshotMutation struct {
+	config
+	op                          Op
+	typ                         string
+	id                          *int64
+	create_time                 *time.Time
+	update_time                 *time.Time
+	user_id                     *int64
+	adduser_id                  *int64
+	model                       *string
+	pricing_version             *int
+	addpricing_version          *int
+	display_input_cost          *float64
+	adddisplay_input_cost       *float64
+	display_output_cost         *float64
+	adddisplay_output_cost      *float64
+	display_cache_read_cost     *float64
+	adddisplay_cache_read_cost  *float64
+	display_cache_write_cost    *float64
+	adddisplay_cache_write_cost *float64
+	display_total_cost          *float64
+	adddisplay_total_cost       *float64
+	display_blend_cost          *float64
+	adddisplay_blend_cost       *float64
+	cost_input                  *float64
+	addcost_input               *float64
+	cost_output                 *float64
+	addcost_output              *float64
+	cost_cache_read             *float64
+	addcost_cache_read          *float64
+	cost_cache_write            *float64
+	addcost_cache_write         *float64
+	cost_total                  *float64
+	addcost_total               *float64
+	cost_supplier_code          *string
+	input_tokens                *int64
+	addinput_tokens             *int64
+	output_tokens               *int64
+	addoutput_tokens            *int64
+	cache_read_tokens           *int64
+	addcache_read_tokens        *int64
+	cache_write_tokens          *int64
+	addcache_write_tokens       *int64
+	usage_model_pct             *float64
+	addusage_model_pct          *float64
+	clearedFields               map[string]struct{}
+	done                        bool
+	oldValue                    func(context.Context) (*UsageModelSnapshot, error)
+	predicates                  []predicate.UsageModelSnapshot
+}
+
+var _ ent.Mutation = (*UsageModelSnapshotMutation)(nil)
+
+// usagemodelsnapshotOption allows management of the mutation configuration using functional options.
+type usagemodelsnapshotOption func(*UsageModelSnapshotMutation)
+
+// newUsageModelSnapshotMutation creates new mutation for the UsageModelSnapshot entity.
+func newUsageModelSnapshotMutation(c config, op Op, opts ...usagemodelsnapshotOption) *UsageModelSnapshotMutation {
+	m := &UsageModelSnapshotMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeUsageModelSnapshot,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withUsageModelSnapshotID sets the ID field of the mutation.
+func withUsageModelSnapshotID(id int64) usagemodelsnapshotOption {
+	return func(m *UsageModelSnapshotMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *UsageModelSnapshot
+		)
+		m.oldValue = func(ctx context.Context) (*UsageModelSnapshot, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().UsageModelSnapshot.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withUsageModelSnapshot sets the old UsageModelSnapshot of the mutation.
+func withUsageModelSnapshot(node *UsageModelSnapshot) usagemodelsnapshotOption {
+	return func(m *UsageModelSnapshotMutation) {
+		m.oldValue = func(context.Context) (*UsageModelSnapshot, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m UsageModelSnapshotMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m UsageModelSnapshotMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *UsageModelSnapshotMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *UsageModelSnapshotMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().UsageModelSnapshot.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *UsageModelSnapshotMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *UsageModelSnapshotMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *UsageModelSnapshotMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *UsageModelSnapshotMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *UsageModelSnapshotMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *UsageModelSnapshotMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *UsageModelSnapshotMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *UsageModelSnapshotMutation) UserID() (r int64, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldUserID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// AddUserID adds i to the "user_id" field.
+func (m *UsageModelSnapshotMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *UsageModelSnapshotMutation) ResetUserID() {
+	m.user_id = nil
+	m.adduser_id = nil
+}
+
+// SetModel sets the "model" field.
+func (m *UsageModelSnapshotMutation) SetModel(s string) {
+	m.model = &s
+}
+
+// Model returns the value of the "model" field in the mutation.
+func (m *UsageModelSnapshotMutation) Model() (r string, exists bool) {
+	v := m.model
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldModel returns the old "model" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldModel(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldModel is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldModel requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldModel: %w", err)
+	}
+	return oldValue.Model, nil
+}
+
+// ResetModel resets all changes to the "model" field.
+func (m *UsageModelSnapshotMutation) ResetModel() {
+	m.model = nil
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (m *UsageModelSnapshotMutation) SetPricingVersion(i int) {
+	m.pricing_version = &i
+	m.addpricing_version = nil
+}
+
+// PricingVersion returns the value of the "pricing_version" field in the mutation.
+func (m *UsageModelSnapshotMutation) PricingVersion() (r int, exists bool) {
+	v := m.pricing_version
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPricingVersion returns the old "pricing_version" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldPricingVersion(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPricingVersion is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPricingVersion requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPricingVersion: %w", err)
+	}
+	return oldValue.PricingVersion, nil
+}
+
+// AddPricingVersion adds i to the "pricing_version" field.
+func (m *UsageModelSnapshotMutation) AddPricingVersion(i int) {
+	if m.addpricing_version != nil {
+		*m.addpricing_version += i
+	} else {
+		m.addpricing_version = &i
+	}
+}
+
+// AddedPricingVersion returns the value that was added to the "pricing_version" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedPricingVersion() (r int, exists bool) {
+	v := m.addpricing_version
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPricingVersion resets all changes to the "pricing_version" field.
+func (m *UsageModelSnapshotMutation) ResetPricingVersion() {
+	m.pricing_version = nil
+	m.addpricing_version = nil
+}
+
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (m *UsageModelSnapshotMutation) SetDisplayInputCost(f float64) {
+	m.display_input_cost = &f
+	m.adddisplay_input_cost = nil
+}
+
+// DisplayInputCost returns the value of the "display_input_cost" field in the mutation.
+func (m *UsageModelSnapshotMutation) DisplayInputCost() (r float64, exists bool) {
+	v := m.display_input_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayInputCost returns the old "display_input_cost" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldDisplayInputCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayInputCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayInputCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayInputCost: %w", err)
+	}
+	return oldValue.DisplayInputCost, nil
+}
+
+// AddDisplayInputCost adds f to the "display_input_cost" field.
+func (m *UsageModelSnapshotMutation) AddDisplayInputCost(f float64) {
+	if m.adddisplay_input_cost != nil {
+		*m.adddisplay_input_cost += f
+	} else {
+		m.adddisplay_input_cost = &f
+	}
+}
+
+// AddedDisplayInputCost returns the value that was added to the "display_input_cost" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedDisplayInputCost() (r float64, exists bool) {
+	v := m.adddisplay_input_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayInputCost resets all changes to the "display_input_cost" field.
+func (m *UsageModelSnapshotMutation) ResetDisplayInputCost() {
+	m.display_input_cost = nil
+	m.adddisplay_input_cost = nil
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (m *UsageModelSnapshotMutation) SetDisplayOutputCost(f float64) {
+	m.display_output_cost = &f
+	m.adddisplay_output_cost = nil
+}
+
+// DisplayOutputCost returns the value of the "display_output_cost" field in the mutation.
+func (m *UsageModelSnapshotMutation) DisplayOutputCost() (r float64, exists bool) {
+	v := m.display_output_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayOutputCost returns the old "display_output_cost" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldDisplayOutputCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayOutputCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayOutputCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayOutputCost: %w", err)
+	}
+	return oldValue.DisplayOutputCost, nil
+}
+
+// AddDisplayOutputCost adds f to the "display_output_cost" field.
+func (m *UsageModelSnapshotMutation) AddDisplayOutputCost(f float64) {
+	if m.adddisplay_output_cost != nil {
+		*m.adddisplay_output_cost += f
+	} else {
+		m.adddisplay_output_cost = &f
+	}
+}
+
+// AddedDisplayOutputCost returns the value that was added to the "display_output_cost" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedDisplayOutputCost() (r float64, exists bool) {
+	v := m.adddisplay_output_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayOutputCost resets all changes to the "display_output_cost" field.
+func (m *UsageModelSnapshotMutation) ResetDisplayOutputCost() {
+	m.display_output_cost = nil
+	m.adddisplay_output_cost = nil
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (m *UsageModelSnapshotMutation) SetDisplayCacheReadCost(f float64) {
+	m.display_cache_read_cost = &f
+	m.adddisplay_cache_read_cost = nil
+}
+
+// DisplayCacheReadCost returns the value of the "display_cache_read_cost" field in the mutation.
+func (m *UsageModelSnapshotMutation) DisplayCacheReadCost() (r float64, exists bool) {
+	v := m.display_cache_read_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayCacheReadCost returns the old "display_cache_read_cost" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldDisplayCacheReadCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayCacheReadCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayCacheReadCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayCacheReadCost: %w", err)
+	}
+	return oldValue.DisplayCacheReadCost, nil
+}
+
+// AddDisplayCacheReadCost adds f to the "display_cache_read_cost" field.
+func (m *UsageModelSnapshotMutation) AddDisplayCacheReadCost(f float64) {
+	if m.adddisplay_cache_read_cost != nil {
+		*m.adddisplay_cache_read_cost += f
+	} else {
+		m.adddisplay_cache_read_cost = &f
+	}
+}
+
+// AddedDisplayCacheReadCost returns the value that was added to the "display_cache_read_cost" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedDisplayCacheReadCost() (r float64, exists bool) {
+	v := m.adddisplay_cache_read_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayCacheReadCost resets all changes to the "display_cache_read_cost" field.
+func (m *UsageModelSnapshotMutation) ResetDisplayCacheReadCost() {
+	m.display_cache_read_cost = nil
+	m.adddisplay_cache_read_cost = nil
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (m *UsageModelSnapshotMutation) SetDisplayCacheWriteCost(f float64) {
+	m.display_cache_write_cost = &f
+	m.adddisplay_cache_write_cost = nil
+}
+
+// DisplayCacheWriteCost returns the value of the "display_cache_write_cost" field in the mutation.
+func (m *UsageModelSnapshotMutation) DisplayCacheWriteCost() (r float64, exists bool) {
+	v := m.display_cache_write_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayCacheWriteCost returns the old "display_cache_write_cost" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldDisplayCacheWriteCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayCacheWriteCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayCacheWriteCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayCacheWriteCost: %w", err)
+	}
+	return oldValue.DisplayCacheWriteCost, nil
+}
+
+// AddDisplayCacheWriteCost adds f to the "display_cache_write_cost" field.
+func (m *UsageModelSnapshotMutation) AddDisplayCacheWriteCost(f float64) {
+	if m.adddisplay_cache_write_cost != nil {
+		*m.adddisplay_cache_write_cost += f
+	} else {
+		m.adddisplay_cache_write_cost = &f
+	}
+}
+
+// AddedDisplayCacheWriteCost returns the value that was added to the "display_cache_write_cost" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedDisplayCacheWriteCost() (r float64, exists bool) {
+	v := m.adddisplay_cache_write_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayCacheWriteCost resets all changes to the "display_cache_write_cost" field.
+func (m *UsageModelSnapshotMutation) ResetDisplayCacheWriteCost() {
+	m.display_cache_write_cost = nil
+	m.adddisplay_cache_write_cost = nil
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (m *UsageModelSnapshotMutation) SetDisplayTotalCost(f float64) {
+	m.display_total_cost = &f
+	m.adddisplay_total_cost = nil
+}
+
+// DisplayTotalCost returns the value of the "display_total_cost" field in the mutation.
+func (m *UsageModelSnapshotMutation) DisplayTotalCost() (r float64, exists bool) {
+	v := m.display_total_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayTotalCost returns the old "display_total_cost" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldDisplayTotalCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayTotalCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayTotalCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayTotalCost: %w", err)
+	}
+	return oldValue.DisplayTotalCost, nil
+}
+
+// AddDisplayTotalCost adds f to the "display_total_cost" field.
+func (m *UsageModelSnapshotMutation) AddDisplayTotalCost(f float64) {
+	if m.adddisplay_total_cost != nil {
+		*m.adddisplay_total_cost += f
+	} else {
+		m.adddisplay_total_cost = &f
+	}
+}
+
+// AddedDisplayTotalCost returns the value that was added to the "display_total_cost" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedDisplayTotalCost() (r float64, exists bool) {
+	v := m.adddisplay_total_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayTotalCost resets all changes to the "display_total_cost" field.
+func (m *UsageModelSnapshotMutation) ResetDisplayTotalCost() {
+	m.display_total_cost = nil
+	m.adddisplay_total_cost = nil
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (m *UsageModelSnapshotMutation) SetDisplayBlendCost(f float64) {
+	m.display_blend_cost = &f
+	m.adddisplay_blend_cost = nil
+}
+
+// DisplayBlendCost returns the value of the "display_blend_cost" field in the mutation.
+func (m *UsageModelSnapshotMutation) DisplayBlendCost() (r float64, exists bool) {
+	v := m.display_blend_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayBlendCost returns the old "display_blend_cost" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldDisplayBlendCost(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayBlendCost is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayBlendCost requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayBlendCost: %w", err)
+	}
+	return oldValue.DisplayBlendCost, nil
+}
+
+// AddDisplayBlendCost adds f to the "display_blend_cost" field.
+func (m *UsageModelSnapshotMutation) AddDisplayBlendCost(f float64) {
+	if m.adddisplay_blend_cost != nil {
+		*m.adddisplay_blend_cost += f
+	} else {
+		m.adddisplay_blend_cost = &f
+	}
+}
+
+// AddedDisplayBlendCost returns the value that was added to the "display_blend_cost" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedDisplayBlendCost() (r float64, exists bool) {
+	v := m.adddisplay_blend_cost
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayBlendCost resets all changes to the "display_blend_cost" field.
+func (m *UsageModelSnapshotMutation) ResetDisplayBlendCost() {
+	m.display_blend_cost = nil
+	m.adddisplay_blend_cost = nil
+}
+
+// SetCostInput sets the "cost_input" field.
+func (m *UsageModelSnapshotMutation) SetCostInput(f float64) {
+	m.cost_input = &f
+	m.addcost_input = nil
+}
+
+// CostInput returns the value of the "cost_input" field in the mutation.
+func (m *UsageModelSnapshotMutation) CostInput() (r float64, exists bool) {
+	v := m.cost_input
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostInput returns the old "cost_input" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCostInput(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostInput is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostInput requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostInput: %w", err)
+	}
+	return oldValue.CostInput, nil
+}
+
+// AddCostInput adds f to the "cost_input" field.
+func (m *UsageModelSnapshotMutation) AddCostInput(f float64) {
+	if m.addcost_input != nil {
+		*m.addcost_input += f
+	} else {
+		m.addcost_input = &f
+	}
+}
+
+// AddedCostInput returns the value that was added to the "cost_input" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCostInput() (r float64, exists bool) {
+	v := m.addcost_input
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostInput resets all changes to the "cost_input" field.
+func (m *UsageModelSnapshotMutation) ResetCostInput() {
+	m.cost_input = nil
+	m.addcost_input = nil
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (m *UsageModelSnapshotMutation) SetCostOutput(f float64) {
+	m.cost_output = &f
+	m.addcost_output = nil
+}
+
+// CostOutput returns the value of the "cost_output" field in the mutation.
+func (m *UsageModelSnapshotMutation) CostOutput() (r float64, exists bool) {
+	v := m.cost_output
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostOutput returns the old "cost_output" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCostOutput(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostOutput is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostOutput requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostOutput: %w", err)
+	}
+	return oldValue.CostOutput, nil
+}
+
+// AddCostOutput adds f to the "cost_output" field.
+func (m *UsageModelSnapshotMutation) AddCostOutput(f float64) {
+	if m.addcost_output != nil {
+		*m.addcost_output += f
+	} else {
+		m.addcost_output = &f
+	}
+}
+
+// AddedCostOutput returns the value that was added to the "cost_output" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCostOutput() (r float64, exists bool) {
+	v := m.addcost_output
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostOutput resets all changes to the "cost_output" field.
+func (m *UsageModelSnapshotMutation) ResetCostOutput() {
+	m.cost_output = nil
+	m.addcost_output = nil
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (m *UsageModelSnapshotMutation) SetCostCacheRead(f float64) {
+	m.cost_cache_read = &f
+	m.addcost_cache_read = nil
+}
+
+// CostCacheRead returns the value of the "cost_cache_read" field in the mutation.
+func (m *UsageModelSnapshotMutation) CostCacheRead() (r float64, exists bool) {
+	v := m.cost_cache_read
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostCacheRead returns the old "cost_cache_read" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCostCacheRead(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostCacheRead is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostCacheRead requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostCacheRead: %w", err)
+	}
+	return oldValue.CostCacheRead, nil
+}
+
+// AddCostCacheRead adds f to the "cost_cache_read" field.
+func (m *UsageModelSnapshotMutation) AddCostCacheRead(f float64) {
+	if m.addcost_cache_read != nil {
+		*m.addcost_cache_read += f
+	} else {
+		m.addcost_cache_read = &f
+	}
+}
+
+// AddedCostCacheRead returns the value that was added to the "cost_cache_read" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCostCacheRead() (r float64, exists bool) {
+	v := m.addcost_cache_read
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostCacheRead resets all changes to the "cost_cache_read" field.
+func (m *UsageModelSnapshotMutation) ResetCostCacheRead() {
+	m.cost_cache_read = nil
+	m.addcost_cache_read = nil
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (m *UsageModelSnapshotMutation) SetCostCacheWrite(f float64) {
+	m.cost_cache_write = &f
+	m.addcost_cache_write = nil
+}
+
+// CostCacheWrite returns the value of the "cost_cache_write" field in the mutation.
+func (m *UsageModelSnapshotMutation) CostCacheWrite() (r float64, exists bool) {
+	v := m.cost_cache_write
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostCacheWrite returns the old "cost_cache_write" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCostCacheWrite(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostCacheWrite is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostCacheWrite requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostCacheWrite: %w", err)
+	}
+	return oldValue.CostCacheWrite, nil
+}
+
+// AddCostCacheWrite adds f to the "cost_cache_write" field.
+func (m *UsageModelSnapshotMutation) AddCostCacheWrite(f float64) {
+	if m.addcost_cache_write != nil {
+		*m.addcost_cache_write += f
+	} else {
+		m.addcost_cache_write = &f
+	}
+}
+
+// AddedCostCacheWrite returns the value that was added to the "cost_cache_write" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCostCacheWrite() (r float64, exists bool) {
+	v := m.addcost_cache_write
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostCacheWrite resets all changes to the "cost_cache_write" field.
+func (m *UsageModelSnapshotMutation) ResetCostCacheWrite() {
+	m.cost_cache_write = nil
+	m.addcost_cache_write = nil
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (m *UsageModelSnapshotMutation) SetCostTotal(f float64) {
+	m.cost_total = &f
+	m.addcost_total = nil
+}
+
+// CostTotal returns the value of the "cost_total" field in the mutation.
+func (m *UsageModelSnapshotMutation) CostTotal() (r float64, exists bool) {
+	v := m.cost_total
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostTotal returns the old "cost_total" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCostTotal(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostTotal is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostTotal requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostTotal: %w", err)
+	}
+	return oldValue.CostTotal, nil
+}
+
+// AddCostTotal adds f to the "cost_total" field.
+func (m *UsageModelSnapshotMutation) AddCostTotal(f float64) {
+	if m.addcost_total != nil {
+		*m.addcost_total += f
+	} else {
+		m.addcost_total = &f
+	}
+}
+
+// AddedCostTotal returns the value that was added to the "cost_total" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCostTotal() (r float64, exists bool) {
+	v := m.addcost_total
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCostTotal resets all changes to the "cost_total" field.
+func (m *UsageModelSnapshotMutation) ResetCostTotal() {
+	m.cost_total = nil
+	m.addcost_total = nil
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (m *UsageModelSnapshotMutation) SetCostSupplierCode(s string) {
+	m.cost_supplier_code = &s
+}
+
+// CostSupplierCode returns the value of the "cost_supplier_code" field in the mutation.
+func (m *UsageModelSnapshotMutation) CostSupplierCode() (r string, exists bool) {
+	v := m.cost_supplier_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCostSupplierCode returns the old "cost_supplier_code" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCostSupplierCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCostSupplierCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCostSupplierCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCostSupplierCode: %w", err)
+	}
+	return oldValue.CostSupplierCode, nil
+}
+
+// ResetCostSupplierCode resets all changes to the "cost_supplier_code" field.
+func (m *UsageModelSnapshotMutation) ResetCostSupplierCode() {
+	m.cost_supplier_code = nil
+}
+
+// SetInputTokens sets the "input_tokens" field.
+func (m *UsageModelSnapshotMutation) SetInputTokens(i int64) {
+	m.input_tokens = &i
+	m.addinput_tokens = nil
+}
+
+// InputTokens returns the value of the "input_tokens" field in the mutation.
+func (m *UsageModelSnapshotMutation) InputTokens() (r int64, exists bool) {
+	v := m.input_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInputTokens returns the old "input_tokens" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldInputTokens(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInputTokens is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInputTokens requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInputTokens: %w", err)
+	}
+	return oldValue.InputTokens, nil
+}
+
+// AddInputTokens adds i to the "input_tokens" field.
+func (m *UsageModelSnapshotMutation) AddInputTokens(i int64) {
+	if m.addinput_tokens != nil {
+		*m.addinput_tokens += i
+	} else {
+		m.addinput_tokens = &i
+	}
+}
+
+// AddedInputTokens returns the value that was added to the "input_tokens" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedInputTokens() (r int64, exists bool) {
+	v := m.addinput_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetInputTokens resets all changes to the "input_tokens" field.
+func (m *UsageModelSnapshotMutation) ResetInputTokens() {
+	m.input_tokens = nil
+	m.addinput_tokens = nil
+}
+
+// SetOutputTokens sets the "output_tokens" field.
+func (m *UsageModelSnapshotMutation) SetOutputTokens(i int64) {
+	m.output_tokens = &i
+	m.addoutput_tokens = nil
+}
+
+// OutputTokens returns the value of the "output_tokens" field in the mutation.
+func (m *UsageModelSnapshotMutation) OutputTokens() (r int64, exists bool) {
+	v := m.output_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOutputTokens returns the old "output_tokens" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldOutputTokens(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOutputTokens is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOutputTokens requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOutputTokens: %w", err)
+	}
+	return oldValue.OutputTokens, nil
+}
+
+// AddOutputTokens adds i to the "output_tokens" field.
+func (m *UsageModelSnapshotMutation) AddOutputTokens(i int64) {
+	if m.addoutput_tokens != nil {
+		*m.addoutput_tokens += i
+	} else {
+		m.addoutput_tokens = &i
+	}
+}
+
+// AddedOutputTokens returns the value that was added to the "output_tokens" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedOutputTokens() (r int64, exists bool) {
+	v := m.addoutput_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetOutputTokens resets all changes to the "output_tokens" field.
+func (m *UsageModelSnapshotMutation) ResetOutputTokens() {
+	m.output_tokens = nil
+	m.addoutput_tokens = nil
+}
+
+// SetCacheReadTokens sets the "cache_read_tokens" field.
+func (m *UsageModelSnapshotMutation) SetCacheReadTokens(i int64) {
+	m.cache_read_tokens = &i
+	m.addcache_read_tokens = nil
+}
+
+// CacheReadTokens returns the value of the "cache_read_tokens" field in the mutation.
+func (m *UsageModelSnapshotMutation) CacheReadTokens() (r int64, exists bool) {
+	v := m.cache_read_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCacheReadTokens returns the old "cache_read_tokens" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCacheReadTokens(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCacheReadTokens is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCacheReadTokens requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCacheReadTokens: %w", err)
+	}
+	return oldValue.CacheReadTokens, nil
+}
+
+// AddCacheReadTokens adds i to the "cache_read_tokens" field.
+func (m *UsageModelSnapshotMutation) AddCacheReadTokens(i int64) {
+	if m.addcache_read_tokens != nil {
+		*m.addcache_read_tokens += i
+	} else {
+		m.addcache_read_tokens = &i
+	}
+}
+
+// AddedCacheReadTokens returns the value that was added to the "cache_read_tokens" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCacheReadTokens() (r int64, exists bool) {
+	v := m.addcache_read_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCacheReadTokens resets all changes to the "cache_read_tokens" field.
+func (m *UsageModelSnapshotMutation) ResetCacheReadTokens() {
+	m.cache_read_tokens = nil
+	m.addcache_read_tokens = nil
+}
+
+// SetCacheWriteTokens sets the "cache_write_tokens" field.
+func (m *UsageModelSnapshotMutation) SetCacheWriteTokens(i int64) {
+	m.cache_write_tokens = &i
+	m.addcache_write_tokens = nil
+}
+
+// CacheWriteTokens returns the value of the "cache_write_tokens" field in the mutation.
+func (m *UsageModelSnapshotMutation) CacheWriteTokens() (r int64, exists bool) {
+	v := m.cache_write_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCacheWriteTokens returns the old "cache_write_tokens" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldCacheWriteTokens(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCacheWriteTokens is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCacheWriteTokens requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCacheWriteTokens: %w", err)
+	}
+	return oldValue.CacheWriteTokens, nil
+}
+
+// AddCacheWriteTokens adds i to the "cache_write_tokens" field.
+func (m *UsageModelSnapshotMutation) AddCacheWriteTokens(i int64) {
+	if m.addcache_write_tokens != nil {
+		*m.addcache_write_tokens += i
+	} else {
+		m.addcache_write_tokens = &i
+	}
+}
+
+// AddedCacheWriteTokens returns the value that was added to the "cache_write_tokens" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedCacheWriteTokens() (r int64, exists bool) {
+	v := m.addcache_write_tokens
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCacheWriteTokens resets all changes to the "cache_write_tokens" field.
+func (m *UsageModelSnapshotMutation) ResetCacheWriteTokens() {
+	m.cache_write_tokens = nil
+	m.addcache_write_tokens = nil
+}
+
+// SetUsageModelPct sets the "usage_model_pct" field.
+func (m *UsageModelSnapshotMutation) SetUsageModelPct(f float64) {
+	m.usage_model_pct = &f
+	m.addusage_model_pct = nil
+}
+
+// UsageModelPct returns the value of the "usage_model_pct" field in the mutation.
+func (m *UsageModelSnapshotMutation) UsageModelPct() (r float64, exists bool) {
+	v := m.usage_model_pct
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsageModelPct returns the old "usage_model_pct" field's value of the UsageModelSnapshot entity.
+// If the UsageModelSnapshot object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageModelSnapshotMutation) OldUsageModelPct(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsageModelPct is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsageModelPct requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsageModelPct: %w", err)
+	}
+	return oldValue.UsageModelPct, nil
+}
+
+// AddUsageModelPct adds f to the "usage_model_pct" field.
+func (m *UsageModelSnapshotMutation) AddUsageModelPct(f float64) {
+	if m.addusage_model_pct != nil {
+		*m.addusage_model_pct += f
+	} else {
+		m.addusage_model_pct = &f
+	}
+}
+
+// AddedUsageModelPct returns the value that was added to the "usage_model_pct" field in this mutation.
+func (m *UsageModelSnapshotMutation) AddedUsageModelPct() (r float64, exists bool) {
+	v := m.addusage_model_pct
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUsageModelPct resets all changes to the "usage_model_pct" field.
+func (m *UsageModelSnapshotMutation) ResetUsageModelPct() {
+	m.usage_model_pct = nil
+	m.addusage_model_pct = nil
+}
+
+// Where appends a list predicates to the UsageModelSnapshotMutation builder.
+func (m *UsageModelSnapshotMutation) Where(ps ...predicate.UsageModelSnapshot) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the UsageModelSnapshotMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *UsageModelSnapshotMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.UsageModelSnapshot, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *UsageModelSnapshotMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *UsageModelSnapshotMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (UsageModelSnapshot).
+func (m *UsageModelSnapshotMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *UsageModelSnapshotMutation) Fields() []string {
+	fields := make([]string, 0, 22)
+	if m.create_time != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, usagemodelsnapshot.FieldUpdateTime)
+	}
+	if m.user_id != nil {
+		fields = append(fields, usagemodelsnapshot.FieldUserID)
+	}
+	if m.model != nil {
+		fields = append(fields, usagemodelsnapshot.FieldModel)
+	}
+	if m.pricing_version != nil {
+		fields = append(fields, usagemodelsnapshot.FieldPricingVersion)
+	}
+	if m.display_input_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayInputCost)
+	}
+	if m.display_output_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayOutputCost)
+	}
+	if m.display_cache_read_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayCacheReadCost)
+	}
+	if m.display_cache_write_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayCacheWriteCost)
+	}
+	if m.display_total_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayTotalCost)
+	}
+	if m.display_blend_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayBlendCost)
+	}
+	if m.cost_input != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostInput)
+	}
+	if m.cost_output != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostOutput)
+	}
+	if m.cost_cache_read != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostCacheRead)
+	}
+	if m.cost_cache_write != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostCacheWrite)
+	}
+	if m.cost_total != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostTotal)
+	}
+	if m.cost_supplier_code != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostSupplierCode)
+	}
+	if m.input_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldInputTokens)
+	}
+	if m.output_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldOutputTokens)
+	}
+	if m.cache_read_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCacheReadTokens)
+	}
+	if m.cache_write_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCacheWriteTokens)
+	}
+	if m.usage_model_pct != nil {
+		fields = append(fields, usagemodelsnapshot.FieldUsageModelPct)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *UsageModelSnapshotMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case usagemodelsnapshot.FieldCreateTime:
+		return m.CreateTime()
+	case usagemodelsnapshot.FieldUpdateTime:
+		return m.UpdateTime()
+	case usagemodelsnapshot.FieldUserID:
+		return m.UserID()
+	case usagemodelsnapshot.FieldModel:
+		return m.Model()
+	case usagemodelsnapshot.FieldPricingVersion:
+		return m.PricingVersion()
+	case usagemodelsnapshot.FieldDisplayInputCost:
+		return m.DisplayInputCost()
+	case usagemodelsnapshot.FieldDisplayOutputCost:
+		return m.DisplayOutputCost()
+	case usagemodelsnapshot.FieldDisplayCacheReadCost:
+		return m.DisplayCacheReadCost()
+	case usagemodelsnapshot.FieldDisplayCacheWriteCost:
+		return m.DisplayCacheWriteCost()
+	case usagemodelsnapshot.FieldDisplayTotalCost:
+		return m.DisplayTotalCost()
+	case usagemodelsnapshot.FieldDisplayBlendCost:
+		return m.DisplayBlendCost()
+	case usagemodelsnapshot.FieldCostInput:
+		return m.CostInput()
+	case usagemodelsnapshot.FieldCostOutput:
+		return m.CostOutput()
+	case usagemodelsnapshot.FieldCostCacheRead:
+		return m.CostCacheRead()
+	case usagemodelsnapshot.FieldCostCacheWrite:
+		return m.CostCacheWrite()
+	case usagemodelsnapshot.FieldCostTotal:
+		return m.CostTotal()
+	case usagemodelsnapshot.FieldCostSupplierCode:
+		return m.CostSupplierCode()
+	case usagemodelsnapshot.FieldInputTokens:
+		return m.InputTokens()
+	case usagemodelsnapshot.FieldOutputTokens:
+		return m.OutputTokens()
+	case usagemodelsnapshot.FieldCacheReadTokens:
+		return m.CacheReadTokens()
+	case usagemodelsnapshot.FieldCacheWriteTokens:
+		return m.CacheWriteTokens()
+	case usagemodelsnapshot.FieldUsageModelPct:
+		return m.UsageModelPct()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *UsageModelSnapshotMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case usagemodelsnapshot.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case usagemodelsnapshot.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case usagemodelsnapshot.FieldUserID:
+		return m.OldUserID(ctx)
+	case usagemodelsnapshot.FieldModel:
+		return m.OldModel(ctx)
+	case usagemodelsnapshot.FieldPricingVersion:
+		return m.OldPricingVersion(ctx)
+	case usagemodelsnapshot.FieldDisplayInputCost:
+		return m.OldDisplayInputCost(ctx)
+	case usagemodelsnapshot.FieldDisplayOutputCost:
+		return m.OldDisplayOutputCost(ctx)
+	case usagemodelsnapshot.FieldDisplayCacheReadCost:
+		return m.OldDisplayCacheReadCost(ctx)
+	case usagemodelsnapshot.FieldDisplayCacheWriteCost:
+		return m.OldDisplayCacheWriteCost(ctx)
+	case usagemodelsnapshot.FieldDisplayTotalCost:
+		return m.OldDisplayTotalCost(ctx)
+	case usagemodelsnapshot.FieldDisplayBlendCost:
+		return m.OldDisplayBlendCost(ctx)
+	case usagemodelsnapshot.FieldCostInput:
+		return m.OldCostInput(ctx)
+	case usagemodelsnapshot.FieldCostOutput:
+		return m.OldCostOutput(ctx)
+	case usagemodelsnapshot.FieldCostCacheRead:
+		return m.OldCostCacheRead(ctx)
+	case usagemodelsnapshot.FieldCostCacheWrite:
+		return m.OldCostCacheWrite(ctx)
+	case usagemodelsnapshot.FieldCostTotal:
+		return m.OldCostTotal(ctx)
+	case usagemodelsnapshot.FieldCostSupplierCode:
+		return m.OldCostSupplierCode(ctx)
+	case usagemodelsnapshot.FieldInputTokens:
+		return m.OldInputTokens(ctx)
+	case usagemodelsnapshot.FieldOutputTokens:
+		return m.OldOutputTokens(ctx)
+	case usagemodelsnapshot.FieldCacheReadTokens:
+		return m.OldCacheReadTokens(ctx)
+	case usagemodelsnapshot.FieldCacheWriteTokens:
+		return m.OldCacheWriteTokens(ctx)
+	case usagemodelsnapshot.FieldUsageModelPct:
+		return m.OldUsageModelPct(ctx)
+	}
+	return nil, fmt.Errorf("unknown UsageModelSnapshot field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *UsageModelSnapshotMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case usagemodelsnapshot.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case usagemodelsnapshot.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case usagemodelsnapshot.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case usagemodelsnapshot.FieldModel:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetModel(v)
+		return nil
+	case usagemodelsnapshot.FieldPricingVersion:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPricingVersion(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayInputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayInputCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayOutputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayOutputCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayCacheReadCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayCacheReadCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayCacheWriteCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayCacheWriteCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayTotalCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayTotalCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayBlendCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayBlendCost(v)
+		return nil
+	case usagemodelsnapshot.FieldCostInput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostInput(v)
+		return nil
+	case usagemodelsnapshot.FieldCostOutput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostOutput(v)
+		return nil
+	case usagemodelsnapshot.FieldCostCacheRead:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostCacheRead(v)
+		return nil
+	case usagemodelsnapshot.FieldCostCacheWrite:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostCacheWrite(v)
+		return nil
+	case usagemodelsnapshot.FieldCostTotal:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostTotal(v)
+		return nil
+	case usagemodelsnapshot.FieldCostSupplierCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCostSupplierCode(v)
+		return nil
+	case usagemodelsnapshot.FieldInputTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInputTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldOutputTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOutputTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldCacheReadTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCacheReadTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldCacheWriteTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCacheWriteTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldUsageModelPct:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsageModelPct(v)
+		return nil
+	}
+	return fmt.Errorf("unknown UsageModelSnapshot field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *UsageModelSnapshotMutation) AddedFields() []string {
+	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, usagemodelsnapshot.FieldUserID)
+	}
+	if m.addpricing_version != nil {
+		fields = append(fields, usagemodelsnapshot.FieldPricingVersion)
+	}
+	if m.adddisplay_input_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayInputCost)
+	}
+	if m.adddisplay_output_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayOutputCost)
+	}
+	if m.adddisplay_cache_read_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayCacheReadCost)
+	}
+	if m.adddisplay_cache_write_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayCacheWriteCost)
+	}
+	if m.adddisplay_total_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayTotalCost)
+	}
+	if m.adddisplay_blend_cost != nil {
+		fields = append(fields, usagemodelsnapshot.FieldDisplayBlendCost)
+	}
+	if m.addcost_input != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostInput)
+	}
+	if m.addcost_output != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostOutput)
+	}
+	if m.addcost_cache_read != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostCacheRead)
+	}
+	if m.addcost_cache_write != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostCacheWrite)
+	}
+	if m.addcost_total != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCostTotal)
+	}
+	if m.addinput_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldInputTokens)
+	}
+	if m.addoutput_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldOutputTokens)
+	}
+	if m.addcache_read_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCacheReadTokens)
+	}
+	if m.addcache_write_tokens != nil {
+		fields = append(fields, usagemodelsnapshot.FieldCacheWriteTokens)
+	}
+	if m.addusage_model_pct != nil {
+		fields = append(fields, usagemodelsnapshot.FieldUsageModelPct)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *UsageModelSnapshotMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case usagemodelsnapshot.FieldUserID:
+		return m.AddedUserID()
+	case usagemodelsnapshot.FieldPricingVersion:
+		return m.AddedPricingVersion()
+	case usagemodelsnapshot.FieldDisplayInputCost:
+		return m.AddedDisplayInputCost()
+	case usagemodelsnapshot.FieldDisplayOutputCost:
+		return m.AddedDisplayOutputCost()
+	case usagemodelsnapshot.FieldDisplayCacheReadCost:
+		return m.AddedDisplayCacheReadCost()
+	case usagemodelsnapshot.FieldDisplayCacheWriteCost:
+		return m.AddedDisplayCacheWriteCost()
+	case usagemodelsnapshot.FieldDisplayTotalCost:
+		return m.AddedDisplayTotalCost()
+	case usagemodelsnapshot.FieldDisplayBlendCost:
+		return m.AddedDisplayBlendCost()
+	case usagemodelsnapshot.FieldCostInput:
+		return m.AddedCostInput()
+	case usagemodelsnapshot.FieldCostOutput:
+		return m.AddedCostOutput()
+	case usagemodelsnapshot.FieldCostCacheRead:
+		return m.AddedCostCacheRead()
+	case usagemodelsnapshot.FieldCostCacheWrite:
+		return m.AddedCostCacheWrite()
+	case usagemodelsnapshot.FieldCostTotal:
+		return m.AddedCostTotal()
+	case usagemodelsnapshot.FieldInputTokens:
+		return m.AddedInputTokens()
+	case usagemodelsnapshot.FieldOutputTokens:
+		return m.AddedOutputTokens()
+	case usagemodelsnapshot.FieldCacheReadTokens:
+		return m.AddedCacheReadTokens()
+	case usagemodelsnapshot.FieldCacheWriteTokens:
+		return m.AddedCacheWriteTokens()
+	case usagemodelsnapshot.FieldUsageModelPct:
+		return m.AddedUsageModelPct()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *UsageModelSnapshotMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case usagemodelsnapshot.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
+	case usagemodelsnapshot.FieldPricingVersion:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPricingVersion(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayInputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayInputCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayOutputCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayOutputCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayCacheReadCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayCacheReadCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayCacheWriteCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayCacheWriteCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayTotalCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayTotalCost(v)
+		return nil
+	case usagemodelsnapshot.FieldDisplayBlendCost:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayBlendCost(v)
+		return nil
+	case usagemodelsnapshot.FieldCostInput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostInput(v)
+		return nil
+	case usagemodelsnapshot.FieldCostOutput:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostOutput(v)
+		return nil
+	case usagemodelsnapshot.FieldCostCacheRead:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostCacheRead(v)
+		return nil
+	case usagemodelsnapshot.FieldCostCacheWrite:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostCacheWrite(v)
+		return nil
+	case usagemodelsnapshot.FieldCostTotal:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCostTotal(v)
+		return nil
+	case usagemodelsnapshot.FieldInputTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddInputTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldOutputTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddOutputTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldCacheReadTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCacheReadTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldCacheWriteTokens:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCacheWriteTokens(v)
+		return nil
+	case usagemodelsnapshot.FieldUsageModelPct:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUsageModelPct(v)
+		return nil
+	}
+	return fmt.Errorf("unknown UsageModelSnapshot numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *UsageModelSnapshotMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *UsageModelSnapshotMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *UsageModelSnapshotMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown UsageModelSnapshot nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *UsageModelSnapshotMutation) ResetField(name string) error {
+	switch name {
+	case usagemodelsnapshot.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case usagemodelsnapshot.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case usagemodelsnapshot.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case usagemodelsnapshot.FieldModel:
+		m.ResetModel()
+		return nil
+	case usagemodelsnapshot.FieldPricingVersion:
+		m.ResetPricingVersion()
+		return nil
+	case usagemodelsnapshot.FieldDisplayInputCost:
+		m.ResetDisplayInputCost()
+		return nil
+	case usagemodelsnapshot.FieldDisplayOutputCost:
+		m.ResetDisplayOutputCost()
+		return nil
+	case usagemodelsnapshot.FieldDisplayCacheReadCost:
+		m.ResetDisplayCacheReadCost()
+		return nil
+	case usagemodelsnapshot.FieldDisplayCacheWriteCost:
+		m.ResetDisplayCacheWriteCost()
+		return nil
+	case usagemodelsnapshot.FieldDisplayTotalCost:
+		m.ResetDisplayTotalCost()
+		return nil
+	case usagemodelsnapshot.FieldDisplayBlendCost:
+		m.ResetDisplayBlendCost()
+		return nil
+	case usagemodelsnapshot.FieldCostInput:
+		m.ResetCostInput()
+		return nil
+	case usagemodelsnapshot.FieldCostOutput:
+		m.ResetCostOutput()
+		return nil
+	case usagemodelsnapshot.FieldCostCacheRead:
+		m.ResetCostCacheRead()
+		return nil
+	case usagemodelsnapshot.FieldCostCacheWrite:
+		m.ResetCostCacheWrite()
+		return nil
+	case usagemodelsnapshot.FieldCostTotal:
+		m.ResetCostTotal()
+		return nil
+	case usagemodelsnapshot.FieldCostSupplierCode:
+		m.ResetCostSupplierCode()
+		return nil
+	case usagemodelsnapshot.FieldInputTokens:
+		m.ResetInputTokens()
+		return nil
+	case usagemodelsnapshot.FieldOutputTokens:
+		m.ResetOutputTokens()
+		return nil
+	case usagemodelsnapshot.FieldCacheReadTokens:
+		m.ResetCacheReadTokens()
+		return nil
+	case usagemodelsnapshot.FieldCacheWriteTokens:
+		m.ResetCacheWriteTokens()
+		return nil
+	case usagemodelsnapshot.FieldUsageModelPct:
+		m.ResetUsageModelPct()
+		return nil
+	}
+	return fmt.Errorf("unknown UsageModelSnapshot field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *UsageModelSnapshotMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *UsageModelSnapshotMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *UsageModelSnapshotMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *UsageModelSnapshotMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *UsageModelSnapshotMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *UsageModelSnapshotMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *UsageModelSnapshotMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown UsageModelSnapshot unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *UsageModelSnapshotMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown UsageModelSnapshot edge %s", name)
 }
 
 // UserMutation represents an operation that mutates the User nodes in the graph.

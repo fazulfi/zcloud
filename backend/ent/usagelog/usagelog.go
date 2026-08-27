@@ -68,6 +68,34 @@ const (
 	FieldTotalCost = "total_cost"
 	// FieldActualCost holds the string denoting the actual_cost field in the database.
 	FieldActualCost = "actual_cost"
+	// FieldDisplayInputCost holds the string denoting the display_input_cost field in the database.
+	FieldDisplayInputCost = "display_input_cost"
+	// FieldDisplayOutputCost holds the string denoting the display_output_cost field in the database.
+	FieldDisplayOutputCost = "display_output_cost"
+	// FieldDisplayCacheReadCost holds the string denoting the display_cache_read_cost field in the database.
+	FieldDisplayCacheReadCost = "display_cache_read_cost"
+	// FieldDisplayCacheWriteCost holds the string denoting the display_cache_write_cost field in the database.
+	FieldDisplayCacheWriteCost = "display_cache_write_cost"
+	// FieldDisplayTotalCost holds the string denoting the display_total_cost field in the database.
+	FieldDisplayTotalCost = "display_total_cost"
+	// FieldDisplayBlendCost holds the string denoting the display_blend_cost field in the database.
+	FieldDisplayBlendCost = "display_blend_cost"
+	// FieldCostInput holds the string denoting the cost_input field in the database.
+	FieldCostInput = "cost_input"
+	// FieldCostOutput holds the string denoting the cost_output field in the database.
+	FieldCostOutput = "cost_output"
+	// FieldCostCacheRead holds the string denoting the cost_cache_read field in the database.
+	FieldCostCacheRead = "cost_cache_read"
+	// FieldCostCacheWrite holds the string denoting the cost_cache_write field in the database.
+	FieldCostCacheWrite = "cost_cache_write"
+	// FieldCostTotal holds the string denoting the cost_total field in the database.
+	FieldCostTotal = "cost_total"
+	// FieldCostSupplierCode holds the string denoting the cost_supplier_code field in the database.
+	FieldCostSupplierCode = "cost_supplier_code"
+	// FieldPricingVersion holds the string denoting the pricing_version field in the database.
+	FieldPricingVersion = "pricing_version"
+	// FieldReservationStatus holds the string denoting the reservation_status field in the database.
+	FieldReservationStatus = "reservation_status"
 	// FieldRateMultiplier holds the string denoting the rate_multiplier field in the database.
 	FieldRateMultiplier = "rate_multiplier"
 	// FieldLongContextBillingApplied holds the string denoting the long_context_billing_applied field in the database.
@@ -187,6 +215,20 @@ var Columns = []string{
 	FieldCacheReadCost,
 	FieldTotalCost,
 	FieldActualCost,
+	FieldDisplayInputCost,
+	FieldDisplayOutputCost,
+	FieldDisplayCacheReadCost,
+	FieldDisplayCacheWriteCost,
+	FieldDisplayTotalCost,
+	FieldDisplayBlendCost,
+	FieldCostInput,
+	FieldCostOutput,
+	FieldCostCacheRead,
+	FieldCostCacheWrite,
+	FieldCostTotal,
+	FieldCostSupplierCode,
+	FieldPricingVersion,
+	FieldReservationStatus,
 	FieldRateMultiplier,
 	FieldLongContextBillingApplied,
 	FieldAccountRateMultiplier,
@@ -260,6 +302,38 @@ var (
 	DefaultTotalCost float64
 	// DefaultActualCost holds the default value on creation for the "actual_cost" field.
 	DefaultActualCost float64
+	// DefaultDisplayInputCost holds the default value on creation for the "display_input_cost" field.
+	DefaultDisplayInputCost float64
+	// DefaultDisplayOutputCost holds the default value on creation for the "display_output_cost" field.
+	DefaultDisplayOutputCost float64
+	// DefaultDisplayCacheReadCost holds the default value on creation for the "display_cache_read_cost" field.
+	DefaultDisplayCacheReadCost float64
+	// DefaultDisplayCacheWriteCost holds the default value on creation for the "display_cache_write_cost" field.
+	DefaultDisplayCacheWriteCost float64
+	// DefaultDisplayTotalCost holds the default value on creation for the "display_total_cost" field.
+	DefaultDisplayTotalCost float64
+	// DefaultDisplayBlendCost holds the default value on creation for the "display_blend_cost" field.
+	DefaultDisplayBlendCost float64
+	// DefaultCostInput holds the default value on creation for the "cost_input" field.
+	DefaultCostInput float64
+	// DefaultCostOutput holds the default value on creation for the "cost_output" field.
+	DefaultCostOutput float64
+	// DefaultCostCacheRead holds the default value on creation for the "cost_cache_read" field.
+	DefaultCostCacheRead float64
+	// DefaultCostCacheWrite holds the default value on creation for the "cost_cache_write" field.
+	DefaultCostCacheWrite float64
+	// DefaultCostTotal holds the default value on creation for the "cost_total" field.
+	DefaultCostTotal float64
+	// DefaultCostSupplierCode holds the default value on creation for the "cost_supplier_code" field.
+	DefaultCostSupplierCode string
+	// CostSupplierCodeValidator is a validator for the "cost_supplier_code" field. It is called by the builders before save.
+	CostSupplierCodeValidator func(string) error
+	// DefaultPricingVersion holds the default value on creation for the "pricing_version" field.
+	DefaultPricingVersion int
+	// DefaultReservationStatus holds the default value on creation for the "reservation_status" field.
+	DefaultReservationStatus string
+	// ReservationStatusValidator is a validator for the "reservation_status" field. It is called by the builders before save.
+	ReservationStatusValidator func(string) error
 	// DefaultRateMultiplier holds the default value on creation for the "rate_multiplier" field.
 	DefaultRateMultiplier float64
 	// DefaultLongContextBillingApplied holds the default value on creation for the "long_context_billing_applied" field.
@@ -433,6 +507,76 @@ func ByTotalCost(opts ...sql.OrderTermOption) OrderOption {
 // ByActualCost orders the results by the actual_cost field.
 func ByActualCost(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldActualCost, opts...).ToFunc()
+}
+
+// ByDisplayInputCost orders the results by the display_input_cost field.
+func ByDisplayInputCost(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayInputCost, opts...).ToFunc()
+}
+
+// ByDisplayOutputCost orders the results by the display_output_cost field.
+func ByDisplayOutputCost(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayOutputCost, opts...).ToFunc()
+}
+
+// ByDisplayCacheReadCost orders the results by the display_cache_read_cost field.
+func ByDisplayCacheReadCost(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayCacheReadCost, opts...).ToFunc()
+}
+
+// ByDisplayCacheWriteCost orders the results by the display_cache_write_cost field.
+func ByDisplayCacheWriteCost(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayCacheWriteCost, opts...).ToFunc()
+}
+
+// ByDisplayTotalCost orders the results by the display_total_cost field.
+func ByDisplayTotalCost(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayTotalCost, opts...).ToFunc()
+}
+
+// ByDisplayBlendCost orders the results by the display_blend_cost field.
+func ByDisplayBlendCost(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayBlendCost, opts...).ToFunc()
+}
+
+// ByCostInput orders the results by the cost_input field.
+func ByCostInput(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCostInput, opts...).ToFunc()
+}
+
+// ByCostOutput orders the results by the cost_output field.
+func ByCostOutput(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCostOutput, opts...).ToFunc()
+}
+
+// ByCostCacheRead orders the results by the cost_cache_read field.
+func ByCostCacheRead(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCostCacheRead, opts...).ToFunc()
+}
+
+// ByCostCacheWrite orders the results by the cost_cache_write field.
+func ByCostCacheWrite(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCostCacheWrite, opts...).ToFunc()
+}
+
+// ByCostTotal orders the results by the cost_total field.
+func ByCostTotal(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCostTotal, opts...).ToFunc()
+}
+
+// ByCostSupplierCode orders the results by the cost_supplier_code field.
+func ByCostSupplierCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCostSupplierCode, opts...).ToFunc()
+}
+
+// ByPricingVersion orders the results by the pricing_version field.
+func ByPricingVersion(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPricingVersion, opts...).ToFunc()
+}
+
+// ByReservationStatus orders the results by the reservation_status field.
+func ByReservationStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldReservationStatus, opts...).ToFunc()
 }
 
 // ByRateMultiplier orders the results by the rate_multiplier field.
