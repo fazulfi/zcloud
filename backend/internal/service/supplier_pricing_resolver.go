@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -32,7 +33,11 @@ func NewSupplierPricingResolver(repo SupplierPricingRepository) *SupplierPricing
 func (r *SupplierPricingResolver) ResolveActiveByModel(ctx context.Context, modelID string, at time.Time) ([]SupplierPricing, error) {
 	cacheKey := modelID
 	if v, ok := r.cache.Get(cacheKey); ok {
-		return v.([]SupplierPricing), nil
+		pricing, ok := v.([]SupplierPricing)
+		if !ok {
+			return nil, fmt.Errorf("supplier pricing cache type mismatch for model %s", modelID)
+		}
+		return pricing, nil
 	}
 	v, err, _ := r.sf.Do(cacheKey, func() (any, error) {
 		rows, err := r.repo.ListActiveByModel(ctx, modelID, at)
@@ -50,7 +55,11 @@ func (r *SupplierPricingResolver) ResolveActiveByModel(ctx context.Context, mode
 	if err != nil {
 		return nil, err
 	}
-	return v.([]SupplierPricing), nil
+	pricing, ok := v.([]SupplierPricing)
+	if !ok {
+		return nil, fmt.Errorf("supplier pricing cache type mismatch for model %s", modelID)
+	}
+	return pricing, nil
 }
 
 // resolveSupplierPricingForModel 供 GatewayService 在选择循环外调用：
