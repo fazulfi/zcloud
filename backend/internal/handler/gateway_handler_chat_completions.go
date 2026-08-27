@@ -11,6 +11,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/pkg/ip"
 	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
 	"github.com/Wei-Shaw/sub2api/internal/service"
+	"github.com/Wei-Shaw/sub2api/zcloud/billing"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
@@ -96,6 +97,19 @@ func (h *GatewayHandler) ChatCompletions(c *gin.Context) {
 	setOpsEndpointContext(c, "", int16(service.RequestTypeFromLegacy(reqStream, false)))
 	pricingCtx, pricingAt := service.WithGatewayTokenRequestPricing(c.Request.Context())
 	c.Request = c.Request.WithContext(pricingCtx)
+
+	if capErr, err := h.gatewayService.CheckModelAdmission(c.Request.Context(), apiKey.UserID, reqModel); err != nil {
+		reqLog.Error("gateway.cc.model_admission_check_failed", zap.Error(err))
+		h.chatCompletionsErrorResponse(c, http.StatusInternalServerError, "api_error", "Model admission check failed")
+		return
+	} else if capErr != nil {
+		status := http.StatusPaymentRequired
+		if capErr.Code == billing.CapErrorTypeModelUnavailable {
+			status = http.StatusForbidden
+		}
+		h.chatCompletionsErrorResponse(c, status, capErr.Code, capErr.Message)
+		return
+	}
 
 	// 解析渠道级模型映射
 	channelMapping, _ := h.gatewayService.ResolveChannelMappingAndRestrict(c.Request.Context(), apiKey.GroupID, reqModel)

@@ -194,6 +194,7 @@ func newTestGatewayHandler(t *testing.T, group *service.Group, accounts []*servi
 		nil, // supplierPricingResolver
 		nil, // reservationRepo
 		nil, // snapshotRepo
+		nil, // modelBalanceRepo
 	)
 
 	// RunModeSimple：跳过计费检查，避免引入 repo/cache 依赖。

@@ -49,6 +49,7 @@ func newGatewayRecordUsageServiceForTest(usageRepo UsageLogRepository, userRepo 
 		nil, // supplierPricingResolver
 		nil, // reservationRepo
 		nil, // snapshotRepo
+		nil, // modelBalanceRepo
 	)
 }
 

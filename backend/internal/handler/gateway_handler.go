@@ -28,6 +28,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/securityaudit"
 	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
 	"github.com/Wei-Shaw/sub2api/internal/service"
+	"github.com/Wei-Shaw/sub2api/zcloud/billing"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -171,6 +172,19 @@ func (h *GatewayHandler) Messages(c *gin.Context) {
 	reqStream := parsedReq.Stream
 	ensureCompositeTargetPlatform(c, apiKey, reqModel)
 	reqLog = reqLog.With(zap.String("model", reqModel), zap.Bool("stream", reqStream))
+
+	if capErr, err := h.gatewayService.CheckModelAdmission(c.Request.Context(), apiKey.UserID, reqModel); err != nil {
+		reqLog.Error("gateway.messages.model_admission_check_failed", zap.Error(err))
+		h.errorResponse(c, http.StatusInternalServerError, "api_error", "Model admission check failed")
+		return
+	} else if capErr != nil {
+		status := http.StatusPaymentRequired
+		if capErr.Code == billing.CapErrorTypeModelUnavailable {
+			status = http.StatusForbidden
+		}
+		h.errorResponse(c, status, capErr.Code, capErr.Message)
+		return
+	}
 
 	// 解析渠道级模型映射
 	channelMapping, _ := h.gatewayService.ResolveChannelMappingAndRestrict(c.Request.Context(), apiKey.GroupID, reqModel)
