@@ -35,12 +35,18 @@ func seedM111Fixture(t *testing.T) m111Seed {
 	scope := uniqueTestValue(t, "m111")
 	seed := m111Seed{ModelIDs: make(map[string]string), PlanIDs: make(map[string]int64)}
 
-	err := db.QueryRowContext(ctx, `INSERT INTO users(email,password_hash,role,status,concurrency)
-		VALUES ($1,'m111-test-hash','user','active',1000)
-		ON CONFLICT(email) DO UPDATE SET status='active' RETURNING id`, scope+"@example.com").Scan(&seed.UserID)
+	// users.email has a PARTIAL unique index (users_email_unique_active WHERE
+	// deleted_at IS NULL), not a plain constraint, so ON CONFLICT (email) is
+	// invalid. Insert with DO NOTHING, then recover the row.
+	_, err := db.ExecContext(ctx, `INSERT INTO users(email,password_hash,role,status,concurrency)
+		VALUES ($1,'m111-test-hash','user','active',1000) ON CONFLICT DO NOTHING`, scope+"@example.com")
 	require.NoError(t, err)
-	err = db.QueryRowContext(ctx, `INSERT INTO groups(name,status) VALUES ($1,'active')
-		ON CONFLICT(name) DO UPDATE SET status='active' RETURNING id`, scope+"-group").Scan(&seed.GroupID)
+	err = db.QueryRowContext(ctx, `SELECT id FROM users WHERE email=$1`, scope+"@example.com").Scan(&seed.UserID)
+	require.NoError(t, err)
+	// groups.name likewise has a partial unique index.
+	_, err = db.ExecContext(ctx, `INSERT INTO groups(name,status) VALUES ($1,'active') ON CONFLICT DO NOTHING`, scope+"-group")
+	require.NoError(t, err)
+	err = db.QueryRowContext(ctx, `SELECT id FROM groups WHERE name=$1`, scope+"-group").Scan(&seed.GroupID)
 	require.NoError(t, err)
 	err = db.QueryRowContext(ctx, `INSERT INTO api_keys(user_id,key,name,group_id,status,model_scope_mode)
 		VALUES ($1,$2,'M1.11 integration key',$3,'active','all')

@@ -46,15 +46,20 @@ func TestM111ConcurrentModelBalanceDebitNeverOverspends(t *testing.T) {
 	seed := seedM111Fixture(t)
 	modelID := seed.ModelIDs[m111Models[0]]
 	const attempts = 100
+	errCh := make(chan error, attempts)
 	var wg sync.WaitGroup
 	wg.Add(attempts)
 	for i := 0; i < attempts; i++ {
 		go func() {
-			debitM111(t, seed.UserID, modelID, 150)
+			errCh <- debitM111(seed.UserID, modelID, 150)
 			wg.Done()
 		}()
 	}
 	wg.Wait()
+	close(errCh)
+	for err := range errCh {
+		require.NoError(t, err)
+	}
 	var purchased, consumed, balance int64
 	err := integrationDB.QueryRow(`SELECT tokens_purchased,tokens_consumed,balance FROM model_balances WHERE user_id=$1 AND model_id=$2`, seed.UserID, modelID).Scan(&purchased, &consumed, &balance)
 	require.NoError(t, err)
@@ -62,13 +67,12 @@ func TestM111ConcurrentModelBalanceDebitNeverOverspends(t *testing.T) {
 	require.Equal(t, purchased-consumed, balance)
 }
 
-func debitM111(t *testing.T, userID int64, modelID string, amount int64) {
-	t.Helper()
+func debitM111(userID int64, modelID string, amount int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	_, err := integrationDB.ExecContext(ctx, `UPDATE model_balances SET tokens_consumed=tokens_consumed+$1,balance=balance-$1,usage_percent=((tokens_consumed+$1)::numeric/tokens_purchased::numeric)*100,updated_at=NOW()
 		WHERE user_id=$2 AND model_id=$3 AND status='active' AND balance >= $1`, amount, userID, modelID)
-	require.NoError(t, err)
+	return err
 }
 
 func TestM111DuplicateReservationIsReplaySafe(t *testing.T) {
@@ -87,7 +91,7 @@ func TestM111DuplicateReservationIsReplaySafe(t *testing.T) {
 
 func TestM111AdmissionStatusesAndScopeData(t *testing.T) {
 	seed := seedM111Fixture(t)
-	var exhausted, notPurchased string
+	var exhausted string
 	err := integrationDB.QueryRow(`SELECT status FROM model_balances WHERE user_id=$1 AND model_id=$2`, seed.UserID, seed.ModelIDs[m111Models[2]]).Scan(&exhausted)
 	require.NoError(t, err)
 	require.Equal(t, "blocked", exhausted)
@@ -97,8 +101,6 @@ func TestM111AdmissionStatusesAndScopeData(t *testing.T) {
 	err = integrationDB.QueryRow(`SELECT enabled FROM api_key_model_scopes WHERE api_key_id=$1 AND model_id=$2`, seed.APIKeyID, seed.ModelIDs[m111Models[0]]).Scan(&enabled)
 	require.NoError(t, err)
 	require.True(t, enabled)
-	notPurchased = "not_purchased"
-	require.Equal(t, "not_purchased", notPurchased)
 }
 
 func TestM111LocalSupplierMockSupportsSuccessStreamAndFailure(t *testing.T) {
@@ -132,7 +134,7 @@ func TestM111AdmissionLatencySanity(t *testing.T) {
 	modelID := seed.ModelIDs[m111Models[0]]
 	start := time.Now()
 	for i := 0; i < 100; i++ {
-		debitM111(t, seed.UserID, modelID, 1)
+		require.NoError(t, debitM111(seed.UserID, modelID, 1))
 	}
 	require.Less(t, time.Since(start), 5*time.Second)
 }
