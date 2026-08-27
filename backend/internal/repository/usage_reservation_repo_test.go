@@ -16,7 +16,7 @@ func TestUsageReservationRepositoryReserve(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer db.Close()
+	t.Cleanup(func() { _ = db.Close() })
 	r := &usageReservationRepository{db: db}
 	req := billing.ReservationRequest{RequestID: "req-1", UserID: 7, AccountID: 9, ModelID: "m", Model: "model", Fingerprint: "fp", Cost: decimal.NewFromInt(2), PricingVersion: 1}
 	mock.ExpectQuery(regexp.QuoteMeta("INSERT INTO usage_reservations")).WithArgs("req-1", int64(7), int64(9), "m", "model", "fp", req.Cost, 1).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(int64(1)))
@@ -34,7 +34,7 @@ func TestUsageReservationRepositoryConflict(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer db.Close()
+	t.Cleanup(func() { _ = db.Close() })
 	r := &usageReservationRepository{db: db}
 	req := billing.ReservationRequest{RequestID: "req-1", Fingerprint: "new"}
 	mock.ExpectQuery(regexp.QuoteMeta("INSERT INTO usage_reservations")).WithArgs("req-1", int64(0), int64(0), "", "", "new", req.Cost, 0).WillReturnError(sql.ErrNoRows)
@@ -53,7 +53,7 @@ func TestUsageReservationRepositoryNotFound(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer db.Close()
+	t.Cleanup(func() { _ = db.Close() })
 	r := &usageReservationRepository{db: db}
 	mock.ExpectExec(regexp.QuoteMeta("UPDATE usage_reservations")).WithArgs("missing", "finalized").WillReturnResult(sqlmock.NewResult(0, 0))
 	_, err = r.Finalize(context.Background(), billing.ReservationRequest{RequestID: "missing"})
