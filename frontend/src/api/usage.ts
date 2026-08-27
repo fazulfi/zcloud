@@ -368,6 +368,30 @@ export async function getMyErrorDetail(id: number): Promise<UserErrorRequestDeta
   return data
 }
 
+export interface ModelBalance {
+  model: string
+  tokens_purchased: number
+  tokens_consumed: number
+  balance: number
+  usage_percent: number
+  status: 'active' | 'blocked' | 'not_purchased' | string
+}
+
+export async function getModelBalances(): Promise<ModelBalance[]> {
+  const { data } = await apiClient.get<ModelBalance[]>('/user/model-balances')
+  return data
+}
+
+export async function exportUsage(format: 'csv' | 'json', params: Record<string, string> = {}) {
+  const { data } = await apiClient.get<Blob>('/usage/export', { params: { ...params, format }, responseType: 'blob' })
+  return data
+}
+
+export async function exportInvoices(format: 'csv' | 'json') {
+  const { data } = await apiClient.get<Blob>('/user/invoices/export', { params: { format }, responseType: 'blob' })
+  return data
+}
+
 export const usageAPI = {
   list,
   query,
@@ -376,6 +400,9 @@ export const usageAPI = {
   getByDateRange,
   getById,
   // Dashboard
+  getModelBalances,
+  exportUsage,
+  exportInvoices,
   getDashboardStats,
   getDashboardTrend,
   getDashboardModels,

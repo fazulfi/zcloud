@@ -84,6 +84,8 @@ var ProviderSet = wire.NewSet(
 	NewUsageReservationRepository,
 	NewUsageModelSnapshotRepository,
 	NewModelBalanceRepository,
+	wire.Bind(new(service.ModelBalanceRepository), new(*modelBalanceRepository)),
+	wire.Bind(new(service.CustomerModelBalanceRepository), new(*modelBalanceRepository)),
 	NewBatchImageRepository,
 	NewIdempotencyRepository,
 	NewUsageCleanupRepository,

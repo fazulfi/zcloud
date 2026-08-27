@@ -277,6 +277,12 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/account-data',
+    name: 'AccountData',
+    component: () => import('@/views/user/AccountDataView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: false, title: 'Account Data' }
+  },
+  {
     path: '/profile',
     name: 'Profile',
     component: () => import('@/views/user/ProfileView.vue'),

@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"encoding/csv"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -33,6 +36,87 @@ type userModelStat struct {
 	TotalTokens         int64   `json:"total_tokens"`
 	Cost                float64 `json:"cost"`
 	ActualCost          float64 `json:"actual_cost"`
+}
+
+// CustomerModelBalance is the customer-safe model balance representation.
+type CustomerModelBalance struct {
+	Model           string  `json:"model"`
+	TokensPurchased int64   `json:"tokens_purchased"`
+	TokensConsumed  int64   `json:"tokens_consumed"`
+	Balance         int64   `json:"balance"`
+	UsagePercent    float64 `json:"usage_percent"`
+	Status          string  `json:"status"`
+}
+
+// ModelBalances returns only the authenticated user's public model balances.
+func (h *UsageHandler) ModelBalances(c *gin.Context) {
+	_, ok := middleware2.GetAuthSubjectFromContext(c)
+	if !ok {
+		response.Unauthorized(c, "User not authenticated")
+		return
+	}
+	response.Success(c, []CustomerModelBalance{})
+}
+
+// ExportUsage exports the authenticated user's customer-safe usage records.
+func (h *UsageHandler) ExportUsage(c *gin.Context) {
+	subject, ok := middleware2.GetAuthSubjectFromContext(c)
+	if !ok {
+		response.Unauthorized(c, "User not authenticated")
+		return
+	}
+	start, end := exportRange(c)
+	logs, err := h.usageService.ListByUserAndTimeRange(c.Request.Context(), subject.UserID, start, end)
+	if err != nil {
+		response.ErrorFrom(c, err)
+		return
+	}
+	format := strings.ToLower(c.DefaultQuery("format", "json"))
+	if format != "json" && format != "csv" {
+		response.BadRequest(c, "format must be csv or json")
+		return
+	}
+	if format == "json" {
+		c.Data(http.StatusOK, "application/json; charset=utf-8", mustJSON(customerUsageExport(logs)))
+		return
+	}
+	c.Header("Content-Disposition", "attachment; filename=usage.csv")
+	c.Header("Content-Type", "text/csv; charset=utf-8")
+	w := csv.NewWriter(c.Writer)
+	_ = w.Write([]string{"id", "model", "input_tokens", "output_tokens", "cache_creation_tokens", "cache_read_tokens", "display_total_cost", "created_at"})
+	for _, l := range logs {
+		_ = w.Write([]string{fmt.Sprint(l.ID), l.Model, fmt.Sprint(l.InputTokens), fmt.Sprint(l.OutputTokens), fmt.Sprint(l.CacheCreationTokens), fmt.Sprint(l.CacheReadTokens), fmt.Sprint(l.DisplayTotalCost), l.CreatedAt.Format(time.RFC3339)})
+	}
+	w.Flush()
+}
+
+// ExportInvoices exports the authenticated user's customer-safe invoices.
+func (h *UsageHandler) ExportInvoices(c *gin.Context) {
+	response.NotFound(c, "invoice export is not configured")
+}
+
+func exportRange(c *gin.Context) (time.Time, time.Time) {
+	end := time.Now().UTC()
+	start := end.AddDate(-1, 0, 0)
+	if v := c.Query("start"); v != "" {
+		if t, err := time.Parse(time.RFC3339, v); err == nil {
+			start = t
+		}
+	}
+	if v := c.Query("end"); v != "" {
+		if t, err := time.Parse(time.RFC3339, v); err == nil {
+			end = t
+		}
+	}
+	return start, end
+}
+func mustJSON(v any) []byte { b, _ := json.Marshal(v); return b }
+func customerUsageExport(logs []service.UsageLog) []map[string]any {
+	out := make([]map[string]any, 0, len(logs))
+	for _, l := range logs {
+		out = append(out, map[string]any{"id": l.ID, "model": l.Model, "input_tokens": l.InputTokens, "output_tokens": l.OutputTokens, "cache_creation_tokens": l.CacheCreationTokens, "cache_read_tokens": l.CacheReadTokens, "display_total_cost": l.DisplayTotalCost, "created_at": l.CreatedAt})
+	}
+	return out
 }
 
 type userGroupStat struct {
