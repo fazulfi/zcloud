@@ -108,6 +108,51 @@ func (UsageLog) Fields() []ent.Field {
 		field.Float("actual_cost").
 			Default(0).
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,10)"}),
+
+		// M1.7 dual metering: display$ columns are customer-visible (D8);
+		// cost$ columns are internal-only and never exposed to customers.
+		field.Float("display_input_cost").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("display_output_cost").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("display_cache_read_cost").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("display_cache_write_cost").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("display_total_cost").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("display_blend_cost").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("cost_input").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("cost_output").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("cost_cache_read").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("cost_cache_write").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.Float("cost_total").
+			Default(0).
+			SchemaType(map[string]string{dialect.Postgres: "numeric(20,8)"}),
+		field.String("cost_supplier_code").
+			MaxLen(20).
+			Default(""),
+		field.Int("pricing_version").
+			Default(0),
+		field.String("reservation_status").
+			MaxLen(16).
+			Default("finalized"),
+
 		field.Float("rate_multiplier").
 			Default(1).
 			SchemaType(map[string]string{dialect.Postgres: "decimal(10,4)"}),

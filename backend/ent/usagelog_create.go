@@ -365,6 +365,202 @@ func (_c *UsageLogCreate) SetNillableActualCost(v *float64) *UsageLogCreate {
 	return _c
 }
 
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (_c *UsageLogCreate) SetDisplayInputCost(v float64) *UsageLogCreate {
+	_c.mutation.SetDisplayInputCost(v)
+	return _c
+}
+
+// SetNillableDisplayInputCost sets the "display_input_cost" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableDisplayInputCost(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetDisplayInputCost(*v)
+	}
+	return _c
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (_c *UsageLogCreate) SetDisplayOutputCost(v float64) *UsageLogCreate {
+	_c.mutation.SetDisplayOutputCost(v)
+	return _c
+}
+
+// SetNillableDisplayOutputCost sets the "display_output_cost" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableDisplayOutputCost(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetDisplayOutputCost(*v)
+	}
+	return _c
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (_c *UsageLogCreate) SetDisplayCacheReadCost(v float64) *UsageLogCreate {
+	_c.mutation.SetDisplayCacheReadCost(v)
+	return _c
+}
+
+// SetNillableDisplayCacheReadCost sets the "display_cache_read_cost" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableDisplayCacheReadCost(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetDisplayCacheReadCost(*v)
+	}
+	return _c
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (_c *UsageLogCreate) SetDisplayCacheWriteCost(v float64) *UsageLogCreate {
+	_c.mutation.SetDisplayCacheWriteCost(v)
+	return _c
+}
+
+// SetNillableDisplayCacheWriteCost sets the "display_cache_write_cost" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableDisplayCacheWriteCost(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetDisplayCacheWriteCost(*v)
+	}
+	return _c
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (_c *UsageLogCreate) SetDisplayTotalCost(v float64) *UsageLogCreate {
+	_c.mutation.SetDisplayTotalCost(v)
+	return _c
+}
+
+// SetNillableDisplayTotalCost sets the "display_total_cost" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableDisplayTotalCost(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetDisplayTotalCost(*v)
+	}
+	return _c
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (_c *UsageLogCreate) SetDisplayBlendCost(v float64) *UsageLogCreate {
+	_c.mutation.SetDisplayBlendCost(v)
+	return _c
+}
+
+// SetNillableDisplayBlendCost sets the "display_blend_cost" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableDisplayBlendCost(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetDisplayBlendCost(*v)
+	}
+	return _c
+}
+
+// SetCostInput sets the "cost_input" field.
+func (_c *UsageLogCreate) SetCostInput(v float64) *UsageLogCreate {
+	_c.mutation.SetCostInput(v)
+	return _c
+}
+
+// SetNillableCostInput sets the "cost_input" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableCostInput(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetCostInput(*v)
+	}
+	return _c
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (_c *UsageLogCreate) SetCostOutput(v float64) *UsageLogCreate {
+	_c.mutation.SetCostOutput(v)
+	return _c
+}
+
+// SetNillableCostOutput sets the "cost_output" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableCostOutput(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetCostOutput(*v)
+	}
+	return _c
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (_c *UsageLogCreate) SetCostCacheRead(v float64) *UsageLogCreate {
+	_c.mutation.SetCostCacheRead(v)
+	return _c
+}
+
+// SetNillableCostCacheRead sets the "cost_cache_read" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableCostCacheRead(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetCostCacheRead(*v)
+	}
+	return _c
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (_c *UsageLogCreate) SetCostCacheWrite(v float64) *UsageLogCreate {
+	_c.mutation.SetCostCacheWrite(v)
+	return _c
+}
+
+// SetNillableCostCacheWrite sets the "cost_cache_write" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableCostCacheWrite(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetCostCacheWrite(*v)
+	}
+	return _c
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (_c *UsageLogCreate) SetCostTotal(v float64) *UsageLogCreate {
+	_c.mutation.SetCostTotal(v)
+	return _c
+}
+
+// SetNillableCostTotal sets the "cost_total" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableCostTotal(v *float64) *UsageLogCreate {
+	if v != nil {
+		_c.SetCostTotal(*v)
+	}
+	return _c
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (_c *UsageLogCreate) SetCostSupplierCode(v string) *UsageLogCreate {
+	_c.mutation.SetCostSupplierCode(v)
+	return _c
+}
+
+// SetNillableCostSupplierCode sets the "cost_supplier_code" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableCostSupplierCode(v *string) *UsageLogCreate {
+	if v != nil {
+		_c.SetCostSupplierCode(*v)
+	}
+	return _c
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (_c *UsageLogCreate) SetPricingVersion(v int) *UsageLogCreate {
+	_c.mutation.SetPricingVersion(v)
+	return _c
+}
+
+// SetNillablePricingVersion sets the "pricing_version" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillablePricingVersion(v *int) *UsageLogCreate {
+	if v != nil {
+		_c.SetPricingVersion(*v)
+	}
+	return _c
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (_c *UsageLogCreate) SetReservationStatus(v string) *UsageLogCreate {
+	_c.mutation.SetReservationStatus(v)
+	return _c
+}
+
+// SetNillableReservationStatus sets the "reservation_status" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableReservationStatus(v *string) *UsageLogCreate {
+	if v != nil {
+		_c.SetReservationStatus(*v)
+	}
+	return _c
+}
+
 // SetRateMultiplier sets the "rate_multiplier" field.
 func (_c *UsageLogCreate) SetRateMultiplier(v float64) *UsageLogCreate {
 	_c.mutation.SetRateMultiplier(v)
@@ -745,6 +941,62 @@ func (_c *UsageLogCreate) defaults() {
 		v := usagelog.DefaultActualCost
 		_c.mutation.SetActualCost(v)
 	}
+	if _, ok := _c.mutation.DisplayInputCost(); !ok {
+		v := usagelog.DefaultDisplayInputCost
+		_c.mutation.SetDisplayInputCost(v)
+	}
+	if _, ok := _c.mutation.DisplayOutputCost(); !ok {
+		v := usagelog.DefaultDisplayOutputCost
+		_c.mutation.SetDisplayOutputCost(v)
+	}
+	if _, ok := _c.mutation.DisplayCacheReadCost(); !ok {
+		v := usagelog.DefaultDisplayCacheReadCost
+		_c.mutation.SetDisplayCacheReadCost(v)
+	}
+	if _, ok := _c.mutation.DisplayCacheWriteCost(); !ok {
+		v := usagelog.DefaultDisplayCacheWriteCost
+		_c.mutation.SetDisplayCacheWriteCost(v)
+	}
+	if _, ok := _c.mutation.DisplayTotalCost(); !ok {
+		v := usagelog.DefaultDisplayTotalCost
+		_c.mutation.SetDisplayTotalCost(v)
+	}
+	if _, ok := _c.mutation.DisplayBlendCost(); !ok {
+		v := usagelog.DefaultDisplayBlendCost
+		_c.mutation.SetDisplayBlendCost(v)
+	}
+	if _, ok := _c.mutation.CostInput(); !ok {
+		v := usagelog.DefaultCostInput
+		_c.mutation.SetCostInput(v)
+	}
+	if _, ok := _c.mutation.CostOutput(); !ok {
+		v := usagelog.DefaultCostOutput
+		_c.mutation.SetCostOutput(v)
+	}
+	if _, ok := _c.mutation.CostCacheRead(); !ok {
+		v := usagelog.DefaultCostCacheRead
+		_c.mutation.SetCostCacheRead(v)
+	}
+	if _, ok := _c.mutation.CostCacheWrite(); !ok {
+		v := usagelog.DefaultCostCacheWrite
+		_c.mutation.SetCostCacheWrite(v)
+	}
+	if _, ok := _c.mutation.CostTotal(); !ok {
+		v := usagelog.DefaultCostTotal
+		_c.mutation.SetCostTotal(v)
+	}
+	if _, ok := _c.mutation.CostSupplierCode(); !ok {
+		v := usagelog.DefaultCostSupplierCode
+		_c.mutation.SetCostSupplierCode(v)
+	}
+	if _, ok := _c.mutation.PricingVersion(); !ok {
+		v := usagelog.DefaultPricingVersion
+		_c.mutation.SetPricingVersion(v)
+	}
+	if _, ok := _c.mutation.ReservationStatus(); !ok {
+		v := usagelog.DefaultReservationStatus
+		_c.mutation.SetReservationStatus(v)
+	}
 	if _, ok := _c.mutation.RateMultiplier(); !ok {
 		v := usagelog.DefaultRateMultiplier
 		_c.mutation.SetRateMultiplier(v)
@@ -871,6 +1123,58 @@ func (_c *UsageLogCreate) check() error {
 	}
 	if _, ok := _c.mutation.ActualCost(); !ok {
 		return &ValidationError{Name: "actual_cost", err: errors.New(`ent: missing required field "UsageLog.actual_cost"`)}
+	}
+	if _, ok := _c.mutation.DisplayInputCost(); !ok {
+		return &ValidationError{Name: "display_input_cost", err: errors.New(`ent: missing required field "UsageLog.display_input_cost"`)}
+	}
+	if _, ok := _c.mutation.DisplayOutputCost(); !ok {
+		return &ValidationError{Name: "display_output_cost", err: errors.New(`ent: missing required field "UsageLog.display_output_cost"`)}
+	}
+	if _, ok := _c.mutation.DisplayCacheReadCost(); !ok {
+		return &ValidationError{Name: "display_cache_read_cost", err: errors.New(`ent: missing required field "UsageLog.display_cache_read_cost"`)}
+	}
+	if _, ok := _c.mutation.DisplayCacheWriteCost(); !ok {
+		return &ValidationError{Name: "display_cache_write_cost", err: errors.New(`ent: missing required field "UsageLog.display_cache_write_cost"`)}
+	}
+	if _, ok := _c.mutation.DisplayTotalCost(); !ok {
+		return &ValidationError{Name: "display_total_cost", err: errors.New(`ent: missing required field "UsageLog.display_total_cost"`)}
+	}
+	if _, ok := _c.mutation.DisplayBlendCost(); !ok {
+		return &ValidationError{Name: "display_blend_cost", err: errors.New(`ent: missing required field "UsageLog.display_blend_cost"`)}
+	}
+	if _, ok := _c.mutation.CostInput(); !ok {
+		return &ValidationError{Name: "cost_input", err: errors.New(`ent: missing required field "UsageLog.cost_input"`)}
+	}
+	if _, ok := _c.mutation.CostOutput(); !ok {
+		return &ValidationError{Name: "cost_output", err: errors.New(`ent: missing required field "UsageLog.cost_output"`)}
+	}
+	if _, ok := _c.mutation.CostCacheRead(); !ok {
+		return &ValidationError{Name: "cost_cache_read", err: errors.New(`ent: missing required field "UsageLog.cost_cache_read"`)}
+	}
+	if _, ok := _c.mutation.CostCacheWrite(); !ok {
+		return &ValidationError{Name: "cost_cache_write", err: errors.New(`ent: missing required field "UsageLog.cost_cache_write"`)}
+	}
+	if _, ok := _c.mutation.CostTotal(); !ok {
+		return &ValidationError{Name: "cost_total", err: errors.New(`ent: missing required field "UsageLog.cost_total"`)}
+	}
+	if _, ok := _c.mutation.CostSupplierCode(); !ok {
+		return &ValidationError{Name: "cost_supplier_code", err: errors.New(`ent: missing required field "UsageLog.cost_supplier_code"`)}
+	}
+	if v, ok := _c.mutation.CostSupplierCode(); ok {
+		if err := usagelog.CostSupplierCodeValidator(v); err != nil {
+			return &ValidationError{Name: "cost_supplier_code", err: fmt.Errorf(`ent: validator failed for field "UsageLog.cost_supplier_code": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.PricingVersion(); !ok {
+		return &ValidationError{Name: "pricing_version", err: errors.New(`ent: missing required field "UsageLog.pricing_version"`)}
+	}
+	if _, ok := _c.mutation.ReservationStatus(); !ok {
+		return &ValidationError{Name: "reservation_status", err: errors.New(`ent: missing required field "UsageLog.reservation_status"`)}
+	}
+	if v, ok := _c.mutation.ReservationStatus(); ok {
+		if err := usagelog.ReservationStatusValidator(v); err != nil {
+			return &ValidationError{Name: "reservation_status", err: fmt.Errorf(`ent: validator failed for field "UsageLog.reservation_status": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.RateMultiplier(); !ok {
 		return &ValidationError{Name: "rate_multiplier", err: errors.New(`ent: missing required field "UsageLog.rate_multiplier"`)}
@@ -1054,6 +1358,62 @@ func (_c *UsageLogCreate) createSpec() (*UsageLog, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.ActualCost(); ok {
 		_spec.SetField(usagelog.FieldActualCost, field.TypeFloat64, value)
 		_node.ActualCost = value
+	}
+	if value, ok := _c.mutation.DisplayInputCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayInputCost, field.TypeFloat64, value)
+		_node.DisplayInputCost = value
+	}
+	if value, ok := _c.mutation.DisplayOutputCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayOutputCost, field.TypeFloat64, value)
+		_node.DisplayOutputCost = value
+	}
+	if value, ok := _c.mutation.DisplayCacheReadCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayCacheReadCost, field.TypeFloat64, value)
+		_node.DisplayCacheReadCost = value
+	}
+	if value, ok := _c.mutation.DisplayCacheWriteCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayCacheWriteCost, field.TypeFloat64, value)
+		_node.DisplayCacheWriteCost = value
+	}
+	if value, ok := _c.mutation.DisplayTotalCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayTotalCost, field.TypeFloat64, value)
+		_node.DisplayTotalCost = value
+	}
+	if value, ok := _c.mutation.DisplayBlendCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayBlendCost, field.TypeFloat64, value)
+		_node.DisplayBlendCost = value
+	}
+	if value, ok := _c.mutation.CostInput(); ok {
+		_spec.SetField(usagelog.FieldCostInput, field.TypeFloat64, value)
+		_node.CostInput = value
+	}
+	if value, ok := _c.mutation.CostOutput(); ok {
+		_spec.SetField(usagelog.FieldCostOutput, field.TypeFloat64, value)
+		_node.CostOutput = value
+	}
+	if value, ok := _c.mutation.CostCacheRead(); ok {
+		_spec.SetField(usagelog.FieldCostCacheRead, field.TypeFloat64, value)
+		_node.CostCacheRead = value
+	}
+	if value, ok := _c.mutation.CostCacheWrite(); ok {
+		_spec.SetField(usagelog.FieldCostCacheWrite, field.TypeFloat64, value)
+		_node.CostCacheWrite = value
+	}
+	if value, ok := _c.mutation.CostTotal(); ok {
+		_spec.SetField(usagelog.FieldCostTotal, field.TypeFloat64, value)
+		_node.CostTotal = value
+	}
+	if value, ok := _c.mutation.CostSupplierCode(); ok {
+		_spec.SetField(usagelog.FieldCostSupplierCode, field.TypeString, value)
+		_node.CostSupplierCode = value
+	}
+	if value, ok := _c.mutation.PricingVersion(); ok {
+		_spec.SetField(usagelog.FieldPricingVersion, field.TypeInt, value)
+		_node.PricingVersion = value
+	}
+	if value, ok := _c.mutation.ReservationStatus(); ok {
+		_spec.SetField(usagelog.FieldReservationStatus, field.TypeString, value)
+		_node.ReservationStatus = value
 	}
 	if value, ok := _c.mutation.RateMultiplier(); ok {
 		_spec.SetField(usagelog.FieldRateMultiplier, field.TypeFloat64, value)
@@ -1731,6 +2091,246 @@ func (u *UsageLogUpsert) UpdateActualCost() *UsageLogUpsert {
 // AddActualCost adds v to the "actual_cost" field.
 func (u *UsageLogUpsert) AddActualCost(v float64) *UsageLogUpsert {
 	u.Add(usagelog.FieldActualCost, v)
+	return u
+}
+
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (u *UsageLogUpsert) SetDisplayInputCost(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldDisplayInputCost, v)
+	return u
+}
+
+// UpdateDisplayInputCost sets the "display_input_cost" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateDisplayInputCost() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldDisplayInputCost)
+	return u
+}
+
+// AddDisplayInputCost adds v to the "display_input_cost" field.
+func (u *UsageLogUpsert) AddDisplayInputCost(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldDisplayInputCost, v)
+	return u
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (u *UsageLogUpsert) SetDisplayOutputCost(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldDisplayOutputCost, v)
+	return u
+}
+
+// UpdateDisplayOutputCost sets the "display_output_cost" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateDisplayOutputCost() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldDisplayOutputCost)
+	return u
+}
+
+// AddDisplayOutputCost adds v to the "display_output_cost" field.
+func (u *UsageLogUpsert) AddDisplayOutputCost(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldDisplayOutputCost, v)
+	return u
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (u *UsageLogUpsert) SetDisplayCacheReadCost(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldDisplayCacheReadCost, v)
+	return u
+}
+
+// UpdateDisplayCacheReadCost sets the "display_cache_read_cost" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateDisplayCacheReadCost() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldDisplayCacheReadCost)
+	return u
+}
+
+// AddDisplayCacheReadCost adds v to the "display_cache_read_cost" field.
+func (u *UsageLogUpsert) AddDisplayCacheReadCost(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldDisplayCacheReadCost, v)
+	return u
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (u *UsageLogUpsert) SetDisplayCacheWriteCost(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldDisplayCacheWriteCost, v)
+	return u
+}
+
+// UpdateDisplayCacheWriteCost sets the "display_cache_write_cost" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateDisplayCacheWriteCost() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldDisplayCacheWriteCost)
+	return u
+}
+
+// AddDisplayCacheWriteCost adds v to the "display_cache_write_cost" field.
+func (u *UsageLogUpsert) AddDisplayCacheWriteCost(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldDisplayCacheWriteCost, v)
+	return u
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (u *UsageLogUpsert) SetDisplayTotalCost(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldDisplayTotalCost, v)
+	return u
+}
+
+// UpdateDisplayTotalCost sets the "display_total_cost" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateDisplayTotalCost() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldDisplayTotalCost)
+	return u
+}
+
+// AddDisplayTotalCost adds v to the "display_total_cost" field.
+func (u *UsageLogUpsert) AddDisplayTotalCost(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldDisplayTotalCost, v)
+	return u
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (u *UsageLogUpsert) SetDisplayBlendCost(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldDisplayBlendCost, v)
+	return u
+}
+
+// UpdateDisplayBlendCost sets the "display_blend_cost" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateDisplayBlendCost() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldDisplayBlendCost)
+	return u
+}
+
+// AddDisplayBlendCost adds v to the "display_blend_cost" field.
+func (u *UsageLogUpsert) AddDisplayBlendCost(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldDisplayBlendCost, v)
+	return u
+}
+
+// SetCostInput sets the "cost_input" field.
+func (u *UsageLogUpsert) SetCostInput(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldCostInput, v)
+	return u
+}
+
+// UpdateCostInput sets the "cost_input" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateCostInput() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldCostInput)
+	return u
+}
+
+// AddCostInput adds v to the "cost_input" field.
+func (u *UsageLogUpsert) AddCostInput(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldCostInput, v)
+	return u
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (u *UsageLogUpsert) SetCostOutput(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldCostOutput, v)
+	return u
+}
+
+// UpdateCostOutput sets the "cost_output" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateCostOutput() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldCostOutput)
+	return u
+}
+
+// AddCostOutput adds v to the "cost_output" field.
+func (u *UsageLogUpsert) AddCostOutput(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldCostOutput, v)
+	return u
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (u *UsageLogUpsert) SetCostCacheRead(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldCostCacheRead, v)
+	return u
+}
+
+// UpdateCostCacheRead sets the "cost_cache_read" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateCostCacheRead() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldCostCacheRead)
+	return u
+}
+
+// AddCostCacheRead adds v to the "cost_cache_read" field.
+func (u *UsageLogUpsert) AddCostCacheRead(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldCostCacheRead, v)
+	return u
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (u *UsageLogUpsert) SetCostCacheWrite(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldCostCacheWrite, v)
+	return u
+}
+
+// UpdateCostCacheWrite sets the "cost_cache_write" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateCostCacheWrite() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldCostCacheWrite)
+	return u
+}
+
+// AddCostCacheWrite adds v to the "cost_cache_write" field.
+func (u *UsageLogUpsert) AddCostCacheWrite(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldCostCacheWrite, v)
+	return u
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (u *UsageLogUpsert) SetCostTotal(v float64) *UsageLogUpsert {
+	u.Set(usagelog.FieldCostTotal, v)
+	return u
+}
+
+// UpdateCostTotal sets the "cost_total" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateCostTotal() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldCostTotal)
+	return u
+}
+
+// AddCostTotal adds v to the "cost_total" field.
+func (u *UsageLogUpsert) AddCostTotal(v float64) *UsageLogUpsert {
+	u.Add(usagelog.FieldCostTotal, v)
+	return u
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (u *UsageLogUpsert) SetCostSupplierCode(v string) *UsageLogUpsert {
+	u.Set(usagelog.FieldCostSupplierCode, v)
+	return u
+}
+
+// UpdateCostSupplierCode sets the "cost_supplier_code" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateCostSupplierCode() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldCostSupplierCode)
+	return u
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (u *UsageLogUpsert) SetPricingVersion(v int) *UsageLogUpsert {
+	u.Set(usagelog.FieldPricingVersion, v)
+	return u
+}
+
+// UpdatePricingVersion sets the "pricing_version" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdatePricingVersion() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldPricingVersion)
+	return u
+}
+
+// AddPricingVersion adds v to the "pricing_version" field.
+func (u *UsageLogUpsert) AddPricingVersion(v int) *UsageLogUpsert {
+	u.Add(usagelog.FieldPricingVersion, v)
+	return u
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (u *UsageLogUpsert) SetReservationStatus(v string) *UsageLogUpsert {
+	u.Set(usagelog.FieldReservationStatus, v)
+	return u
+}
+
+// UpdateReservationStatus sets the "reservation_status" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateReservationStatus() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldReservationStatus)
 	return u
 }
 
@@ -2663,6 +3263,286 @@ func (u *UsageLogUpsertOne) AddActualCost(v float64) *UsageLogUpsertOne {
 func (u *UsageLogUpsertOne) UpdateActualCost() *UsageLogUpsertOne {
 	return u.Update(func(s *UsageLogUpsert) {
 		s.UpdateActualCost()
+	})
+}
+
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (u *UsageLogUpsertOne) SetDisplayInputCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayInputCost(v)
+	})
+}
+
+// AddDisplayInputCost adds v to the "display_input_cost" field.
+func (u *UsageLogUpsertOne) AddDisplayInputCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayInputCost(v)
+	})
+}
+
+// UpdateDisplayInputCost sets the "display_input_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateDisplayInputCost() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayInputCost()
+	})
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (u *UsageLogUpsertOne) SetDisplayOutputCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayOutputCost(v)
+	})
+}
+
+// AddDisplayOutputCost adds v to the "display_output_cost" field.
+func (u *UsageLogUpsertOne) AddDisplayOutputCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayOutputCost(v)
+	})
+}
+
+// UpdateDisplayOutputCost sets the "display_output_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateDisplayOutputCost() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayOutputCost()
+	})
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (u *UsageLogUpsertOne) SetDisplayCacheReadCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayCacheReadCost(v)
+	})
+}
+
+// AddDisplayCacheReadCost adds v to the "display_cache_read_cost" field.
+func (u *UsageLogUpsertOne) AddDisplayCacheReadCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayCacheReadCost(v)
+	})
+}
+
+// UpdateDisplayCacheReadCost sets the "display_cache_read_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateDisplayCacheReadCost() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayCacheReadCost()
+	})
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (u *UsageLogUpsertOne) SetDisplayCacheWriteCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayCacheWriteCost(v)
+	})
+}
+
+// AddDisplayCacheWriteCost adds v to the "display_cache_write_cost" field.
+func (u *UsageLogUpsertOne) AddDisplayCacheWriteCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayCacheWriteCost(v)
+	})
+}
+
+// UpdateDisplayCacheWriteCost sets the "display_cache_write_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateDisplayCacheWriteCost() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayCacheWriteCost()
+	})
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (u *UsageLogUpsertOne) SetDisplayTotalCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayTotalCost(v)
+	})
+}
+
+// AddDisplayTotalCost adds v to the "display_total_cost" field.
+func (u *UsageLogUpsertOne) AddDisplayTotalCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayTotalCost(v)
+	})
+}
+
+// UpdateDisplayTotalCost sets the "display_total_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateDisplayTotalCost() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayTotalCost()
+	})
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (u *UsageLogUpsertOne) SetDisplayBlendCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayBlendCost(v)
+	})
+}
+
+// AddDisplayBlendCost adds v to the "display_blend_cost" field.
+func (u *UsageLogUpsertOne) AddDisplayBlendCost(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayBlendCost(v)
+	})
+}
+
+// UpdateDisplayBlendCost sets the "display_blend_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateDisplayBlendCost() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayBlendCost()
+	})
+}
+
+// SetCostInput sets the "cost_input" field.
+func (u *UsageLogUpsertOne) SetCostInput(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostInput(v)
+	})
+}
+
+// AddCostInput adds v to the "cost_input" field.
+func (u *UsageLogUpsertOne) AddCostInput(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostInput(v)
+	})
+}
+
+// UpdateCostInput sets the "cost_input" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateCostInput() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostInput()
+	})
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (u *UsageLogUpsertOne) SetCostOutput(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostOutput(v)
+	})
+}
+
+// AddCostOutput adds v to the "cost_output" field.
+func (u *UsageLogUpsertOne) AddCostOutput(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostOutput(v)
+	})
+}
+
+// UpdateCostOutput sets the "cost_output" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateCostOutput() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostOutput()
+	})
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (u *UsageLogUpsertOne) SetCostCacheRead(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostCacheRead(v)
+	})
+}
+
+// AddCostCacheRead adds v to the "cost_cache_read" field.
+func (u *UsageLogUpsertOne) AddCostCacheRead(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostCacheRead(v)
+	})
+}
+
+// UpdateCostCacheRead sets the "cost_cache_read" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateCostCacheRead() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostCacheRead()
+	})
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (u *UsageLogUpsertOne) SetCostCacheWrite(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostCacheWrite(v)
+	})
+}
+
+// AddCostCacheWrite adds v to the "cost_cache_write" field.
+func (u *UsageLogUpsertOne) AddCostCacheWrite(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostCacheWrite(v)
+	})
+}
+
+// UpdateCostCacheWrite sets the "cost_cache_write" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateCostCacheWrite() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostCacheWrite()
+	})
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (u *UsageLogUpsertOne) SetCostTotal(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostTotal(v)
+	})
+}
+
+// AddCostTotal adds v to the "cost_total" field.
+func (u *UsageLogUpsertOne) AddCostTotal(v float64) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostTotal(v)
+	})
+}
+
+// UpdateCostTotal sets the "cost_total" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateCostTotal() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostTotal()
+	})
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (u *UsageLogUpsertOne) SetCostSupplierCode(v string) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostSupplierCode(v)
+	})
+}
+
+// UpdateCostSupplierCode sets the "cost_supplier_code" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateCostSupplierCode() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostSupplierCode()
+	})
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (u *UsageLogUpsertOne) SetPricingVersion(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetPricingVersion(v)
+	})
+}
+
+// AddPricingVersion adds v to the "pricing_version" field.
+func (u *UsageLogUpsertOne) AddPricingVersion(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddPricingVersion(v)
+	})
+}
+
+// UpdatePricingVersion sets the "pricing_version" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdatePricingVersion() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdatePricingVersion()
+	})
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (u *UsageLogUpsertOne) SetReservationStatus(v string) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetReservationStatus(v)
+	})
+}
+
+// UpdateReservationStatus sets the "reservation_status" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateReservationStatus() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateReservationStatus()
 	})
 }
 
@@ -3819,6 +4699,286 @@ func (u *UsageLogUpsertBulk) AddActualCost(v float64) *UsageLogUpsertBulk {
 func (u *UsageLogUpsertBulk) UpdateActualCost() *UsageLogUpsertBulk {
 	return u.Update(func(s *UsageLogUpsert) {
 		s.UpdateActualCost()
+	})
+}
+
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (u *UsageLogUpsertBulk) SetDisplayInputCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayInputCost(v)
+	})
+}
+
+// AddDisplayInputCost adds v to the "display_input_cost" field.
+func (u *UsageLogUpsertBulk) AddDisplayInputCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayInputCost(v)
+	})
+}
+
+// UpdateDisplayInputCost sets the "display_input_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateDisplayInputCost() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayInputCost()
+	})
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (u *UsageLogUpsertBulk) SetDisplayOutputCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayOutputCost(v)
+	})
+}
+
+// AddDisplayOutputCost adds v to the "display_output_cost" field.
+func (u *UsageLogUpsertBulk) AddDisplayOutputCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayOutputCost(v)
+	})
+}
+
+// UpdateDisplayOutputCost sets the "display_output_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateDisplayOutputCost() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayOutputCost()
+	})
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (u *UsageLogUpsertBulk) SetDisplayCacheReadCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayCacheReadCost(v)
+	})
+}
+
+// AddDisplayCacheReadCost adds v to the "display_cache_read_cost" field.
+func (u *UsageLogUpsertBulk) AddDisplayCacheReadCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayCacheReadCost(v)
+	})
+}
+
+// UpdateDisplayCacheReadCost sets the "display_cache_read_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateDisplayCacheReadCost() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayCacheReadCost()
+	})
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (u *UsageLogUpsertBulk) SetDisplayCacheWriteCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayCacheWriteCost(v)
+	})
+}
+
+// AddDisplayCacheWriteCost adds v to the "display_cache_write_cost" field.
+func (u *UsageLogUpsertBulk) AddDisplayCacheWriteCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayCacheWriteCost(v)
+	})
+}
+
+// UpdateDisplayCacheWriteCost sets the "display_cache_write_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateDisplayCacheWriteCost() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayCacheWriteCost()
+	})
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (u *UsageLogUpsertBulk) SetDisplayTotalCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayTotalCost(v)
+	})
+}
+
+// AddDisplayTotalCost adds v to the "display_total_cost" field.
+func (u *UsageLogUpsertBulk) AddDisplayTotalCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayTotalCost(v)
+	})
+}
+
+// UpdateDisplayTotalCost sets the "display_total_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateDisplayTotalCost() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayTotalCost()
+	})
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (u *UsageLogUpsertBulk) SetDisplayBlendCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetDisplayBlendCost(v)
+	})
+}
+
+// AddDisplayBlendCost adds v to the "display_blend_cost" field.
+func (u *UsageLogUpsertBulk) AddDisplayBlendCost(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddDisplayBlendCost(v)
+	})
+}
+
+// UpdateDisplayBlendCost sets the "display_blend_cost" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateDisplayBlendCost() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateDisplayBlendCost()
+	})
+}
+
+// SetCostInput sets the "cost_input" field.
+func (u *UsageLogUpsertBulk) SetCostInput(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostInput(v)
+	})
+}
+
+// AddCostInput adds v to the "cost_input" field.
+func (u *UsageLogUpsertBulk) AddCostInput(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostInput(v)
+	})
+}
+
+// UpdateCostInput sets the "cost_input" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateCostInput() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostInput()
+	})
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (u *UsageLogUpsertBulk) SetCostOutput(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostOutput(v)
+	})
+}
+
+// AddCostOutput adds v to the "cost_output" field.
+func (u *UsageLogUpsertBulk) AddCostOutput(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostOutput(v)
+	})
+}
+
+// UpdateCostOutput sets the "cost_output" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateCostOutput() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostOutput()
+	})
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (u *UsageLogUpsertBulk) SetCostCacheRead(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostCacheRead(v)
+	})
+}
+
+// AddCostCacheRead adds v to the "cost_cache_read" field.
+func (u *UsageLogUpsertBulk) AddCostCacheRead(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostCacheRead(v)
+	})
+}
+
+// UpdateCostCacheRead sets the "cost_cache_read" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateCostCacheRead() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostCacheRead()
+	})
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (u *UsageLogUpsertBulk) SetCostCacheWrite(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostCacheWrite(v)
+	})
+}
+
+// AddCostCacheWrite adds v to the "cost_cache_write" field.
+func (u *UsageLogUpsertBulk) AddCostCacheWrite(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostCacheWrite(v)
+	})
+}
+
+// UpdateCostCacheWrite sets the "cost_cache_write" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateCostCacheWrite() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostCacheWrite()
+	})
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (u *UsageLogUpsertBulk) SetCostTotal(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostTotal(v)
+	})
+}
+
+// AddCostTotal adds v to the "cost_total" field.
+func (u *UsageLogUpsertBulk) AddCostTotal(v float64) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddCostTotal(v)
+	})
+}
+
+// UpdateCostTotal sets the "cost_total" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateCostTotal() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostTotal()
+	})
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (u *UsageLogUpsertBulk) SetCostSupplierCode(v string) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetCostSupplierCode(v)
+	})
+}
+
+// UpdateCostSupplierCode sets the "cost_supplier_code" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateCostSupplierCode() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateCostSupplierCode()
+	})
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (u *UsageLogUpsertBulk) SetPricingVersion(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetPricingVersion(v)
+	})
+}
+
+// AddPricingVersion adds v to the "pricing_version" field.
+func (u *UsageLogUpsertBulk) AddPricingVersion(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddPricingVersion(v)
+	})
+}
+
+// UpdatePricingVersion sets the "pricing_version" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdatePricingVersion() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdatePricingVersion()
+	})
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (u *UsageLogUpsertBulk) SetReservationStatus(v string) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetReservationStatus(v)
+	})
+}
+
+// UpdateReservationStatus sets the "reservation_status" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateReservationStatus() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateReservationStatus()
 	})
 }
 

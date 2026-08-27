@@ -162,12 +162,27 @@ type UsageLog struct {
 	CacheReadCost             float64
 	TotalCost                 float64
 	ActualCost                float64
+	DisplayInputCost          float64
+	DisplayOutputCost         float64
+	DisplayCacheReadCost      float64
+	DisplayCacheWriteCost     float64
+	DisplayTotalCost          float64
+	DisplayBlendCost          float64
+	CostInput                 float64
+	CostOutput                float64
+	CostCacheRead             float64
+	CostCacheWrite            float64
+	CostTotal                 float64
+	CostSupplierCode          string
 	RateMultiplier            float64
 	LongContextBillingApplied bool
 	// AccountRateMultiplier 账号计费倍率快照（nil 表示历史数据，按 1.0 处理）
 	AccountRateMultiplier *float64
 	// AccountStatsCost 账号统计定价预计算费用（nil = 使用默认公式 total_cost × account_rate_multiplier）
 	AccountStatsCost *float64
+
+	PricingVersion    int
+	ReservationStatus string
 
 	BillingType  int8
 	RequestType  RequestType

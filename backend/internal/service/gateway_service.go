@@ -23,6 +23,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/pkg/logger"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/xai"
 	"github.com/Wei-Shaw/sub2api/internal/util/responseheaders"
+	"github.com/Wei-Shaw/sub2api/zcloud/billing"
 	"github.com/cespare/xxhash/v2"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/tidwall/gjson"
@@ -785,6 +786,8 @@ type GatewayService struct {
 	resolver                *ModelPricingResolver
 	compositeResolver       *CompositeRouteResolver
 	supplierPricingResolver *SupplierPricingResolver
+	reservationRepo         billing.ReservationRepository
+	snapshotRepo            UsageModelSnapshotRepository
 	debugGatewayBodyFile    atomic.Pointer[os.File] // non-nil when SUB2API_DEBUG_GATEWAY_BODY is set
 	tlsFPProfileService     *TLSFingerprintProfileService
 	balanceNotifyService    *BalanceNotifyService
@@ -822,6 +825,8 @@ func NewGatewayService(
 	balanceNotifyService *BalanceNotifyService,
 	userPlatformQuotaRepo UserPlatformQuotaRepository,
 	supplierPricingResolver *SupplierPricingResolver,
+	reservationRepo billing.ReservationRepository,
+	snapshotRepo UsageModelSnapshotRepository,
 ) *GatewayService {
 	userGroupRateTTL := resolveUserGroupRateCacheTTL(cfg)
 	modelsListTTL := resolveModelsListCacheTTL(cfg)
@@ -858,6 +863,8 @@ func NewGatewayService(
 		resolver:                resolver,
 		compositeResolver:       compositeResolver,
 		supplierPricingResolver: supplierPricingResolver,
+		reservationRepo:         reservationRepo,
+		snapshotRepo:            snapshotRepo,
 		balanceNotifyService:    balanceNotifyService,
 		userPlatformQuotaRepo:   userPlatformQuotaRepo,
 	}

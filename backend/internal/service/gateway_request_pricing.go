@@ -6,9 +6,11 @@ import (
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/timezone"
+	"github.com/Wei-Shaw/sub2api/zcloud/pricing"
 )
 
 type gatewayTokenRequestPricingAtCtxKey struct{}
+type gatewayTokenRequestPricingVersionCtxKey struct{}
 type gatewayTokenRequestBillingGroupCtxKey struct{}
 
 // WithGatewayTokenRequestPricing marks a shared-gateway request as token billed
@@ -20,6 +22,7 @@ func WithGatewayTokenRequestPricing(ctx context.Context) (context.Context, time.
 	}
 	pricingAt := timezone.Now()
 	ctx = context.WithValue(ctx, gatewayTokenRequestPricingAtCtxKey{}, pricingAt)
+	ctx = context.WithValue(ctx, gatewayTokenRequestPricingVersionCtxKey{}, pricing.PricingVersionDualMetering)
 	// 调度过程中可能因 fallback/composite 路由覆盖 ctxkey.Group；计费 D 仍必须
 	// 使用认证时刻的父分组，和最终 RecordUsage 的计费归属保持一致。
 	if group, ok := ctx.Value(ctxkey.Group).(*Group); ok && IsGroupContextValid(group) {
@@ -41,6 +44,14 @@ func gatewayTokenRequestPricingAtFromContext(ctx context.Context) (time.Time, bo
 func GatewayTokenRequestPricingAtFromContext(ctx context.Context) time.Time {
 	pricingAt, _ := gatewayTokenRequestPricingAtFromContext(ctx)
 	return pricingAt
+}
+
+func GatewayTokenRequestPricingVersionFromContext(ctx context.Context) int {
+	if ctx == nil {
+		return 0
+	}
+	version, _ := ctx.Value(gatewayTokenRequestPricingVersionCtxKey{}).(int)
+	return version
 }
 
 func gatewayTokenRequestBillingGroupFromContext(ctx context.Context) *Group {

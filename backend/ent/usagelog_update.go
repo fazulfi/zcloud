@@ -561,6 +561,286 @@ func (_u *UsageLogUpdate) AddActualCost(v float64) *UsageLogUpdate {
 	return _u
 }
 
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (_u *UsageLogUpdate) SetDisplayInputCost(v float64) *UsageLogUpdate {
+	_u.mutation.ResetDisplayInputCost()
+	_u.mutation.SetDisplayInputCost(v)
+	return _u
+}
+
+// SetNillableDisplayInputCost sets the "display_input_cost" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableDisplayInputCost(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetDisplayInputCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayInputCost adds value to the "display_input_cost" field.
+func (_u *UsageLogUpdate) AddDisplayInputCost(v float64) *UsageLogUpdate {
+	_u.mutation.AddDisplayInputCost(v)
+	return _u
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (_u *UsageLogUpdate) SetDisplayOutputCost(v float64) *UsageLogUpdate {
+	_u.mutation.ResetDisplayOutputCost()
+	_u.mutation.SetDisplayOutputCost(v)
+	return _u
+}
+
+// SetNillableDisplayOutputCost sets the "display_output_cost" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableDisplayOutputCost(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetDisplayOutputCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayOutputCost adds value to the "display_output_cost" field.
+func (_u *UsageLogUpdate) AddDisplayOutputCost(v float64) *UsageLogUpdate {
+	_u.mutation.AddDisplayOutputCost(v)
+	return _u
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (_u *UsageLogUpdate) SetDisplayCacheReadCost(v float64) *UsageLogUpdate {
+	_u.mutation.ResetDisplayCacheReadCost()
+	_u.mutation.SetDisplayCacheReadCost(v)
+	return _u
+}
+
+// SetNillableDisplayCacheReadCost sets the "display_cache_read_cost" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableDisplayCacheReadCost(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetDisplayCacheReadCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayCacheReadCost adds value to the "display_cache_read_cost" field.
+func (_u *UsageLogUpdate) AddDisplayCacheReadCost(v float64) *UsageLogUpdate {
+	_u.mutation.AddDisplayCacheReadCost(v)
+	return _u
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (_u *UsageLogUpdate) SetDisplayCacheWriteCost(v float64) *UsageLogUpdate {
+	_u.mutation.ResetDisplayCacheWriteCost()
+	_u.mutation.SetDisplayCacheWriteCost(v)
+	return _u
+}
+
+// SetNillableDisplayCacheWriteCost sets the "display_cache_write_cost" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableDisplayCacheWriteCost(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetDisplayCacheWriteCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayCacheWriteCost adds value to the "display_cache_write_cost" field.
+func (_u *UsageLogUpdate) AddDisplayCacheWriteCost(v float64) *UsageLogUpdate {
+	_u.mutation.AddDisplayCacheWriteCost(v)
+	return _u
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (_u *UsageLogUpdate) SetDisplayTotalCost(v float64) *UsageLogUpdate {
+	_u.mutation.ResetDisplayTotalCost()
+	_u.mutation.SetDisplayTotalCost(v)
+	return _u
+}
+
+// SetNillableDisplayTotalCost sets the "display_total_cost" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableDisplayTotalCost(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetDisplayTotalCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayTotalCost adds value to the "display_total_cost" field.
+func (_u *UsageLogUpdate) AddDisplayTotalCost(v float64) *UsageLogUpdate {
+	_u.mutation.AddDisplayTotalCost(v)
+	return _u
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (_u *UsageLogUpdate) SetDisplayBlendCost(v float64) *UsageLogUpdate {
+	_u.mutation.ResetDisplayBlendCost()
+	_u.mutation.SetDisplayBlendCost(v)
+	return _u
+}
+
+// SetNillableDisplayBlendCost sets the "display_blend_cost" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableDisplayBlendCost(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetDisplayBlendCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayBlendCost adds value to the "display_blend_cost" field.
+func (_u *UsageLogUpdate) AddDisplayBlendCost(v float64) *UsageLogUpdate {
+	_u.mutation.AddDisplayBlendCost(v)
+	return _u
+}
+
+// SetCostInput sets the "cost_input" field.
+func (_u *UsageLogUpdate) SetCostInput(v float64) *UsageLogUpdate {
+	_u.mutation.ResetCostInput()
+	_u.mutation.SetCostInput(v)
+	return _u
+}
+
+// SetNillableCostInput sets the "cost_input" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableCostInput(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetCostInput(*v)
+	}
+	return _u
+}
+
+// AddCostInput adds value to the "cost_input" field.
+func (_u *UsageLogUpdate) AddCostInput(v float64) *UsageLogUpdate {
+	_u.mutation.AddCostInput(v)
+	return _u
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (_u *UsageLogUpdate) SetCostOutput(v float64) *UsageLogUpdate {
+	_u.mutation.ResetCostOutput()
+	_u.mutation.SetCostOutput(v)
+	return _u
+}
+
+// SetNillableCostOutput sets the "cost_output" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableCostOutput(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetCostOutput(*v)
+	}
+	return _u
+}
+
+// AddCostOutput adds value to the "cost_output" field.
+func (_u *UsageLogUpdate) AddCostOutput(v float64) *UsageLogUpdate {
+	_u.mutation.AddCostOutput(v)
+	return _u
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (_u *UsageLogUpdate) SetCostCacheRead(v float64) *UsageLogUpdate {
+	_u.mutation.ResetCostCacheRead()
+	_u.mutation.SetCostCacheRead(v)
+	return _u
+}
+
+// SetNillableCostCacheRead sets the "cost_cache_read" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableCostCacheRead(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetCostCacheRead(*v)
+	}
+	return _u
+}
+
+// AddCostCacheRead adds value to the "cost_cache_read" field.
+func (_u *UsageLogUpdate) AddCostCacheRead(v float64) *UsageLogUpdate {
+	_u.mutation.AddCostCacheRead(v)
+	return _u
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (_u *UsageLogUpdate) SetCostCacheWrite(v float64) *UsageLogUpdate {
+	_u.mutation.ResetCostCacheWrite()
+	_u.mutation.SetCostCacheWrite(v)
+	return _u
+}
+
+// SetNillableCostCacheWrite sets the "cost_cache_write" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableCostCacheWrite(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetCostCacheWrite(*v)
+	}
+	return _u
+}
+
+// AddCostCacheWrite adds value to the "cost_cache_write" field.
+func (_u *UsageLogUpdate) AddCostCacheWrite(v float64) *UsageLogUpdate {
+	_u.mutation.AddCostCacheWrite(v)
+	return _u
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (_u *UsageLogUpdate) SetCostTotal(v float64) *UsageLogUpdate {
+	_u.mutation.ResetCostTotal()
+	_u.mutation.SetCostTotal(v)
+	return _u
+}
+
+// SetNillableCostTotal sets the "cost_total" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableCostTotal(v *float64) *UsageLogUpdate {
+	if v != nil {
+		_u.SetCostTotal(*v)
+	}
+	return _u
+}
+
+// AddCostTotal adds value to the "cost_total" field.
+func (_u *UsageLogUpdate) AddCostTotal(v float64) *UsageLogUpdate {
+	_u.mutation.AddCostTotal(v)
+	return _u
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (_u *UsageLogUpdate) SetCostSupplierCode(v string) *UsageLogUpdate {
+	_u.mutation.SetCostSupplierCode(v)
+	return _u
+}
+
+// SetNillableCostSupplierCode sets the "cost_supplier_code" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableCostSupplierCode(v *string) *UsageLogUpdate {
+	if v != nil {
+		_u.SetCostSupplierCode(*v)
+	}
+	return _u
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (_u *UsageLogUpdate) SetPricingVersion(v int) *UsageLogUpdate {
+	_u.mutation.ResetPricingVersion()
+	_u.mutation.SetPricingVersion(v)
+	return _u
+}
+
+// SetNillablePricingVersion sets the "pricing_version" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillablePricingVersion(v *int) *UsageLogUpdate {
+	if v != nil {
+		_u.SetPricingVersion(*v)
+	}
+	return _u
+}
+
+// AddPricingVersion adds value to the "pricing_version" field.
+func (_u *UsageLogUpdate) AddPricingVersion(v int) *UsageLogUpdate {
+	_u.mutation.AddPricingVersion(v)
+	return _u
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (_u *UsageLogUpdate) SetReservationStatus(v string) *UsageLogUpdate {
+	_u.mutation.SetReservationStatus(v)
+	return _u
+}
+
+// SetNillableReservationStatus sets the "reservation_status" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableReservationStatus(v *string) *UsageLogUpdate {
+	if v != nil {
+		_u.SetReservationStatus(*v)
+	}
+	return _u
+}
+
 // SetRateMultiplier sets the "rate_multiplier" field.
 func (_u *UsageLogUpdate) SetRateMultiplier(v float64) *UsageLogUpdate {
 	_u.mutation.ResetRateMultiplier()
@@ -1076,6 +1356,16 @@ func (_u *UsageLogUpdate) check() error {
 			return &ValidationError{Name: "billing_mode", err: fmt.Errorf(`ent: validator failed for field "UsageLog.billing_mode": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.CostSupplierCode(); ok {
+		if err := usagelog.CostSupplierCodeValidator(v); err != nil {
+			return &ValidationError{Name: "cost_supplier_code", err: fmt.Errorf(`ent: validator failed for field "UsageLog.cost_supplier_code": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.ReservationStatus(); ok {
+		if err := usagelog.ReservationStatusValidator(v); err != nil {
+			return &ValidationError{Name: "reservation_status", err: fmt.Errorf(`ent: validator failed for field "UsageLog.reservation_status": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.UserAgent(); ok {
 		if err := usagelog.UserAgentValidator(v); err != nil {
 			return &ValidationError{Name: "user_agent", err: fmt.Errorf(`ent: validator failed for field "UsageLog.user_agent": %w`, err)}
@@ -1263,6 +1553,84 @@ func (_u *UsageLogUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.AddedActualCost(); ok {
 		_spec.AddField(usagelog.FieldActualCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayInputCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayInputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayInputCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayInputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayOutputCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayOutputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayOutputCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayOutputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayCacheReadCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayCacheReadCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayCacheReadCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayCacheReadCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayCacheWriteCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayCacheWriteCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayCacheWriteCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayCacheWriteCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayTotalCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayTotalCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayTotalCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayTotalCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayBlendCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayBlendCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayBlendCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayBlendCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostInput(); ok {
+		_spec.SetField(usagelog.FieldCostInput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostInput(); ok {
+		_spec.AddField(usagelog.FieldCostInput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostOutput(); ok {
+		_spec.SetField(usagelog.FieldCostOutput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostOutput(); ok {
+		_spec.AddField(usagelog.FieldCostOutput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostCacheRead(); ok {
+		_spec.SetField(usagelog.FieldCostCacheRead, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostCacheRead(); ok {
+		_spec.AddField(usagelog.FieldCostCacheRead, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostCacheWrite(); ok {
+		_spec.SetField(usagelog.FieldCostCacheWrite, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostCacheWrite(); ok {
+		_spec.AddField(usagelog.FieldCostCacheWrite, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostTotal(); ok {
+		_spec.SetField(usagelog.FieldCostTotal, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostTotal(); ok {
+		_spec.AddField(usagelog.FieldCostTotal, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostSupplierCode(); ok {
+		_spec.SetField(usagelog.FieldCostSupplierCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.PricingVersion(); ok {
+		_spec.SetField(usagelog.FieldPricingVersion, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedPricingVersion(); ok {
+		_spec.AddField(usagelog.FieldPricingVersion, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.ReservationStatus(); ok {
+		_spec.SetField(usagelog.FieldReservationStatus, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.RateMultiplier(); ok {
 		_spec.SetField(usagelog.FieldRateMultiplier, field.TypeFloat64, value)
@@ -2075,6 +2443,286 @@ func (_u *UsageLogUpdateOne) AddActualCost(v float64) *UsageLogUpdateOne {
 	return _u
 }
 
+// SetDisplayInputCost sets the "display_input_cost" field.
+func (_u *UsageLogUpdateOne) SetDisplayInputCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetDisplayInputCost()
+	_u.mutation.SetDisplayInputCost(v)
+	return _u
+}
+
+// SetNillableDisplayInputCost sets the "display_input_cost" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableDisplayInputCost(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetDisplayInputCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayInputCost adds value to the "display_input_cost" field.
+func (_u *UsageLogUpdateOne) AddDisplayInputCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddDisplayInputCost(v)
+	return _u
+}
+
+// SetDisplayOutputCost sets the "display_output_cost" field.
+func (_u *UsageLogUpdateOne) SetDisplayOutputCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetDisplayOutputCost()
+	_u.mutation.SetDisplayOutputCost(v)
+	return _u
+}
+
+// SetNillableDisplayOutputCost sets the "display_output_cost" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableDisplayOutputCost(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetDisplayOutputCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayOutputCost adds value to the "display_output_cost" field.
+func (_u *UsageLogUpdateOne) AddDisplayOutputCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddDisplayOutputCost(v)
+	return _u
+}
+
+// SetDisplayCacheReadCost sets the "display_cache_read_cost" field.
+func (_u *UsageLogUpdateOne) SetDisplayCacheReadCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetDisplayCacheReadCost()
+	_u.mutation.SetDisplayCacheReadCost(v)
+	return _u
+}
+
+// SetNillableDisplayCacheReadCost sets the "display_cache_read_cost" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableDisplayCacheReadCost(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetDisplayCacheReadCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayCacheReadCost adds value to the "display_cache_read_cost" field.
+func (_u *UsageLogUpdateOne) AddDisplayCacheReadCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddDisplayCacheReadCost(v)
+	return _u
+}
+
+// SetDisplayCacheWriteCost sets the "display_cache_write_cost" field.
+func (_u *UsageLogUpdateOne) SetDisplayCacheWriteCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetDisplayCacheWriteCost()
+	_u.mutation.SetDisplayCacheWriteCost(v)
+	return _u
+}
+
+// SetNillableDisplayCacheWriteCost sets the "display_cache_write_cost" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableDisplayCacheWriteCost(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetDisplayCacheWriteCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayCacheWriteCost adds value to the "display_cache_write_cost" field.
+func (_u *UsageLogUpdateOne) AddDisplayCacheWriteCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddDisplayCacheWriteCost(v)
+	return _u
+}
+
+// SetDisplayTotalCost sets the "display_total_cost" field.
+func (_u *UsageLogUpdateOne) SetDisplayTotalCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetDisplayTotalCost()
+	_u.mutation.SetDisplayTotalCost(v)
+	return _u
+}
+
+// SetNillableDisplayTotalCost sets the "display_total_cost" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableDisplayTotalCost(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetDisplayTotalCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayTotalCost adds value to the "display_total_cost" field.
+func (_u *UsageLogUpdateOne) AddDisplayTotalCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddDisplayTotalCost(v)
+	return _u
+}
+
+// SetDisplayBlendCost sets the "display_blend_cost" field.
+func (_u *UsageLogUpdateOne) SetDisplayBlendCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetDisplayBlendCost()
+	_u.mutation.SetDisplayBlendCost(v)
+	return _u
+}
+
+// SetNillableDisplayBlendCost sets the "display_blend_cost" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableDisplayBlendCost(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetDisplayBlendCost(*v)
+	}
+	return _u
+}
+
+// AddDisplayBlendCost adds value to the "display_blend_cost" field.
+func (_u *UsageLogUpdateOne) AddDisplayBlendCost(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddDisplayBlendCost(v)
+	return _u
+}
+
+// SetCostInput sets the "cost_input" field.
+func (_u *UsageLogUpdateOne) SetCostInput(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetCostInput()
+	_u.mutation.SetCostInput(v)
+	return _u
+}
+
+// SetNillableCostInput sets the "cost_input" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableCostInput(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetCostInput(*v)
+	}
+	return _u
+}
+
+// AddCostInput adds value to the "cost_input" field.
+func (_u *UsageLogUpdateOne) AddCostInput(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddCostInput(v)
+	return _u
+}
+
+// SetCostOutput sets the "cost_output" field.
+func (_u *UsageLogUpdateOne) SetCostOutput(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetCostOutput()
+	_u.mutation.SetCostOutput(v)
+	return _u
+}
+
+// SetNillableCostOutput sets the "cost_output" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableCostOutput(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetCostOutput(*v)
+	}
+	return _u
+}
+
+// AddCostOutput adds value to the "cost_output" field.
+func (_u *UsageLogUpdateOne) AddCostOutput(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddCostOutput(v)
+	return _u
+}
+
+// SetCostCacheRead sets the "cost_cache_read" field.
+func (_u *UsageLogUpdateOne) SetCostCacheRead(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetCostCacheRead()
+	_u.mutation.SetCostCacheRead(v)
+	return _u
+}
+
+// SetNillableCostCacheRead sets the "cost_cache_read" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableCostCacheRead(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetCostCacheRead(*v)
+	}
+	return _u
+}
+
+// AddCostCacheRead adds value to the "cost_cache_read" field.
+func (_u *UsageLogUpdateOne) AddCostCacheRead(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddCostCacheRead(v)
+	return _u
+}
+
+// SetCostCacheWrite sets the "cost_cache_write" field.
+func (_u *UsageLogUpdateOne) SetCostCacheWrite(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetCostCacheWrite()
+	_u.mutation.SetCostCacheWrite(v)
+	return _u
+}
+
+// SetNillableCostCacheWrite sets the "cost_cache_write" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableCostCacheWrite(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetCostCacheWrite(*v)
+	}
+	return _u
+}
+
+// AddCostCacheWrite adds value to the "cost_cache_write" field.
+func (_u *UsageLogUpdateOne) AddCostCacheWrite(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddCostCacheWrite(v)
+	return _u
+}
+
+// SetCostTotal sets the "cost_total" field.
+func (_u *UsageLogUpdateOne) SetCostTotal(v float64) *UsageLogUpdateOne {
+	_u.mutation.ResetCostTotal()
+	_u.mutation.SetCostTotal(v)
+	return _u
+}
+
+// SetNillableCostTotal sets the "cost_total" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableCostTotal(v *float64) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetCostTotal(*v)
+	}
+	return _u
+}
+
+// AddCostTotal adds value to the "cost_total" field.
+func (_u *UsageLogUpdateOne) AddCostTotal(v float64) *UsageLogUpdateOne {
+	_u.mutation.AddCostTotal(v)
+	return _u
+}
+
+// SetCostSupplierCode sets the "cost_supplier_code" field.
+func (_u *UsageLogUpdateOne) SetCostSupplierCode(v string) *UsageLogUpdateOne {
+	_u.mutation.SetCostSupplierCode(v)
+	return _u
+}
+
+// SetNillableCostSupplierCode sets the "cost_supplier_code" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableCostSupplierCode(v *string) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetCostSupplierCode(*v)
+	}
+	return _u
+}
+
+// SetPricingVersion sets the "pricing_version" field.
+func (_u *UsageLogUpdateOne) SetPricingVersion(v int) *UsageLogUpdateOne {
+	_u.mutation.ResetPricingVersion()
+	_u.mutation.SetPricingVersion(v)
+	return _u
+}
+
+// SetNillablePricingVersion sets the "pricing_version" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillablePricingVersion(v *int) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetPricingVersion(*v)
+	}
+	return _u
+}
+
+// AddPricingVersion adds value to the "pricing_version" field.
+func (_u *UsageLogUpdateOne) AddPricingVersion(v int) *UsageLogUpdateOne {
+	_u.mutation.AddPricingVersion(v)
+	return _u
+}
+
+// SetReservationStatus sets the "reservation_status" field.
+func (_u *UsageLogUpdateOne) SetReservationStatus(v string) *UsageLogUpdateOne {
+	_u.mutation.SetReservationStatus(v)
+	return _u
+}
+
+// SetNillableReservationStatus sets the "reservation_status" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableReservationStatus(v *string) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetReservationStatus(*v)
+	}
+	return _u
+}
+
 // SetRateMultiplier sets the "rate_multiplier" field.
 func (_u *UsageLogUpdateOne) SetRateMultiplier(v float64) *UsageLogUpdateOne {
 	_u.mutation.ResetRateMultiplier()
@@ -2603,6 +3251,16 @@ func (_u *UsageLogUpdateOne) check() error {
 			return &ValidationError{Name: "billing_mode", err: fmt.Errorf(`ent: validator failed for field "UsageLog.billing_mode": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.CostSupplierCode(); ok {
+		if err := usagelog.CostSupplierCodeValidator(v); err != nil {
+			return &ValidationError{Name: "cost_supplier_code", err: fmt.Errorf(`ent: validator failed for field "UsageLog.cost_supplier_code": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.ReservationStatus(); ok {
+		if err := usagelog.ReservationStatusValidator(v); err != nil {
+			return &ValidationError{Name: "reservation_status", err: fmt.Errorf(`ent: validator failed for field "UsageLog.reservation_status": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.UserAgent(); ok {
 		if err := usagelog.UserAgentValidator(v); err != nil {
 			return &ValidationError{Name: "user_agent", err: fmt.Errorf(`ent: validator failed for field "UsageLog.user_agent": %w`, err)}
@@ -2807,6 +3465,84 @@ func (_u *UsageLogUpdateOne) sqlSave(ctx context.Context) (_node *UsageLog, err 
 	}
 	if value, ok := _u.mutation.AddedActualCost(); ok {
 		_spec.AddField(usagelog.FieldActualCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayInputCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayInputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayInputCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayInputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayOutputCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayOutputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayOutputCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayOutputCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayCacheReadCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayCacheReadCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayCacheReadCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayCacheReadCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayCacheWriteCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayCacheWriteCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayCacheWriteCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayCacheWriteCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayTotalCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayTotalCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayTotalCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayTotalCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.DisplayBlendCost(); ok {
+		_spec.SetField(usagelog.FieldDisplayBlendCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayBlendCost(); ok {
+		_spec.AddField(usagelog.FieldDisplayBlendCost, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostInput(); ok {
+		_spec.SetField(usagelog.FieldCostInput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostInput(); ok {
+		_spec.AddField(usagelog.FieldCostInput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostOutput(); ok {
+		_spec.SetField(usagelog.FieldCostOutput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostOutput(); ok {
+		_spec.AddField(usagelog.FieldCostOutput, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostCacheRead(); ok {
+		_spec.SetField(usagelog.FieldCostCacheRead, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostCacheRead(); ok {
+		_spec.AddField(usagelog.FieldCostCacheRead, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostCacheWrite(); ok {
+		_spec.SetField(usagelog.FieldCostCacheWrite, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostCacheWrite(); ok {
+		_spec.AddField(usagelog.FieldCostCacheWrite, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostTotal(); ok {
+		_spec.SetField(usagelog.FieldCostTotal, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedCostTotal(); ok {
+		_spec.AddField(usagelog.FieldCostTotal, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.CostSupplierCode(); ok {
+		_spec.SetField(usagelog.FieldCostSupplierCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.PricingVersion(); ok {
+		_spec.SetField(usagelog.FieldPricingVersion, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedPricingVersion(); ok {
+		_spec.AddField(usagelog.FieldPricingVersion, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.ReservationStatus(); ok {
+		_spec.SetField(usagelog.FieldReservationStatus, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.RateMultiplier(); ok {
 		_spec.SetField(usagelog.FieldRateMultiplier, field.TypeFloat64, value)

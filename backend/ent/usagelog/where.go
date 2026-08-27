@@ -190,6 +190,76 @@ func ActualCost(v float64) predicate.UsageLog {
 	return predicate.UsageLog(sql.FieldEQ(FieldActualCost, v))
 }
 
+// DisplayInputCost applies equality check predicate on the "display_input_cost" field. It's identical to DisplayInputCostEQ.
+func DisplayInputCost(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayInputCost, v))
+}
+
+// DisplayOutputCost applies equality check predicate on the "display_output_cost" field. It's identical to DisplayOutputCostEQ.
+func DisplayOutputCost(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayOutputCost, v))
+}
+
+// DisplayCacheReadCost applies equality check predicate on the "display_cache_read_cost" field. It's identical to DisplayCacheReadCostEQ.
+func DisplayCacheReadCost(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheWriteCost applies equality check predicate on the "display_cache_write_cost" field. It's identical to DisplayCacheWriteCostEQ.
+func DisplayCacheWriteCost(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayTotalCost applies equality check predicate on the "display_total_cost" field. It's identical to DisplayTotalCostEQ.
+func DisplayTotalCost(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayTotalCost, v))
+}
+
+// DisplayBlendCost applies equality check predicate on the "display_blend_cost" field. It's identical to DisplayBlendCostEQ.
+func DisplayBlendCost(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayBlendCost, v))
+}
+
+// CostInput applies equality check predicate on the "cost_input" field. It's identical to CostInputEQ.
+func CostInput(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostInput, v))
+}
+
+// CostOutput applies equality check predicate on the "cost_output" field. It's identical to CostOutputEQ.
+func CostOutput(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostOutput, v))
+}
+
+// CostCacheRead applies equality check predicate on the "cost_cache_read" field. It's identical to CostCacheReadEQ.
+func CostCacheRead(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostCacheRead, v))
+}
+
+// CostCacheWrite applies equality check predicate on the "cost_cache_write" field. It's identical to CostCacheWriteEQ.
+func CostCacheWrite(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostCacheWrite, v))
+}
+
+// CostTotal applies equality check predicate on the "cost_total" field. It's identical to CostTotalEQ.
+func CostTotal(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostTotal, v))
+}
+
+// CostSupplierCode applies equality check predicate on the "cost_supplier_code" field. It's identical to CostSupplierCodeEQ.
+func CostSupplierCode(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostSupplierCode, v))
+}
+
+// PricingVersion applies equality check predicate on the "pricing_version" field. It's identical to PricingVersionEQ.
+func PricingVersion(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldPricingVersion, v))
+}
+
+// ReservationStatus applies equality check predicate on the "reservation_status" field. It's identical to ReservationStatusEQ.
+func ReservationStatus(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldReservationStatus, v))
+}
+
 // RateMultiplier applies equality check predicate on the "rate_multiplier" field. It's identical to RateMultiplierEQ.
 func RateMultiplier(v float64) predicate.UsageLog {
 	return predicate.UsageLog(sql.FieldEQ(FieldRateMultiplier, v))
@@ -1533,6 +1603,616 @@ func ActualCostLT(v float64) predicate.UsageLog {
 // ActualCostLTE applies the LTE predicate on the "actual_cost" field.
 func ActualCostLTE(v float64) predicate.UsageLog {
 	return predicate.UsageLog(sql.FieldLTE(FieldActualCost, v))
+}
+
+// DisplayInputCostEQ applies the EQ predicate on the "display_input_cost" field.
+func DisplayInputCostEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayInputCost, v))
+}
+
+// DisplayInputCostNEQ applies the NEQ predicate on the "display_input_cost" field.
+func DisplayInputCostNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldDisplayInputCost, v))
+}
+
+// DisplayInputCostIn applies the In predicate on the "display_input_cost" field.
+func DisplayInputCostIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldDisplayInputCost, vs...))
+}
+
+// DisplayInputCostNotIn applies the NotIn predicate on the "display_input_cost" field.
+func DisplayInputCostNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldDisplayInputCost, vs...))
+}
+
+// DisplayInputCostGT applies the GT predicate on the "display_input_cost" field.
+func DisplayInputCostGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldDisplayInputCost, v))
+}
+
+// DisplayInputCostGTE applies the GTE predicate on the "display_input_cost" field.
+func DisplayInputCostGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldDisplayInputCost, v))
+}
+
+// DisplayInputCostLT applies the LT predicate on the "display_input_cost" field.
+func DisplayInputCostLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldDisplayInputCost, v))
+}
+
+// DisplayInputCostLTE applies the LTE predicate on the "display_input_cost" field.
+func DisplayInputCostLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldDisplayInputCost, v))
+}
+
+// DisplayOutputCostEQ applies the EQ predicate on the "display_output_cost" field.
+func DisplayOutputCostEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayOutputCost, v))
+}
+
+// DisplayOutputCostNEQ applies the NEQ predicate on the "display_output_cost" field.
+func DisplayOutputCostNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldDisplayOutputCost, v))
+}
+
+// DisplayOutputCostIn applies the In predicate on the "display_output_cost" field.
+func DisplayOutputCostIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldDisplayOutputCost, vs...))
+}
+
+// DisplayOutputCostNotIn applies the NotIn predicate on the "display_output_cost" field.
+func DisplayOutputCostNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldDisplayOutputCost, vs...))
+}
+
+// DisplayOutputCostGT applies the GT predicate on the "display_output_cost" field.
+func DisplayOutputCostGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldDisplayOutputCost, v))
+}
+
+// DisplayOutputCostGTE applies the GTE predicate on the "display_output_cost" field.
+func DisplayOutputCostGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldDisplayOutputCost, v))
+}
+
+// DisplayOutputCostLT applies the LT predicate on the "display_output_cost" field.
+func DisplayOutputCostLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldDisplayOutputCost, v))
+}
+
+// DisplayOutputCostLTE applies the LTE predicate on the "display_output_cost" field.
+func DisplayOutputCostLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldDisplayOutputCost, v))
+}
+
+// DisplayCacheReadCostEQ applies the EQ predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheReadCostNEQ applies the NEQ predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheReadCostIn applies the In predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldDisplayCacheReadCost, vs...))
+}
+
+// DisplayCacheReadCostNotIn applies the NotIn predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldDisplayCacheReadCost, vs...))
+}
+
+// DisplayCacheReadCostGT applies the GT predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheReadCostGTE applies the GTE predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheReadCostLT applies the LT predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheReadCostLTE applies the LTE predicate on the "display_cache_read_cost" field.
+func DisplayCacheReadCostLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldDisplayCacheReadCost, v))
+}
+
+// DisplayCacheWriteCostEQ applies the EQ predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayCacheWriteCostNEQ applies the NEQ predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayCacheWriteCostIn applies the In predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldDisplayCacheWriteCost, vs...))
+}
+
+// DisplayCacheWriteCostNotIn applies the NotIn predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldDisplayCacheWriteCost, vs...))
+}
+
+// DisplayCacheWriteCostGT applies the GT predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayCacheWriteCostGTE applies the GTE predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayCacheWriteCostLT applies the LT predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayCacheWriteCostLTE applies the LTE predicate on the "display_cache_write_cost" field.
+func DisplayCacheWriteCostLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldDisplayCacheWriteCost, v))
+}
+
+// DisplayTotalCostEQ applies the EQ predicate on the "display_total_cost" field.
+func DisplayTotalCostEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayTotalCost, v))
+}
+
+// DisplayTotalCostNEQ applies the NEQ predicate on the "display_total_cost" field.
+func DisplayTotalCostNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldDisplayTotalCost, v))
+}
+
+// DisplayTotalCostIn applies the In predicate on the "display_total_cost" field.
+func DisplayTotalCostIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldDisplayTotalCost, vs...))
+}
+
+// DisplayTotalCostNotIn applies the NotIn predicate on the "display_total_cost" field.
+func DisplayTotalCostNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldDisplayTotalCost, vs...))
+}
+
+// DisplayTotalCostGT applies the GT predicate on the "display_total_cost" field.
+func DisplayTotalCostGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldDisplayTotalCost, v))
+}
+
+// DisplayTotalCostGTE applies the GTE predicate on the "display_total_cost" field.
+func DisplayTotalCostGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldDisplayTotalCost, v))
+}
+
+// DisplayTotalCostLT applies the LT predicate on the "display_total_cost" field.
+func DisplayTotalCostLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldDisplayTotalCost, v))
+}
+
+// DisplayTotalCostLTE applies the LTE predicate on the "display_total_cost" field.
+func DisplayTotalCostLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldDisplayTotalCost, v))
+}
+
+// DisplayBlendCostEQ applies the EQ predicate on the "display_blend_cost" field.
+func DisplayBlendCostEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldDisplayBlendCost, v))
+}
+
+// DisplayBlendCostNEQ applies the NEQ predicate on the "display_blend_cost" field.
+func DisplayBlendCostNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldDisplayBlendCost, v))
+}
+
+// DisplayBlendCostIn applies the In predicate on the "display_blend_cost" field.
+func DisplayBlendCostIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldDisplayBlendCost, vs...))
+}
+
+// DisplayBlendCostNotIn applies the NotIn predicate on the "display_blend_cost" field.
+func DisplayBlendCostNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldDisplayBlendCost, vs...))
+}
+
+// DisplayBlendCostGT applies the GT predicate on the "display_blend_cost" field.
+func DisplayBlendCostGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldDisplayBlendCost, v))
+}
+
+// DisplayBlendCostGTE applies the GTE predicate on the "display_blend_cost" field.
+func DisplayBlendCostGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldDisplayBlendCost, v))
+}
+
+// DisplayBlendCostLT applies the LT predicate on the "display_blend_cost" field.
+func DisplayBlendCostLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldDisplayBlendCost, v))
+}
+
+// DisplayBlendCostLTE applies the LTE predicate on the "display_blend_cost" field.
+func DisplayBlendCostLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldDisplayBlendCost, v))
+}
+
+// CostInputEQ applies the EQ predicate on the "cost_input" field.
+func CostInputEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostInput, v))
+}
+
+// CostInputNEQ applies the NEQ predicate on the "cost_input" field.
+func CostInputNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldCostInput, v))
+}
+
+// CostInputIn applies the In predicate on the "cost_input" field.
+func CostInputIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldCostInput, vs...))
+}
+
+// CostInputNotIn applies the NotIn predicate on the "cost_input" field.
+func CostInputNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldCostInput, vs...))
+}
+
+// CostInputGT applies the GT predicate on the "cost_input" field.
+func CostInputGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldCostInput, v))
+}
+
+// CostInputGTE applies the GTE predicate on the "cost_input" field.
+func CostInputGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldCostInput, v))
+}
+
+// CostInputLT applies the LT predicate on the "cost_input" field.
+func CostInputLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldCostInput, v))
+}
+
+// CostInputLTE applies the LTE predicate on the "cost_input" field.
+func CostInputLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldCostInput, v))
+}
+
+// CostOutputEQ applies the EQ predicate on the "cost_output" field.
+func CostOutputEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostOutput, v))
+}
+
+// CostOutputNEQ applies the NEQ predicate on the "cost_output" field.
+func CostOutputNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldCostOutput, v))
+}
+
+// CostOutputIn applies the In predicate on the "cost_output" field.
+func CostOutputIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldCostOutput, vs...))
+}
+
+// CostOutputNotIn applies the NotIn predicate on the "cost_output" field.
+func CostOutputNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldCostOutput, vs...))
+}
+
+// CostOutputGT applies the GT predicate on the "cost_output" field.
+func CostOutputGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldCostOutput, v))
+}
+
+// CostOutputGTE applies the GTE predicate on the "cost_output" field.
+func CostOutputGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldCostOutput, v))
+}
+
+// CostOutputLT applies the LT predicate on the "cost_output" field.
+func CostOutputLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldCostOutput, v))
+}
+
+// CostOutputLTE applies the LTE predicate on the "cost_output" field.
+func CostOutputLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldCostOutput, v))
+}
+
+// CostCacheReadEQ applies the EQ predicate on the "cost_cache_read" field.
+func CostCacheReadEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostCacheRead, v))
+}
+
+// CostCacheReadNEQ applies the NEQ predicate on the "cost_cache_read" field.
+func CostCacheReadNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldCostCacheRead, v))
+}
+
+// CostCacheReadIn applies the In predicate on the "cost_cache_read" field.
+func CostCacheReadIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldCostCacheRead, vs...))
+}
+
+// CostCacheReadNotIn applies the NotIn predicate on the "cost_cache_read" field.
+func CostCacheReadNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldCostCacheRead, vs...))
+}
+
+// CostCacheReadGT applies the GT predicate on the "cost_cache_read" field.
+func CostCacheReadGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldCostCacheRead, v))
+}
+
+// CostCacheReadGTE applies the GTE predicate on the "cost_cache_read" field.
+func CostCacheReadGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldCostCacheRead, v))
+}
+
+// CostCacheReadLT applies the LT predicate on the "cost_cache_read" field.
+func CostCacheReadLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldCostCacheRead, v))
+}
+
+// CostCacheReadLTE applies the LTE predicate on the "cost_cache_read" field.
+func CostCacheReadLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldCostCacheRead, v))
+}
+
+// CostCacheWriteEQ applies the EQ predicate on the "cost_cache_write" field.
+func CostCacheWriteEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostCacheWrite, v))
+}
+
+// CostCacheWriteNEQ applies the NEQ predicate on the "cost_cache_write" field.
+func CostCacheWriteNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldCostCacheWrite, v))
+}
+
+// CostCacheWriteIn applies the In predicate on the "cost_cache_write" field.
+func CostCacheWriteIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldCostCacheWrite, vs...))
+}
+
+// CostCacheWriteNotIn applies the NotIn predicate on the "cost_cache_write" field.
+func CostCacheWriteNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldCostCacheWrite, vs...))
+}
+
+// CostCacheWriteGT applies the GT predicate on the "cost_cache_write" field.
+func CostCacheWriteGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldCostCacheWrite, v))
+}
+
+// CostCacheWriteGTE applies the GTE predicate on the "cost_cache_write" field.
+func CostCacheWriteGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldCostCacheWrite, v))
+}
+
+// CostCacheWriteLT applies the LT predicate on the "cost_cache_write" field.
+func CostCacheWriteLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldCostCacheWrite, v))
+}
+
+// CostCacheWriteLTE applies the LTE predicate on the "cost_cache_write" field.
+func CostCacheWriteLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldCostCacheWrite, v))
+}
+
+// CostTotalEQ applies the EQ predicate on the "cost_total" field.
+func CostTotalEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostTotal, v))
+}
+
+// CostTotalNEQ applies the NEQ predicate on the "cost_total" field.
+func CostTotalNEQ(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldCostTotal, v))
+}
+
+// CostTotalIn applies the In predicate on the "cost_total" field.
+func CostTotalIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldCostTotal, vs...))
+}
+
+// CostTotalNotIn applies the NotIn predicate on the "cost_total" field.
+func CostTotalNotIn(vs ...float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldCostTotal, vs...))
+}
+
+// CostTotalGT applies the GT predicate on the "cost_total" field.
+func CostTotalGT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldCostTotal, v))
+}
+
+// CostTotalGTE applies the GTE predicate on the "cost_total" field.
+func CostTotalGTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldCostTotal, v))
+}
+
+// CostTotalLT applies the LT predicate on the "cost_total" field.
+func CostTotalLT(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldCostTotal, v))
+}
+
+// CostTotalLTE applies the LTE predicate on the "cost_total" field.
+func CostTotalLTE(v float64) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldCostTotal, v))
+}
+
+// CostSupplierCodeEQ applies the EQ predicate on the "cost_supplier_code" field.
+func CostSupplierCodeEQ(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeNEQ applies the NEQ predicate on the "cost_supplier_code" field.
+func CostSupplierCodeNEQ(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeIn applies the In predicate on the "cost_supplier_code" field.
+func CostSupplierCodeIn(vs ...string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldCostSupplierCode, vs...))
+}
+
+// CostSupplierCodeNotIn applies the NotIn predicate on the "cost_supplier_code" field.
+func CostSupplierCodeNotIn(vs ...string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldCostSupplierCode, vs...))
+}
+
+// CostSupplierCodeGT applies the GT predicate on the "cost_supplier_code" field.
+func CostSupplierCodeGT(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeGTE applies the GTE predicate on the "cost_supplier_code" field.
+func CostSupplierCodeGTE(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeLT applies the LT predicate on the "cost_supplier_code" field.
+func CostSupplierCodeLT(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeLTE applies the LTE predicate on the "cost_supplier_code" field.
+func CostSupplierCodeLTE(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeContains applies the Contains predicate on the "cost_supplier_code" field.
+func CostSupplierCodeContains(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldContains(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeHasPrefix applies the HasPrefix predicate on the "cost_supplier_code" field.
+func CostSupplierCodeHasPrefix(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldHasPrefix(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeHasSuffix applies the HasSuffix predicate on the "cost_supplier_code" field.
+func CostSupplierCodeHasSuffix(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldHasSuffix(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeEqualFold applies the EqualFold predicate on the "cost_supplier_code" field.
+func CostSupplierCodeEqualFold(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEqualFold(FieldCostSupplierCode, v))
+}
+
+// CostSupplierCodeContainsFold applies the ContainsFold predicate on the "cost_supplier_code" field.
+func CostSupplierCodeContainsFold(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldContainsFold(FieldCostSupplierCode, v))
+}
+
+// PricingVersionEQ applies the EQ predicate on the "pricing_version" field.
+func PricingVersionEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldPricingVersion, v))
+}
+
+// PricingVersionNEQ applies the NEQ predicate on the "pricing_version" field.
+func PricingVersionNEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldPricingVersion, v))
+}
+
+// PricingVersionIn applies the In predicate on the "pricing_version" field.
+func PricingVersionIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldPricingVersion, vs...))
+}
+
+// PricingVersionNotIn applies the NotIn predicate on the "pricing_version" field.
+func PricingVersionNotIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldPricingVersion, vs...))
+}
+
+// PricingVersionGT applies the GT predicate on the "pricing_version" field.
+func PricingVersionGT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldPricingVersion, v))
+}
+
+// PricingVersionGTE applies the GTE predicate on the "pricing_version" field.
+func PricingVersionGTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldPricingVersion, v))
+}
+
+// PricingVersionLT applies the LT predicate on the "pricing_version" field.
+func PricingVersionLT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldPricingVersion, v))
+}
+
+// PricingVersionLTE applies the LTE predicate on the "pricing_version" field.
+func PricingVersionLTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldPricingVersion, v))
+}
+
+// ReservationStatusEQ applies the EQ predicate on the "reservation_status" field.
+func ReservationStatusEQ(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldReservationStatus, v))
+}
+
+// ReservationStatusNEQ applies the NEQ predicate on the "reservation_status" field.
+func ReservationStatusNEQ(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldReservationStatus, v))
+}
+
+// ReservationStatusIn applies the In predicate on the "reservation_status" field.
+func ReservationStatusIn(vs ...string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldReservationStatus, vs...))
+}
+
+// ReservationStatusNotIn applies the NotIn predicate on the "reservation_status" field.
+func ReservationStatusNotIn(vs ...string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldReservationStatus, vs...))
+}
+
+// ReservationStatusGT applies the GT predicate on the "reservation_status" field.
+func ReservationStatusGT(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldReservationStatus, v))
+}
+
+// ReservationStatusGTE applies the GTE predicate on the "reservation_status" field.
+func ReservationStatusGTE(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldReservationStatus, v))
+}
+
+// ReservationStatusLT applies the LT predicate on the "reservation_status" field.
+func ReservationStatusLT(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldReservationStatus, v))
+}
+
+// ReservationStatusLTE applies the LTE predicate on the "reservation_status" field.
+func ReservationStatusLTE(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldReservationStatus, v))
+}
+
+// ReservationStatusContains applies the Contains predicate on the "reservation_status" field.
+func ReservationStatusContains(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldContains(FieldReservationStatus, v))
+}
+
+// ReservationStatusHasPrefix applies the HasPrefix predicate on the "reservation_status" field.
+func ReservationStatusHasPrefix(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldHasPrefix(FieldReservationStatus, v))
+}
+
+// ReservationStatusHasSuffix applies the HasSuffix predicate on the "reservation_status" field.
+func ReservationStatusHasSuffix(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldHasSuffix(FieldReservationStatus, v))
+}
+
+// ReservationStatusEqualFold applies the EqualFold predicate on the "reservation_status" field.
+func ReservationStatusEqualFold(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEqualFold(FieldReservationStatus, v))
+}
+
+// ReservationStatusContainsFold applies the ContainsFold predicate on the "reservation_status" field.
+func ReservationStatusContainsFold(v string) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldContainsFold(FieldReservationStatus, v))
 }
 
 // RateMultiplierEQ applies the EQ predicate on the "rate_multiplier" field.
