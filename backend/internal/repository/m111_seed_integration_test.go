@@ -97,7 +97,7 @@ func seedM111Fixture(t *testing.T) m111Seed {
 		}
 		_, err = db.ExecContext(ctx, `INSERT INTO model_balances(user_id,model_id,tokens_purchased,tokens_consumed,balance,usage_percent,status)
 			VALUES ($1,$2,$3::bigint,$4::bigint,$3::bigint-$4::bigint,($4::numeric/$3::numeric)*100,$5)
-			ON CONFLICT(user_id,model_id) DO UPDATE SET tokens_purchased=EXCLUDED.tokens_purchased,tokens_consumed=EXCLUDED.tokens_consumed,balance=EXCLUDED.balance,usage_percent=EXCLUDED.usage_percent,status=EXCLUDED.status`, seed.UserID, model, purchased, consumed, status)
+			ON CONFLICT(user_id,model_id) DO UPDATE SET tokens_purchased=EXCLUDED.tokens_purchased,tokens_consumed=EXCLUDED.tokens_consumed,balance=EXCLUDED.balance,usage_percent=EXCLUDED.usage_percent,status=EXCLUDED.status`, seed.UserID, seed.ModelIDs[model], purchased, consumed, status)
 		require.NoError(t, err)
 	}
 	return seed
