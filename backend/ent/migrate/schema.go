@@ -33,6 +33,8 @@ var (
 		{Name: "window_5h_start", Type: field.TypeTime, Nullable: true},
 		{Name: "window_1d_start", Type: field.TypeTime, Nullable: true},
 		{Name: "window_7d_start", Type: field.TypeTime, Nullable: true},
+		{Name: "model_scope_mode", Type: field.TypeString, Size: 20, Default: "all"},
+		{Name: "enabled_models_count", Type: field.TypeInt, Default: 0},
 		{Name: "group_id", Type: field.TypeInt64, Nullable: true},
 		{Name: "user_id", Type: field.TypeInt64},
 	}
@@ -44,13 +46,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "api_keys_groups_api_keys",
-				Columns:    []*schema.Column{APIKeysColumns[22]},
+				Columns:    []*schema.Column{APIKeysColumns[24]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "api_keys_users_api_keys",
-				Columns:    []*schema.Column{APIKeysColumns[23]},
+				Columns:    []*schema.Column{APIKeysColumns[25]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -59,12 +61,12 @@ var (
 			{
 				Name:    "apikey_user_id",
 				Unique:  false,
-				Columns: []*schema.Column{APIKeysColumns[23]},
+				Columns: []*schema.Column{APIKeysColumns[25]},
 			},
 			{
 				Name:    "apikey_group_id",
 				Unique:  false,
-				Columns: []*schema.Column{APIKeysColumns[22]},
+				Columns: []*schema.Column{APIKeysColumns[24]},
 			},
 			{
 				Name:    "apikey_status",
@@ -349,6 +351,38 @@ var (
 				Name:    "announcementread_announcement_id_user_id",
 				Unique:  true,
 				Columns: []*schema.Column{AnnouncementReadsColumns[3], AnnouncementReadsColumns[4]},
+			},
+		},
+	}
+	// APIKeyModelScopesColumns holds the columns for the "api_key_model_scopes" table.
+	APIKeyModelScopesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"postgres": "timestamptz"}},
+		{Name: "model_id", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "uuid"}},
+		{Name: "rate_limit_per_min", Type: field.TypeInt, Default: 60},
+		{Name: "rate_limit_per_hour", Type: field.TypeInt, Default: 0},
+		{Name: "enabled", Type: field.TypeBool, Default: true},
+		{Name: "api_key_id", Type: field.TypeInt64},
+	}
+	// APIKeyModelScopesTable holds the schema information for the "api_key_model_scopes" table.
+	APIKeyModelScopesTable = &schema.Table{
+		Name:       "api_key_model_scopes",
+		Columns:    APIKeyModelScopesColumns,
+		PrimaryKey: []*schema.Column{APIKeyModelScopesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "api_key_model_scopes_api_keys_model_scopes",
+				Columns:    []*schema.Column{APIKeyModelScopesColumns[7]},
+				RefColumns: []*schema.Column{APIKeysColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "apikeymodelscope_api_key_id_model_id",
+				Unique:  true,
+				Columns: []*schema.Column{APIKeyModelScopesColumns[7], APIKeyModelScopesColumns[3]},
 			},
 		},
 	}
@@ -2281,6 +2315,7 @@ var (
 		AccountGroupsTable,
 		AnnouncementsTable,
 		AnnouncementReadsTable,
+		APIKeyModelScopesTable,
 		AuthIdentitiesTable,
 		AuthIdentityChannelsTable,
 		BatchImageEventsTable,
@@ -2346,6 +2381,10 @@ func init() {
 	AnnouncementReadsTable.ForeignKeys[1].RefTable = UsersTable
 	AnnouncementReadsTable.Annotation = &entsql.Annotation{
 		Table: "announcement_reads",
+	}
+	APIKeyModelScopesTable.ForeignKeys[0].RefTable = APIKeysTable
+	APIKeyModelScopesTable.Annotation = &entsql.Annotation{
+		Table: "api_key_model_scopes",
 	}
 	AuthIdentitiesTable.ForeignKeys[0].RefTable = UsersTable
 	AuthIdentitiesTable.Annotation = &entsql.Annotation{

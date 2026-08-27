@@ -21,6 +21,9 @@ type Announcement func(*sql.Selector)
 // AnnouncementRead is the predicate function for announcementread builders.
 type AnnouncementRead func(*sql.Selector)
 
+// ApiKeyModelScope is the predicate function for apikeymodelscope builders.
+type ApiKeyModelScope func(*sql.Selector)
+
 // AuthIdentity is the predicate function for authidentity builders.
 type AuthIdentity func(*sql.Selector)
 
