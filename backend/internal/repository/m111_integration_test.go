@@ -78,10 +78,10 @@ func debitM111(userID int64, modelID string, amount int64) error {
 func TestM111DuplicateReservationIsReplaySafe(t *testing.T) {
 	seed := seedM111Fixture(t)
 	requestID := m111RequestID(t, "duplicate")
-	args := []any{requestID, seed.UserID, seed.APIKeyID, "", m111Models[0], "fingerprint", 1.0, "finalized"}
-	_, err := integrationDB.Exec(`INSERT INTO usage_reservations(request_id,user_id,api_key_id,model, fingerprint,reserved_cost,status) VALUES ($1,$2,$3,$5,$6,$7,$8) ON CONFLICT(request_id) DO NOTHING`, args...)
+	args := []any{requestID, seed.UserID, seed.APIKeyID, m111Models[0], "fingerprint", 1.0, "finalized"}
+	_, err := integrationDB.Exec(`INSERT INTO usage_reservations(request_id,user_id,api_key_id,model,fingerprint,reserved_cost,status) VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(request_id) DO NOTHING`, args...)
 	require.NoError(t, err)
-	_, err = integrationDB.Exec(`INSERT INTO usage_reservations(request_id,user_id,api_key_id,model,fingerprint,reserved_cost,status) VALUES ($1,$2,$3,$5,$6,$7,$8) ON CONFLICT(request_id) DO NOTHING`, args...)
+	_, err = integrationDB.Exec(`INSERT INTO usage_reservations(request_id,user_id,api_key_id,model,fingerprint,reserved_cost,status) VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(request_id) DO NOTHING`, args...)
 	require.NoError(t, err)
 	var count int
 	err = integrationDB.QueryRow(`SELECT count(*) FROM usage_reservations WHERE request_id=$1`, requestID).Scan(&count)
