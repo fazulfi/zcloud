@@ -327,7 +327,31 @@ export async function getBatchApiKeysUsage(
   return data
 }
 
+export interface ModelMargin {
+  model: string
+  display_total: number
+  cost_total: number
+  margin: number
+  margin_percent: number
+  supplier_breakdown: Array<{ supplier_code: string; display_total: number; cost_total: number; margin: number }>
+  pricing_versions: number[]
+}
+
+export async function getModelMargins(params?: { start_date?: string; end_date?: string }) {
+  const { data } = await apiClient.get<{ models: ModelMargin[] }>('/admin/dashboard/model-margins', { params })
+  return data
+}
+
+export interface ModelBalance { user_id: number; model_id: string; canonical_name: string; tokens_purchased: number; tokens_consumed: number; balance: number; usage_percent: number; status: string }
+
+export async function getUserModelBalances(user_id: number) {
+  const { data } = await apiClient.get<{ balances: ModelBalance[] }>('/admin/dashboard/user-model-balances', { params: { user_id } })
+  return data
+}
+
 export const dashboardAPI = {
+	getModelMargins,
+	getUserModelBalances,
   getStats,
   getRealtimeMetrics,
   getUsageTrend,

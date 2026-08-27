@@ -293,7 +293,12 @@ func registerDashboardRoutes(admin *gin.RouterGroup, h *handler.Handlers) {
 		dashboard.POST("/users-usage", h.Admin.Dashboard.GetBatchUsersUsage)
 		dashboard.POST("/api-keys-usage", h.Admin.Dashboard.GetBatchAPIKeysUsage)
 		dashboard.GET("/user-breakdown", h.Admin.Dashboard.GetUserBreakdown)
+		dashboard.GET("/model-margins", h.Admin.Operational.GetModelMargins)
+		dashboard.GET("/user-model-balances", h.Admin.Operational.GetUserModelBalances)
+		dashboard.GET("/reconciliation-drift", h.Admin.Operational.GetReconciliationDrift)
 		dashboard.POST("/aggregation/backfill", h.Admin.Dashboard.BackfillAggregation)
+		suppliers := admin.Group("/suppliers")
+		suppliers.GET("/pricing", h.Admin.Operational.GetSupplierPricing)
 	}
 }
 

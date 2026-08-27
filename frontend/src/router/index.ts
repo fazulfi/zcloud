@@ -414,6 +414,12 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/admin/model-margins',
+    name: 'AdminModelMargins',
+    component: () => import('@/views/admin/ModelMarginsView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true, title: 'Model Margins' }
+  },
+  {
     path: '/admin/ops',
     name: 'AdminOps',
     component: () => import('@/views/admin/ops/OpsDashboard.vue'),
