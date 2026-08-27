@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	dbent "github.com/Wei-Shaw/sub2api/ent"
 	"github.com/Wei-Shaw/sub2api/ent/apikey"
@@ -107,5 +106,3 @@ func writeExport(c *gin.Context, name string, rows []map[string]any, columns []s
 	}
 	w.Flush()
 }
-
-func exportTime(v string) time.Time { t, _ := time.Parse(time.RFC3339, v); return t }
