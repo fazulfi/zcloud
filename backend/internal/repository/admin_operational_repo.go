@@ -30,7 +30,7 @@ func (r *adminOperationalRepository) GetModelMargins(ctx context.Context, start,
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	byModel := make(map[string]*service.AdminModelMargin)
 	order := make([]string, 0)
 	for rows.Next() {
