@@ -39,6 +39,9 @@ func RegisterUserRoutes(
 			user.POST("/auth-identities/bind/start", h.User.StartIdentityBinding)
 			user.GET("/api-keys/:id/usage/daily", panelRateLimiter.Heavy(), h.Usage.GetMyAPIKeyDailyUsage)
 			user.GET("/platform-quotas", h.User.GetMyPlatformQuotas)
+			user.GET("/model-balances", h.Usage.ModelBalances)
+			user.GET("/invoices/export", h.AccountData.ExportInvoices)
+			user.POST("/account/delete", h.AccountData.DeleteAccount)
 
 			// 通知邮箱管理
 			notifyEmail := user.Group("/notify-email")
@@ -104,6 +107,7 @@ func RegisterUserRoutes(
 			usage.GET("/errors/:id", h.Usage.GetErrorDetail)
 			usage.GET("/:id", h.Usage.GetByID)
 			usage.GET("/stats", h.Usage.Stats)
+			usage.GET("/export", h.Usage.ExportUsage)
 			// User dashboard endpoints
 			usage.GET("/dashboard/stats", h.Usage.DashboardStats)
 			usage.GET("/dashboard/trend", h.Usage.DashboardTrend)

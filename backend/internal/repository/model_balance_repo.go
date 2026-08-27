@@ -15,7 +15,7 @@ type modelBalanceRepository struct {
 }
 
 // NewModelBalanceRepository creates an Ent-backed model balance repository.
-func NewModelBalanceRepository(client *dbent.Client) service.ModelBalanceRepository {
+func NewModelBalanceRepository(client *dbent.Client) *modelBalanceRepository {
 	return &modelBalanceRepository{client: client}
 }
 
@@ -35,7 +35,33 @@ func (r *modelBalanceRepository) GetByUserAndModel(ctx context.Context, userID i
 		}
 		return nil, err
 	}
-	return &service.ModelBalance{UserID: row.UserID, ModelID: row.ModelID, Balance: row.Balance, Status: row.Status}, nil
+	return &service.ModelBalance{UserID: row.UserID, ModelID: row.ModelID, ModelName: modelName, TokensPurchased: row.TokensPurchased, TokensConsumed: row.TokensConsumed, Balance: row.Balance, UsagePercent: row.UsagePercent, Status: row.Status}, nil
+}
+
+func (r *modelBalanceRepository) ListByUser(ctx context.Context, userID int64) ([]service.ModelBalance, error) {
+	if r == nil || r.client == nil {
+		return nil, errors.New("model balance repository client is nil")
+	}
+	rows, err := r.client.ModelBalance.Query().
+		Where(modelbalance.UserIDEQ(userID)).
+		WithModel().
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	balances := make([]service.ModelBalance, 0, len(rows))
+	for _, row := range rows {
+		modelName := row.ModelID
+		if row.Edges.Model != nil {
+			modelName = row.Edges.Model.CanonicalName
+		}
+		balances = append(balances, service.ModelBalance{
+			UserID: row.UserID, ModelID: row.ModelID, ModelName: modelName,
+			TokensPurchased: row.TokensPurchased, TokensConsumed: row.TokensConsumed,
+			Balance: row.Balance, UsagePercent: row.UsagePercent, Status: row.Status,
+		})
+	}
+	return balances, nil
 }
 
 func (r *modelBalanceRepository) SetBlocked(ctx context.Context, userID int64, modelID string, blocked bool) error {

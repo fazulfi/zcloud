@@ -72,6 +72,11 @@ func NewUsageService(usageRepo UsageLogRepository, userRepo UserRepository, entC
 	}
 }
 
+func (s *UsageService) ListByUserAndTimeRange(ctx context.Context, userID int64, startTime, endTime time.Time) ([]UsageLog, error) {
+	logs, _, err := s.usageRepo.ListByUserAndTimeRange(ctx, userID, startTime, endTime)
+	return logs, err
+}
+
 // Create 创建使用日志
 func (s *UsageService) Create(ctx context.Context, req CreateUsageLogRequest) (*UsageLog, error) {
 	// 使用数据库事务保证「使用日志插入」与「扣费」的原子性，避免重复扣费或漏扣风险。
