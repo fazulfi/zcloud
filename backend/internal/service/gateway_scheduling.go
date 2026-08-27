@@ -1873,6 +1873,9 @@ func (s *GatewayService) selectAccountForModelWithPlatform(ctx context.Context, 
 		ctx = s.withWindowCostPrefetch(ctx, accounts)
 		ctx = s.withRPMPrefetch(ctx, accounts)
 
+		// 预取供应商定价（单模型一次查询，缓存+singleflight）
+		supplierPricing, _ := s.resolveSupplierPricingForModel(ctx, requestedModel)
+
 		routingSet := make(map[int64]struct{}, len(routingAccountIDs))
 		for _, id := range routingAccountIDs {
 			if id > 0 {
@@ -1922,23 +1925,8 @@ func (s *GatewayService) selectAccountForModelWithPlatform(ctx context.Context, 
 				selected = acc
 				continue
 			}
-			if acc.Priority < selected.Priority {
+			if s.isPreferredAccount(acc, selected, s.rankBySupplierCost(supplierPricing, acc), s.rankBySupplierCost(supplierPricing, selected), preferOAuth) {
 				selected = acc
-			} else if acc.Priority == selected.Priority {
-				switch {
-				case acc.LastUsedAt == nil && selected.LastUsedAt != nil:
-					selected = acc
-				case acc.LastUsedAt != nil && selected.LastUsedAt == nil:
-					// keep selected (never used is preferred)
-				case acc.LastUsedAt == nil && selected.LastUsedAt == nil:
-					if preferOAuth && acc.Type != selected.Type && acc.Type == AccountTypeOAuth {
-						selected = acc
-					}
-				default:
-					if acc.LastUsedAt.Before(*selected.LastUsedAt) {
-						selected = acc
-					}
-				}
 			}
 		}
 
@@ -1993,6 +1981,9 @@ func (s *GatewayService) selectAccountForModelWithPlatform(ctx context.Context, 
 	ctx = s.withWindowCostPrefetch(ctx, accounts)
 	ctx = s.withRPMPrefetch(ctx, accounts)
 
+	// 预取供应商定价（单模型一次查询，缓存+singleflight）
+	supplierPricing, _ := s.resolveSupplierPricingForModel(ctx, requestedModel)
+
 	// 3. 按优先级+最久未用选择（考虑模型支持）
 	// needsUpstreamCheck 仅在主选择循环中使用；粘性会话命中时跳过此检查，
 	// 因为粘性会话优先保持连接一致性，且 upstream 计费基准极少使用。
@@ -2039,23 +2030,8 @@ func (s *GatewayService) selectAccountForModelWithPlatform(ctx context.Context, 
 			selected = acc
 			continue
 		}
-		if acc.Priority < selected.Priority {
+		if s.isPreferredAccount(acc, selected, s.rankBySupplierCost(supplierPricing, acc), s.rankBySupplierCost(supplierPricing, selected), preferOAuth) {
 			selected = acc
-		} else if acc.Priority == selected.Priority {
-			switch {
-			case acc.LastUsedAt == nil && selected.LastUsedAt != nil:
-				selected = acc
-			case acc.LastUsedAt != nil && selected.LastUsedAt == nil:
-				// keep selected (never used is preferred)
-			case acc.LastUsedAt == nil && selected.LastUsedAt == nil:
-				if preferOAuth && acc.Type != selected.Type && acc.Type == AccountTypeOAuth {
-					selected = acc
-				}
-			default:
-				if acc.LastUsedAt.Before(*selected.LastUsedAt) {
-					selected = acc
-				}
-			}
 		}
 	}
 
@@ -2135,6 +2111,9 @@ func (s *GatewayService) selectAccountWithMixedScheduling(ctx context.Context, g
 		ctx = s.withWindowCostPrefetch(ctx, accounts)
 		ctx = s.withRPMPrefetch(ctx, accounts)
 
+		// 预取供应商定价（单模型一次查询，缓存+singleflight）
+		supplierPricing, _ := s.resolveSupplierPricingForModel(ctx, requestedModel)
+
 		routingSet := make(map[int64]struct{}, len(routingAccountIDs))
 		for _, id := range routingAccountIDs {
 			if id > 0 {
@@ -2188,23 +2167,8 @@ func (s *GatewayService) selectAccountWithMixedScheduling(ctx context.Context, g
 				selected = acc
 				continue
 			}
-			if acc.Priority < selected.Priority {
+			if s.isPreferredAccount(acc, selected, s.rankBySupplierCost(supplierPricing, acc), s.rankBySupplierCost(supplierPricing, selected), preferOAuth) {
 				selected = acc
-			} else if acc.Priority == selected.Priority {
-				switch {
-				case acc.LastUsedAt == nil && selected.LastUsedAt != nil:
-					selected = acc
-				case acc.LastUsedAt != nil && selected.LastUsedAt == nil:
-					// keep selected (never used is preferred)
-				case acc.LastUsedAt == nil && selected.LastUsedAt == nil:
-					if preferOAuth && acc.Platform == PlatformGemini && selected.Platform == PlatformGemini && acc.Type != selected.Type && acc.Type == AccountTypeOAuth {
-						selected = acc
-					}
-				default:
-					if acc.LastUsedAt.Before(*selected.LastUsedAt) {
-						selected = acc
-					}
-				}
 			}
 		}
 
@@ -2257,6 +2221,9 @@ func (s *GatewayService) selectAccountWithMixedScheduling(ctx context.Context, g
 	ctx = s.withWindowCostPrefetch(ctx, accounts)
 	ctx = s.withRPMPrefetch(ctx, accounts)
 
+	// 预取供应商定价（单模型一次查询，缓存+singleflight）
+	supplierPricing, _ := s.resolveSupplierPricingForModel(ctx, requestedModel)
+
 	// 3. 按优先级+最久未用选择（考虑模型支持和混合调度）
 	// needsUpstreamCheck 仅在主选择循环中使用；粘性会话命中时跳过此检查。
 	needsUpstreamCheck := s.needsUpstreamChannelRestrictionCheck(ctx, groupID)
@@ -2306,23 +2273,8 @@ func (s *GatewayService) selectAccountWithMixedScheduling(ctx context.Context, g
 			selected = acc
 			continue
 		}
-		if acc.Priority < selected.Priority {
+		if s.isPreferredAccount(acc, selected, s.rankBySupplierCost(supplierPricing, acc), s.rankBySupplierCost(supplierPricing, selected), preferOAuth) {
 			selected = acc
-		} else if acc.Priority == selected.Priority {
-			switch {
-			case acc.LastUsedAt == nil && selected.LastUsedAt != nil:
-				selected = acc
-			case acc.LastUsedAt != nil && selected.LastUsedAt == nil:
-				// keep selected (never used is preferred)
-			case acc.LastUsedAt == nil && selected.LastUsedAt == nil:
-				if preferOAuth && acc.Platform == PlatformGemini && selected.Platform == PlatformGemini && acc.Type != selected.Type && acc.Type == AccountTypeOAuth {
-					selected = acc
-				}
-			default:
-				if acc.LastUsedAt.Before(*selected.LastUsedAt) {
-					selected = acc
-				}
-			}
 		}
 	}
 

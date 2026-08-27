@@ -784,6 +784,7 @@ type GatewayService struct {
 	channelService        *ChannelService
 	resolver              *ModelPricingResolver
 	compositeResolver     *CompositeRouteResolver
+	supplierPricingResolver *SupplierPricingResolver
 	debugGatewayBodyFile  atomic.Pointer[os.File] // non-nil when SUB2API_DEBUG_GATEWAY_BODY is set
 	tlsFPProfileService   *TLSFingerprintProfileService
 	balanceNotifyService  *BalanceNotifyService
@@ -820,6 +821,7 @@ func NewGatewayService(
 	compositeResolver *CompositeRouteResolver,
 	balanceNotifyService *BalanceNotifyService,
 	userPlatformQuotaRepo UserPlatformQuotaRepository,
+	supplierPricingResolver *SupplierPricingResolver,
 ) *GatewayService {
 	userGroupRateTTL := resolveUserGroupRateCacheTTL(cfg)
 	modelsListTTL := resolveModelsListCacheTTL(cfg)
@@ -855,6 +857,7 @@ func NewGatewayService(
 		channelService:        channelService,
 		resolver:              resolver,
 		compositeResolver:     compositeResolver,
+		supplierPricingResolver: supplierPricingResolver,
 		balanceNotifyService:  balanceNotifyService,
 		userPlatformQuotaRepo: userPlatformQuotaRepo,
 	}
