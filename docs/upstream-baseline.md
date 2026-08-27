@@ -28,6 +28,10 @@ F0.1 (pin + audit). Any rebase/upgrade must start from this baseline.
   run `go generate ./ent`.
 - **Fork boundary:** zcloud-specific code lives under `backend/zcloud/`.
   Minimal, documented edits to upstream files only where integration demands.
+- **F0.7 deployment deviation:** the Vue/Vite frontend is built to `frontend/dist/`
+  and deployed as a static Vercel project. The backend VPS image no longer builds
+  or embeds frontend assets; API traffic is served from the backend origin with
+  explicit frontend CORS origins.
 
 ## Verified local toolchain (at baseline)
 
