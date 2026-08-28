@@ -1,8 +1,8 @@
 <template>
   <!-- Row 1: Core Stats -->
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-    <!-- Balance -->
-    <div v-if="!isSimple" class="card p-4">
+    <!-- Active models -->
+    <div class="card p-4">
       <div class="flex items-center gap-3">
         <div class="rounded-lg bg-emerald-100 p-2 dark:bg-emerald-900/30">
           <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -10,9 +10,9 @@
           </svg>
         </div>
         <div>
-          <p class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('dashboard.balance') }}</p>
-          <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400">${{ formatBalance(balance) }}</p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('common.available') }}</p>
+          <p class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('dashboard.activeModels') }}</p>
+          <p class="text-xl font-bold text-gray-900 dark:text-white">{{ activeModelCount }}</p>
+          <p class="text-xs text-green-600 dark:text-green-400">{{ t('common.active') }}</p>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@
   </div>
 
   <!-- Row 3: Per-platform breakdown -->
-  <div v-if="!isSimple && platformCards.length > 0" class="card p-4">
+  <div v-if="!isSimple && showPlatformBreakdown && platformCards.length > 0" class="card p-4">
     <div class="mb-3 flex items-center justify-between">
       <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('dashboard.platformBreakdown') }}</h3>
       <span class="text-xs text-gray-500 dark:text-gray-400">
@@ -226,8 +226,10 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
+import { useAppStore } from '@/stores/app'
 import type { UserDashboardStats as UserStatsType } from '@/api/usage'
 import type { PlatformQuotaItem } from '@/types'
+import type { ModelBalance } from '@/api/usage'
 
 interface FusedPlatformCard {
   platform: string
@@ -244,8 +246,12 @@ const props = defineProps<{
   balance: number
   isSimple: boolean
   platformQuotas?: PlatformQuotaItem[] | null
+  modelBalances?: ModelBalance[]
 }>()
 const { t } = useI18n()
+const appStore = useAppStore()
+const activeModelCount = computed(() => (props.modelBalances ?? []).filter((model) => model.status === 'active').length)
+const showPlatformBreakdown = computed(() => appStore.cachedPublicSettings?.show_platform_breakdown === true)
 
 const PLATFORM_LABELS: Record<string, string> = {
   anthropic: 'Claude',
@@ -373,12 +379,6 @@ function formatResetTime(iso: string | null | undefined): string {
     hour12: false,
   })
 }
-
-const formatBalance = (b: number) =>
-  new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(b)
 
 const formatNumber = (n: number) => n.toLocaleString()
 const formatCost = (c: number) => c.toFixed(4)

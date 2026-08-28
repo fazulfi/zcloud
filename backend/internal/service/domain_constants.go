@@ -508,6 +508,11 @@ const (
 	// and the header entry is hidden. Defaults to false (opt-in feature).
 	SettingKeyModelPlazaEnabled = "model_plaza_enabled"
 
+	// SettingKeyRedeemEnabled is a DB-backed soft switch for the Redeem Code feature.
+	// When false: the /redeem route is hidden from the sidebar, redirects to the
+	// dashboard, and the redeem endpoints reject requests. Defaults to false (opt-in).
+	SettingKeyRedeemEnabled = "redeem_enabled"
+
 	// SettingKeyModelPlazaRequireAuth controls whether the Model Plaza page requires a
 	// logged-in user. When false the page is public and anonymous visitors see only
 	// non-exclusive groups.

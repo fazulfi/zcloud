@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div v-if="appStore.cachedPublicSettings?.payment_enabled === true" class="card">
     <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
       <h2 class="text-lg font-medium text-gray-900 dark:text-white">
         {{ t('profile.balanceNotify.title') }}

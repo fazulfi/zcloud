@@ -282,6 +282,29 @@ export function formatTokensK(tokens: number): string {
 }
 
 /**
+ * 格式化 token 余额（K/M/B，最多保留 2 位小数并向下取整）
+ * @param n token 数量
+ * @returns 紧凑格式的 token 数量，如 "1.53M"
+ */
+export function formatTokenBalance(n: number): string {
+  if (!Number.isFinite(n)) return '0'
+
+  const sign = n < 0 ? '-' : ''
+  const abs = Math.abs(n)
+  const units = [
+    { value: 1_000_000_000, suffix: 'B' },
+    { value: 1_000_000, suffix: 'M' },
+    { value: 1_000, suffix: 'K' }
+  ]
+  const unit = units.find(({ value }) => abs >= value)
+
+  if (!unit) return `${sign}${Math.floor(abs)}`
+
+  const compact = Math.floor((abs / unit.value) * 100) / 100
+  return `${sign}${compact.toFixed(2).replace(/\.?0+$/, '')}${unit.suffix}`
+}
+
+/**
  * 格式化大数字（K/M/B，保留 1 位小数）
  * @param num 数字
  * @param options allowBillions=false 时最高只显示到 M

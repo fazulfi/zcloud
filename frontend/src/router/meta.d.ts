@@ -56,6 +56,12 @@ declare module 'vue-router' {
     requiresRiskControl?: boolean
 
     /**
+     * Whether this route requires the redeem feature flag to be enabled
+     * @default false
+     */
+    requiresRedeem?: boolean
+
+    /**
      * i18n key for the page title
      */
     titleKey?: string
