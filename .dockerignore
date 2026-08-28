@@ -48,6 +48,12 @@ coverage/
 .env
 .env.*
 !.env.example
+# Frontend Vite mode env files must reach the Docker build context: the
+# frontend-builder stage (deploy/Dockerfile) builds the SPA with the mode's
+# VITE_API_BASE_URL (staging vs production), so excluding them would silently
+# fall back to production defaults for staging images.
+!frontend/.env.production
+!frontend/.env.staging
 
 # 本地闭源插件目录可能包含发布签名私钥，绝不能进入 Docker 构建上下文。
 /plugins/

@@ -6,12 +6,14 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release (e.g., v0.1.183-zcloud.1)'
+        description: 'Immutable version tag to release (e.g., v0.1.183-zcloud.1)'
         required: true
         type: string
 
 env:
   SIMPLE_RELEASE: 'true'
+  IMAGE: ghcr.io/${{ github.repository }}
+  VERSION: ${{ inputs.tag }}
 
 permissions:
   contents: write
@@ -25,7 +27,6 @@ jobs:
         uses: actions/checkout@v6
       - name: Update VERSION file
         run: |
-          VERSION=${{ github.event.inputs.tag }}
           VERSION=${VERSION#v}
           echo "$VERSION" > backend/cmd/server/VERSION
           echo "Updated VERSION file to: $VERSION"
@@ -67,6 +68,10 @@ jobs:
   build-image:
     needs: [update-version, build-frontend]
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.image.outputs.digest }}
+      image: ${{ steps.image.outputs.image }}
+      version: ${{ steps.image.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -92,19 +97,76 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push image
+      - name: Build and push immutable image
+        id: image
         run: |
-          VERSION=${TAG_NAME#v}
-          IMAGE="ghcr.io/${REPO,,}:${VERSION}"
-          docker build \
-            --build-arg VERSION="${VERSION}" \
-            --build-arg COMMIT="${GITHUB_SHA}" \
-            -f deploy/Dockerfile \
-            -t "${IMAGE}" \
-            -t "ghcr.io/${REPO,,}:latest" \
-            .
-          docker push "${IMAGE}"
-          docker push "ghcr.io/${REPO,,}:latest"
+          version=${VERSION#v}
+          image="${IMAGE,,}:$version"
+          docker build --build-arg VERSION="$version" --build-arg COMMIT="$GITHUB_SHA" --build-arg FRONTEND_MODE=production -f deploy/Dockerfile -t "$image" .
+          docker push "$image"
+          digest=$(docker inspect --format='{{index .RepoDigests 0}}' "$image" | awk -F@ '{print $2}')
+          test -n "$digest"
+          {
+            echo "image=$image"
+            echo "digest=$digest"
+            echo "version=$version"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "### Release evidence"
+            echo "- Commit SHA: \\`$GITHUB_SHA\\`"
+            echo "- Version: \\`$version\\`"
+            echo "- Image: \\`$image@$digest\\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload release evidence
+        run: |
+          mkdir -p release-evidence
+          printf 'commit_sha=%s\nversion=%s\nimage=%s\ndigest=%s\n' "$GITHUB_SHA" "${{ steps.image.outputs.version }}" "${{ steps.image.outputs.image }}" "${{ steps.image.outputs.digest }}" > release-evidence/release.txt
+      - name: Publish release evidence artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-evidence
+          path: release-evidence/release.txt
+          retention-days: 90
+
+  staging-smoke:
+    needs: build-image
+    runs-on: ubuntu-latest
+    environment: staging
+    env:
+      STAGING_HOST: ${{ secrets.STAGING_HOST }}
+      STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Validate immutable image healthcheck
         env:
-          TAG_NAME: ${{ github.event.inputs.tag }}
-          REPO: ${{ github.repository }}
+          IMAGE: ${{ needs.build-image.outputs.image }}
+          DIGEST: ${{ needs.build-image.outputs.digest }}
+        run: |
+          docker pull "$IMAGE@$DIGEST"
+          docker image inspect "$IMAGE@$DIGEST" --format '{{json .Config.Healthcheck}}' | grep -q health
+      - name: Staging deploy and smoke over SSH
+        if: ${{ env.STAGING_HOST != '' }}
+        env:
+          IMAGE: ${{ needs.build-image.outputs.image }}
+          DIGEST: ${{ needs.build-image.outputs.digest }}
+          VERSION: ${{ needs.build-image.outputs.version }}
+        run: |
+          install -m 600 /dev/null staging_key
+          printf '%s\n' "$STAGING_SSH_KEY" > staging_key
+          printf '%s\n' '${{ secrets.GITHUB_TOKEN }}' | ssh -o StrictHostKeyChecking=no -i staging_key "$STAGING_HOST" "docker login ghcr.io -u '${{ github.repository_owner }}' --password-stdin && cd /opt/zcloud/deploy && docker pull '$IMAGE@$DIGEST' && ZCLOUD_VERSION='$VERSION' docker compose -f docker-compose.zcloud.yml --env-file .env.zcloud up -d --no-build zrouter && curl -fsS http://127.0.0.1:18080/health/ready"
+
+  production:
+    needs: staging-smoke
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Production deployment approval gate
+        run: |
+          echo "Approved immutable release ${{ needs.build-image.outputs.version }}"
+          echo "Image digest: ${{ needs.build-image.outputs.digest }}"
+          echo "Deploy the approved digest using the production operator procedure."

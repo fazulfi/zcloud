@@ -1,17 +1,47 @@
 # =============================================================================
 # Sub2API Multi-Stage Dockerfile
 # =============================================================================
-# Stage 1: Build Go backend
-# Stage 2: Final minimal image
+# Stage 1: Build frontend (Vue/Vite)
+# Stage 2: Build Go backend (with embedded frontend, -tags embed)
+# Stage 3: Final minimal image
 # =============================================================================
 
 ARG GOLANG_IMAGE=golang:1.27.0-alpine
 ARG ALPINE_IMAGE=alpine:3.20
+ARG NODE_IMAGE=node:20-alpine
 ARG GOPROXY=https://goproxy.cn,direct
 ARG GOSUMDB=sum.golang.google.cn
 
 # -----------------------------------------------------------------------------
-# Stage 1: Backend Builder
+# Stage 1: Frontend Builder (Vue/Vite). Builds the SPA that gets embedded into
+# the Go binary via -tags embed (see internal/web/embed_on.go).
+# FRONTEND_MODE selects the Vite mode -> frontend/.env.<mode> is loaded by Vite:
+#   - production: VITE_API_BASE_URL=https://api.zrouter.dev/api/v1 (.env.production)
+#   - staging:    VITE_API_BASE_URL=https://zrouter.82.25.62.204.sslip.io/api/v1 (.env.staging)
+# If unset, Vite defaults to production.
+# -----------------------------------------------------------------------------
+FROM ${NODE_IMAGE} AS frontend-builder
+
+ARG FRONTEND_MODE=production
+
+WORKDIR /app/frontend
+
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+COPY frontend/.env* ./
+
+RUN corepack enable && pnpm install --frozen-lockfile
+
+COPY frontend/ ./
+
+# docs/legal/*.md are imported at build time by the admin-compliance gate
+# (LegalDocumentView.vue `?raw` imports resolve to ../../../../docs/legal/),
+# so they must be present at /app/docs/legal in this stage.
+COPY docs/legal/ /app/docs/legal/
+
+RUN pnpm run build --mode ${FRONTEND_MODE}
+
+# -----------------------------------------------------------------------------
+# Stage 2: Backend Builder
 # -----------------------------------------------------------------------------
 FROM ${GOLANG_IMAGE} AS backend-builder
 
@@ -37,13 +67,19 @@ RUN go mod download
 # Copy backend source first
 COPY backend/ ./
 
+# Copy prebuilt frontend for -tags embed (//go:embed all:dist in internal/web)
+# Built in Stage 1 (frontend-builder) with FRONTEND_MODE so the SPA's
+# VITE_API_BASE_URL matches the target environment (staging vs production).
+COPY --from=frontend-builder /app/frontend/dist ./internal/web/dist
+
 # Build the backend binary (BuildType=release for CI builds).
-# The frontend is deployed separately as a static Vercel application.
+# The frontend is embedded into the binary (-tags embed) so app/api/root
+# all serve from 127.0.0.1:18080 (embedded frontend decision, no Vercel).
 # Version precedence: build arg VERSION > exact git tag > cmd/server/VERSION
 RUN VERSION_VALUE="${VERSION}" && \
     if [ -z "${VERSION_VALUE}" ]; then VERSION_VALUE="$(./scripts/resolve-version.sh)"; fi && \
     DATE_VALUE="${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}" && \
-     CGO_ENABLED=0 GOOS=linux go build \
+     CGO_ENABLED=0 GOOS=linux go build -tags embed \
      -ldflags="-s -w -X main.Version=${VERSION_VALUE} -X main.Commit=${COMMIT} -X main.Date=${DATE_VALUE} -X main.BuildType=release" \
     -o /app/sub2api \
     ./cmd/server
