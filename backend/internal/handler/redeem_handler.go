@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/Wei-Shaw/sub2api/internal/handler/dto"
+	infraerrors "github.com/Wei-Shaw/sub2api/internal/pkg/errors"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/response"
 	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
 	"github.com/Wei-Shaw/sub2api/internal/service"
@@ -12,12 +13,14 @@ import (
 // RedeemHandler handles redeem code-related requests
 type RedeemHandler struct {
 	redeemService *service.RedeemService
+	settingSvc    *service.SettingService
 }
 
 // NewRedeemHandler creates a new RedeemHandler
-func NewRedeemHandler(redeemService *service.RedeemService) *RedeemHandler {
+func NewRedeemHandler(redeemService *service.RedeemService, settingSvc *service.SettingService) *RedeemHandler {
 	return &RedeemHandler{
 		redeemService: redeemService,
+		settingSvc:    settingSvc,
 	}
 }
 
@@ -44,6 +47,11 @@ func (h *RedeemHandler) Redeem(c *gin.Context) {
 		return
 	}
 
+	if h.settingSvc != nil && !h.settingSvc.IsRedeemEnabled(c.Request.Context()) {
+		response.ErrorFrom(c, infraerrors.NotFound("REDEEM_DISABLED", "redeem feature is disabled"))
+		return
+	}
+
 	var req RedeemRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.BadRequest(c, "Invalid request: "+err.Error())
@@ -65,6 +73,11 @@ func (h *RedeemHandler) GetHistory(c *gin.Context) {
 	subject, ok := middleware2.GetAuthSubjectFromContext(c)
 	if !ok {
 		response.Unauthorized(c, "User not authenticated")
+		return
+	}
+
+	if h.settingSvc != nil && !h.settingSvc.IsRedeemEnabled(c.Request.Context()) {
+		response.ErrorFrom(c, infraerrors.NotFound("REDEEM_DISABLED", "redeem feature is disabled"))
 		return
 	}
 
