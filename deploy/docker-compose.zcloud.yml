@@ -1,7 +1,7 @@
 # zcloud production docker compose (fork build)
 
 # Staging (MVP): zcloud.82.25.62.204.sslip.io → nginx host :18080/:18443
-# Production:   zcloud.dev / api.zcloud.dev / app.zcloud.dev (TLS via Caddy/nginx)
+# Production:   zrouter.dev / api.zrouter.dev / app.zrouter.dev (TLS via Caddy/nginx)
 
 # Stack: zrouter (stateless, built from fork, NOT weishaw/sub2api:latest)
 #        postgres   — pinned, named volume, private network (VPS host PG reuse for staging)
@@ -32,8 +32,8 @@ services:
         soft: 100000
         hard: 100000
     ports:
-      # Staging: host 18080 → container 8080 (avoids clash with host nginx 80/443)
-      - "${BIND_HOST:-0.0.0.0}:${SERVER_PORT:-18080}:8080"
+      # Container listens on SERVER_PORT (env_file), default 18080 — map 1:1
+      - "${BIND_HOST:-0.0.0.0}:${SERVER_PORT:-18080}:${SERVER_PORT:-18080}"
     env_file:
       - .env.zcloud
     volumes:

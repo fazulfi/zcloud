@@ -10,7 +10,7 @@
 	}
 }
 
-api.zcloud.dev {
+api.zrouter.dev {
 	encode zstd gzip
 	reverse_proxy 127.0.0.1:18080 {
 		health_uri /health
@@ -23,7 +23,7 @@ api.zcloud.dev {
 	}
 }
 
-app.zcloud.dev {
+app.zrouter.dev {
 	encode zstd gzip
 	reverse_proxy 127.0.0.1:18080 {
 		health_uri /health
@@ -36,7 +36,7 @@ app.zcloud.dev {
 	}
 }
 
-zcloud.dev {
+zrouter.dev {
 	encode zstd gzip
 	reverse_proxy 127.0.0.1:18080 {
 		health_uri /health

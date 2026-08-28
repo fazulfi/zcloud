@@ -7,8 +7,8 @@
 
 | Env | URL | Host | Notes |
 |---|---|---|---|
-| staging | zcloud.82.25.62.204.sslip.io | 82.25.62.204 (SG) | Port 18080/18443, VPS host PG+Redis, nginx TLS |
-| production | zcloud.dev / api.zcloud.dev / app.zcloud.dev | 82.25.62.204 (SG) | Caddy/nginx TLS, managed PG/Redis or same VPS |
+| staging | zrouter.82.25.62.204.sslip.io | 82.25.62.204 (SG) | Port 18080/18443, VPS host PG+Redis, nginx TLS |
+| production | zrouter.dev / api.zrouter.dev / app.zrouter.dev | 82.25.62.204 (SG) | Caddy/nginx TLS, managed PG/Redis or same VPS |
 
 ## Staging deploy (rehearsal)
 
@@ -27,10 +27,10 @@ curl -s http://localhost:18080/health
 Host nginx site (staging):
 
 ```nginx
-# /etc/nginx/sites-available/zcloud-staging
+# /etc/nginx/sites-available/zrouter-staging
 server {
     listen 80;
-    server_name zcloud.82.25.62.204.sslip.io;
+    server_name zrouter.82.25.62.204.sslip.io;
     underscores_in_headers on;              # required: sticky-session underscore headers
     client_max_body_size 256m;
     location / {
@@ -58,15 +58,14 @@ docker compose -f docker-compose.zcloud.yml exec zrouter /app/sub2api migrate  #
 
 TLS: Caddyfile.zcloud (Caddy handles ACME) OR host nginx + certbot. SSE: keep `proxy_buffering off`.
 
-## Vercel frontend deployment
+## Embedded frontend
 
-The frontend is a separate static Vite deployment. The backend remains on the VPS, exposed through `api.zrouter.dev` (production) or `zrouter.82.25.62.204.sslip.io` (staging). The backend container is built without the frontend embed tag and serves API traffic only.
+The frontend is built as a static Vite bundle and embedded into the backend binary (`-tags embed`, `//go:embed all:dist` in `backend/internal/web`). One container serves both API and SPA from `127.0.0.1:18080`, so `app.zrouter.dev` and `api.zrouter.dev` both point at the same zrouter service (nginx/Caddy reverse proxy).
 
-1. Create a Vercel project with the repository root set to `frontend/`.
-2. Use framework preset **Vite**, install command `pnpm install --frozen-lockfile`, and build command `pnpm build` (or `pnpm build:prod` if a deployment-specific alias is added later). Output directory is `dist`.
-3. For production, set `VITE_API_BASE_URL=https://api.zrouter.dev/api/v1` and `VITE_WS_BASE_URL=wss://api.zrouter.dev`. For staging, use `https://zrouter.82.25.62.204.sslip.io/api/v1` and `wss://zrouter.82.25.62.204.sslip.io` respectively. These values are also recorded in `frontend/.env.production` and `frontend/.env.staging`.
-4. Deploy the `frontend` directory. `frontend/vercel.json` supplies SPA fallback rewrites for client-side routes.
-5. Configure backend `CORS_ALLOWED_ORIGINS` as `https://app.zrouter.dev,https://zrouter.82.25.62.204.sslip.io` (or the equivalent `cors.allowed_origins` YAML list). This deployment uses direct browser API calls with CORS; API rewrites through Vercel are intentionally not configured.
+1. Build the frontend: `cd frontend && pnpm install --frozen-lockfile && pnpm build` (uses `frontend/.env.production` → `VITE_API_BASE_URL=https://api.zrouter.dev/api/v1`, `VITE_WS_BASE_URL=wss://api.zrouter.dev`).
+2. The Dockerfile copies `frontend/dist` into `backend/internal/web/dist` and builds with `-tags embed` — no separate frontend deploy step.
+3. Configure backend `CORS_ALLOWED_ORIGINS` as `https://app.zrouter.dev,https://api.zrouter.dev,https://zrouter.82.25.62.204.sslip.io` (or the equivalent `cors.allowed_origins` YAML list). This deployment uses direct browser API calls with CORS; API rewrites are intentionally not configured.
+4. SPA fallback: `frontend/vercel.json` is retained for local/legacy static hosting; when embedded, the backend serves SPA routes directly.
 
 OAuth provider settings must use backend callbacks: production Google callback `https://api.zrouter.dev/api/v1/auth/oauth/google/callback` and staging callback `https://zrouter.82.25.62.204.sslip.io/api/v1/auth/oauth/google/callback`. The frontend starts Google OAuth at `/auth/oauth/google/start` under the configured API base (therefore `https://api.zrouter.dev/api/v1/auth/oauth/google/start` in production). The callback UI routes are `/auth/callback` and its alias `/auth/oauth/callback`; keep the backend frontend redirect setting at `/auth/oauth/callback`.
 
