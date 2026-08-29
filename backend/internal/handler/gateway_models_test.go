@@ -10,6 +10,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
 	"github.com/Wei-Shaw/sub2api/internal/service"
+	"github.com/Wei-Shaw/sub2api/zcloud/billing"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 )
@@ -18,6 +19,12 @@ type gatewayModelsAccountRepoStub struct {
 	service.AccountRepository
 
 	byGroup map[int64][]service.Account
+}
+
+type gatewayModelsBalanceRepoStub struct {
+	service.ModelBalanceRepository
+
+	balances []service.ModelBalance
 }
 
 type gatewayModelsResponseForTest struct {
@@ -52,7 +59,15 @@ func (s *gatewayModelsAccountRepoStub) ListSchedulableByGroupID(ctx context.Cont
 	return out, nil
 }
 
+func (s *gatewayModelsBalanceRepoStub) ListByUser(ctx context.Context, userID int64) ([]service.ModelBalance, error) {
+	return s.balances, nil
+}
+
 func newGatewayModelsHandlerForTest(repo service.AccountRepository) *GatewayHandler {
+	return newGatewayModelsHandlerForTestWithBalances(repo, nil)
+}
+
+func newGatewayModelsHandlerForTestWithBalances(repo service.AccountRepository, balanceRepo service.ModelBalanceRepository) *GatewayHandler {
 	return &GatewayHandler{
 		gatewayService: service.NewGatewayService(
 			repo,
@@ -60,7 +75,7 @@ func newGatewayModelsHandlerForTest(repo service.AccountRepository) *GatewayHand
 			nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,
 			nil,
 			nil,
-			nil,
+			balanceRepo,
 		),
 	}
 }
@@ -769,6 +784,181 @@ func TestGatewayModels_OpenAICustomModelsListKeepsOpenAIResponseShapeForDefaultF
 	require.NotZero(t, got.Data[0].Created)
 	require.Equal(t, "openai", got.Data[0].OwnedBy)
 	require.Empty(t, got.Data[0].CreatedAt)
+}
+
+func TestGatewayModels_PurchasedBalancesOverrideDefaultFallback(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	groupID := int64(40)
+	h := newGatewayModelsHandlerForTestWithBalances(
+		&gatewayModelsAccountRepoStub{byGroup: map[int64][]service.Account{groupID: nil}},
+		&gatewayModelsBalanceRepoStub{
+			balances: []service.ModelBalance{
+				{ModelName: "gpt-5.5", Balance: 10_000_000, Status: string(billing.ModelCapActive)},
+				{ModelName: "gpt-5.6-sol", Balance: 10_000_000, Status: string(billing.ModelCapActive)},
+			},
+		},
+	)
+
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	c.Request = httptest.NewRequest(http.MethodGet, "/v1/models", nil)
+	c.Set(string(middleware2.ContextKeyAPIKey), &service.APIKey{
+		UserID: 720,
+		Group:  &service.Group{ID: groupID, Platform: service.PlatformOpenAI},
+	})
+
+	h.Models(c)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	var got gatewayModelsResponseForTest
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
+	require.Equal(t, []string{"gpt-5.5", "gpt-5.6-sol"}, modelIDsForTest(got.Data))
+}
+
+func TestGatewayModels_PurchasedBalancesIntersectWithMappedModels(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	groupID := int64(41)
+	h := newGatewayModelsHandlerForTestWithBalances(
+		&gatewayModelsAccountRepoStub{
+			byGroup: map[int64][]service.Account{
+				groupID: {
+					{
+						ID:       1,
+						Platform: service.PlatformOpenAI,
+						Credentials: map[string]any{
+							"model_mapping": map[string]any{
+								"gpt-5.5":    "gpt-5.5",
+								"gpt-5.4":    "gpt-5.4",
+								"smart_toy":  "smart_toy",
+								"gpt-5.6-sol": "gpt-5.6-sol",
+							},
+						},
+					},
+				},
+			},
+		},
+		&gatewayModelsBalanceRepoStub{
+			balances: []service.ModelBalance{
+				{ModelName: "gpt-5.5", Balance: 10_000_000, Status: string(billing.ModelCapActive)},
+				{ModelName: "gpt-5.6-sol", Balance: 10_000_000, Status: string(billing.ModelCapActive)},
+			},
+		},
+	)
+
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	c.Request = httptest.NewRequest(http.MethodGet, "/v1/models", nil)
+	c.Set(string(middleware2.ContextKeyAPIKey), &service.APIKey{
+		UserID: 720,
+		Group:  &service.Group{ID: groupID, Platform: service.PlatformOpenAI},
+	})
+
+	h.Models(c)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	var got gatewayModelsResponseForTest
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
+	require.Equal(t, []string{"gpt-5.5", "gpt-5.6-sol"}, modelIDsForTest(got.Data))
+}
+
+func TestGatewayModels_BlockedOrExhaustedBalancesExcluded(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	groupID := int64(42)
+	h := newGatewayModelsHandlerForTestWithBalances(
+		&gatewayModelsAccountRepoStub{byGroup: map[int64][]service.Account{groupID: nil}},
+		&gatewayModelsBalanceRepoStub{
+			balances: []service.ModelBalance{
+				{ModelName: "gpt-5.5", Balance: 10_000_000, Status: string(billing.ModelCapActive)},
+				{ModelName: "gpt-5.6-sol", Balance: 10_000_000, Status: string(billing.ModelCapBlocked)},
+				{ModelName: "gpt-5.4", Balance: 0, Status: string(billing.ModelCapActive)},
+			},
+		},
+	)
+
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	c.Request = httptest.NewRequest(http.MethodGet, "/v1/models", nil)
+	c.Set(string(middleware2.ContextKeyAPIKey), &service.APIKey{
+		UserID: 720,
+		Group:  &service.Group{ID: groupID, Platform: service.PlatformOpenAI},
+	})
+
+	h.Models(c)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	var got gatewayModelsResponseForTest
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
+	require.Equal(t, []string{"gpt-5.5"}, modelIDsForTest(got.Data))
+}
+
+func TestGatewayModels_NoBalancesKeepsMappedModels(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	groupID := int64(43)
+	h := newGatewayModelsHandlerForTest(
+		&gatewayModelsAccountRepoStub{
+			byGroup: map[int64][]service.Account{
+				groupID: {
+					{
+						ID:       1,
+						Platform: service.PlatformOpenAI,
+						Credentials: map[string]any{
+							"model_mapping": map[string]any{
+								"gpt-5.5": "gpt-5.5",
+							},
+						},
+					},
+				},
+			},
+		},
+	)
+
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	c.Request = httptest.NewRequest(http.MethodGet, "/v1/models", nil)
+	c.Set(string(middleware2.ContextKeyAPIKey), &service.APIKey{
+		UserID: 1,
+		Group:  &service.Group{ID: groupID, Platform: service.PlatformOpenAI},
+	})
+
+	h.Models(c)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	var got gatewayModelsResponseForTest
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
+	require.Equal(t, []string{"gpt-5.5"}, modelIDsForTest(got.Data))
+}
+
+func TestGatewayModels_PurchasedBalancesApplyToComposite(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	groupID := int64(44)
+	h := newGatewayModelsHandlerForTestWithBalances(
+		&gatewayModelsAccountRepoStub{byGroup: map[int64][]service.Account{groupID: nil}},
+		&gatewayModelsBalanceRepoStub{
+			balances: []service.ModelBalance{
+				{ModelName: "gpt-5.5", Balance: 10_000_000, Status: string(billing.ModelCapActive)},
+			},
+		},
+	)
+
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	c.Request = httptest.NewRequest(http.MethodGet, "/v1/models", nil)
+	c.Set(string(middleware2.ContextKeyAPIKey), &service.APIKey{
+		UserID: 720,
+		Group:  &service.Group{ID: groupID, Platform: service.PlatformComposite},
+	})
+
+	h.Models(c)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	var got gatewayModelsResponseForTest
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
+	require.Equal(t, []string{"gpt-5.5"}, modelIDsForTest(got.Data))
 }
 
 func modelIDsForTest(models []gatewayModelItemForTest) []string {

@@ -6,6 +6,16 @@ import (
 	"github.com/Wei-Shaw/sub2api/zcloud/billing"
 )
 
+// ListUserModelBalances returns the user's model balance rows, or nil when the
+// balance store is unavailable. Used to make /v1/models user-aware so token-plan
+// users only see the models they purchased.
+func (s *GatewayService) ListUserModelBalances(ctx context.Context, userID int64) ([]ModelBalance, error) {
+	if s == nil || s.modelBalanceRepo == nil {
+		return nil, nil
+	}
+	return s.modelBalanceRepo.ListByUser(ctx, userID)
+}
+
 func (s *GatewayService) CheckModelAdmission(ctx context.Context, userID int64, model string) (*billing.CapExhaustionError, error) {
 	if s == nil || s.modelBalanceRepo == nil {
 		return nil, nil

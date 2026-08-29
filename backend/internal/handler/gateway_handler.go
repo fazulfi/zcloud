@@ -1098,6 +1098,8 @@ func (h *GatewayHandler) Models(c *gin.Context) {
 		platform = forcedPlatform
 	}
 
+	purchasedModelIDs := h.purchasedModelIDsForUser(c, apiKey)
+
 	if platform == service.PlatformComposite {
 		availableModels := h.compositeAvailableModels(c.Request.Context(), groupID)
 		if apiKey != nil && apiKey.Group != nil && apiKey.Group.CustomModelsListEnabled() {
@@ -1105,8 +1107,15 @@ func (h *GatewayHandler) Models(c *gin.Context) {
 			writeCustomModelsList(c, service.PlatformComposite, availableModels)
 			return
 		}
+		if len(purchasedModelIDs) > 0 {
+			availableModels = intersectModels(purchasedModelIDs, availableModels)
+		}
 		if len(availableModels) > 0 {
 			writeModelsList(c, service.PlatformComposite, availableModels)
+			return
+		}
+		if len(purchasedModelIDs) > 0 {
+			writeModelsList(c, service.PlatformComposite, purchasedModelIDs)
 			return
 		}
 		writeModelsList(c, service.PlatformComposite, defaultModelIDsForPlatform(service.PlatformComposite))
@@ -1122,8 +1131,17 @@ func (h *GatewayHandler) Models(c *gin.Context) {
 		return
 	}
 
+	if len(purchasedModelIDs) > 0 {
+		availableModels = intersectModels(purchasedModelIDs, availableModels)
+	}
+
 	if len(availableModels) > 0 {
 		writeModelsList(c, platform, availableModels)
+		return
+	}
+
+	if len(purchasedModelIDs) > 0 {
+		writeModelsList(c, platform, purchasedModelIDs)
 		return
 	}
 
@@ -1152,6 +1170,52 @@ func (h *GatewayHandler) Models(c *gin.Context) {
 		"object": "list",
 		"data":   claude.DefaultModels,
 	})
+}
+
+func (h *GatewayHandler) purchasedModelIDsForUser(c *gin.Context, apiKey *service.APIKey) []string {
+	if h == nil || h.gatewayService == nil || apiKey == nil {
+		return nil
+	}
+	balances, err := h.gatewayService.ListUserModelBalances(c.Request.Context(), apiKey.UserID)
+	if err != nil || len(balances) == 0 {
+		return nil
+	}
+	modelIDs := make([]string, 0, len(balances))
+	for _, balance := range balances {
+		name := strings.TrimSpace(balance.ModelName)
+		if name == "" {
+			continue
+		}
+		switch billing.ModelCapStatus(balance.Status) {
+		case billing.ModelCapBlocked, billing.ModelCapNotPurchased:
+			continue
+		}
+		if balance.Balance <= 0 {
+			continue
+		}
+		modelIDs = append(modelIDs, name)
+	}
+	return modelIDs
+}
+
+func intersectModels(purchased, available []string) []string {
+	if len(purchased) == 0 {
+		return nil
+	}
+	if len(available) == 0 {
+		return purchased
+	}
+	availableSet := make(map[string]struct{}, len(available))
+	for _, model := range available {
+		availableSet[model] = struct{}{}
+	}
+	result := make([]string, 0, len(purchased))
+	for _, model := range purchased {
+		if _, ok := availableSet[model]; ok {
+			result = append(result, model)
+		}
+	}
+	return result
 }
 
 func (h *GatewayHandler) compositeAvailableModels(ctx context.Context, groupID *int64) []string {
