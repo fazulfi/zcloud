@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	dbent "github.com/Wei-Shaw/sub2api/ent"
 )
 
 // PlazaOfficialPricing 模型广场展示用的官方参考价（USD per token），与计费同源：
@@ -57,33 +59,51 @@ type PlazaGroup struct {
 	Models                    []PlazaModel
 }
 
+// PlanCatalogReader 提供「无渠道时的无头目录」兜底数据源：直接读取
+// subscription_plans 中 for_sale 的订阅计划，将其 product_name 作为广场模型名。
+type PlanCatalogReader interface {
+	ListPlansForSale(ctx context.Context) ([]*dbent.SubscriptionPlan, error)
+}
+
 // ModelPlazaService 聚合模型广场数据。
 //
 // 模型枚举来自渠道配置；token 模型的展示单价与阶梯由 BillingService 的阶梯表
 // 查询给出（与扣费走同一条解析链与计费函数），图片/按次模型沿用渠道/分组档位价。
+// 当没有任何活跃渠道时（无头模式），若注入了 PlanCatalogReader，则回退用
+// subscription_plans 的 for_sale 计划构建模型目录，保证「选模型 → 买 plan」流程可走。
 type ModelPlazaService struct {
 	channelRepo    ChannelRepository
 	groupRepo      GroupRepository
 	pricingService *PricingService
 	billingService *BillingService
 	resolver       *ModelPricingResolver
+	catalogReader  PlanCatalogReader
 }
 
 // NewModelPlazaService 创建模型广场服务。
+// readers 为可选注入的目录兜底数据源（取第一个非 nil），仅用于无渠道时的无头模式。
 func NewModelPlazaService(
 	channelRepo ChannelRepository,
 	groupRepo GroupRepository,
 	pricingService *PricingService,
 	billingService *BillingService,
 	resolver *ModelPricingResolver,
+	readers ...PlanCatalogReader,
 ) *ModelPlazaService {
-	return &ModelPlazaService{
+	s := &ModelPlazaService{
 		channelRepo:    channelRepo,
 		groupRepo:      groupRepo,
 		pricingService: pricingService,
 		billingService: billingService,
 		resolver:       resolver,
 	}
+	for _, r := range readers {
+		if r != nil {
+			s.catalogReader = r
+			break
+		}
+	}
+	return s
 }
 
 // ListGroups 返回模型广场数据：每个活跃分组附带其可用模型与定价。
@@ -144,6 +164,7 @@ func (s *ModelPlazaService) ListGroups(ctx context.Context) ([]PlazaGroup, error
 	}
 	// modelIdx[groupID][platform+modelName] = index into byGroup[groupID].Models
 	modelIdx := make(map[int64]map[modelKey]int, len(groups))
+	totalModels := 0
 	for i := range channels {
 		ch := &channels[i]
 		if ch.Status != StatusActive {
@@ -185,6 +206,34 @@ func (s *ModelPlazaService) ListGroups(ctx context.Context) ([]PlazaGroup, error
 					Name:     m.Name,
 					Platform: m.Platform,
 					Pricing:  m.Pricing,
+				})
+				totalModels++
+			}
+		}
+	}
+
+	// 无渠道时（无头模式）回退到订阅计划目录：把 for_sale 计划的
+	// product_name 作为模型名注入所属分组，保证模型广场有内容可点。
+	if totalModels == 0 && s.catalogReader != nil {
+		plans, err := s.catalogReader.ListPlansForSale(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("list for-sale plans for plaza fallback: %w", err)
+		}
+		for _, gid := range order {
+			pg := byGroup[gid]
+			seen := make(map[string]struct{}, len(plans))
+			for _, p := range plans {
+				if p.ModelID == nil || strings.TrimSpace(p.ProductName) == "" {
+					continue
+				}
+				name := strings.TrimSpace(p.ProductName)
+				if _, dup := seen[name]; dup {
+					continue
+				}
+				seen[name] = struct{}{}
+				pg.Models = append(pg.Models, PlazaModel{
+					Name:     name,
+					Platform: groupEnt[gid].Platform,
 				})
 			}
 		}

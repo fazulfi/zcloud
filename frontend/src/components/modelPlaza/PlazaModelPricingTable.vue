@@ -1,14 +1,15 @@
 <template>
   <div class="plaza-pricing-table overflow-x-auto" :style="accentStyle">
-    <table class="w-full min-w-[1000px] table-fixed border-collapse text-sm tabular-nums">
+    <table class="w-full min-w-[1100px] table-fixed border-collapse text-sm tabular-nums">
       <colgroup>
-        <col class="w-[25%]" />
+        <col class="w-[22%]" />
         <col class="w-[11%]" />
         <col class="w-[9%]" />
-        <col class="w-[14%]" />
-        <col class="w-[11%]" />
+        <col class="w-[13%]" />
+        <col class="w-[10%]" />
         <col class="w-[8%]" />
-        <col class="w-[14%]" />
+        <col class="w-[12%]" />
+        <col class="w-[7%]" />
         <col class="w-[8%]" />
       </colgroup>
       <thead>
@@ -42,6 +43,12 @@
           >
             {{ t('modelPlaza.table.rate') }}
           </th>
+          <th
+            rowspan="2"
+            class="border-l border-gray-100 py-2.5 pl-3 pr-4 text-right align-middle dark:border-dark-700/60"
+          >
+            {{ t('modelPlaza.table.buy') }}
+          </th>
         </tr>
         <tr
           class="border-b border-gray-200 text-left text-[11px] font-medium uppercase leading-4 tracking-wide text-gray-400 dark:border-dark-700 dark:text-dark-500"
@@ -65,7 +72,14 @@
           <!-- 模型名 + 非 token 计费模式徽章;分时时段行额外标注时段 -->
           <td class="border-r border-gray-100 py-2.5 pl-5 pr-4 align-middle dark:border-dark-700/60">
             <div class="flex flex-wrap items-center gap-1.5">
-              <span class="font-medium text-gray-900 dark:text-white">{{ m.name }}</span>
+              <button
+                type="button"
+                class="text-left font-medium text-primary-600 hover:underline dark:text-primary-400"
+                :title="t('modelPlaza.table.buy')"
+                @click="goToModel(m.name)"
+              >
+                {{ m.name }}
+              </button>
               <!-- 时段徽章紧跟模型名,其余徽章排在后面,空间不足时先换行的是它们 -->
               <span
                 v-if="period"
@@ -278,6 +292,18 @@
             </template>
             <span v-else class="font-bold text-gray-700 dark:text-gray-300">{{ effectiveRate }}x</span>
           </td>
+
+          <!-- 购买入口:点击进入该模型的套餐选购页 -->
+          <td class="border-l border-gray-100 py-2.5 pl-3 pr-4 text-right align-middle dark:border-dark-700/60">
+            <button
+              type="button"
+              class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-90 active:scale-[0.97]"
+              :style="{ backgroundColor: platformAccentColor(props.platform ?? '') }"
+              @click="goToModel(m.name)"
+            >
+              {{ t('modelPlaza.table.buy') }}
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -287,6 +313,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { formatScaled } from '@/utils/pricing'
 import { platformAccentColor, platformBadgeLightClass, platformLabel } from '@/utils/platformColors'
 import {
@@ -318,6 +345,12 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const router = useRouter()
+
+/** 跳转到该模型的套餐选购页(「点模型 → 选套餐」流程入口)。 */
+function goToModel(name: string): void {
+  void router.push(`/model-plaza/model/${encodeURIComponent(name)}`)
+}
 
 /** 实付分区只从平台拿一个主色,浅底/标题/下划线全部由 scoped CSS 用 color-mix 派生。 */
 const accentStyle = computed(() => ({ '--plaza-accent': platformAccentColor(props.platform ?? '') }))

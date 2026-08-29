@@ -597,6 +597,8 @@ export default {
     loading: 'Loading...',
     empty: 'No groups to display',
     loadFailed: 'Failed to load model plaza',
+    noPlansForModel: 'No plans available for this model yet',
+    backToCatalog: 'Back to catalog',
     noSearchResult: 'No matching models',
     anonymousHint: 'Sign in to see your exclusive groups and personal rates',
     filters: {
@@ -639,6 +641,7 @@ export default {
       paidPrice: 'Your Price (Discounted)',
       officialPrice: 'Official Price',
       rate: 'Rate',
+      buy: 'Buy',
       unitPerMillion: '$ / 1M tokens',
       perUnitRequest: '/ request',
       perUnitImage: '/ image',

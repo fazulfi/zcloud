@@ -602,6 +602,8 @@ export default {
     loading: '加载中...',
     empty: '暂无可展示的分组',
     loadFailed: '加载模型广场失败',
+    noPlansForModel: '该模型暂无可用套餐',
+    backToCatalog: '返回目录',
     noSearchResult: '没有匹配的模型',
     anonymousHint: '登录后可查看你的专属分组与专属倍率',
     filters: {
@@ -643,6 +645,7 @@ export default {
       paidPrice: '实付价格(折后)',
       officialPrice: '官方价格',
       rate: '折扣倍率',
+      buy: '购买',
       unitPerMillion: '$ / 1M token',
       perUnitRequest: '/ 次',
       perUnitImage: '/ 张',

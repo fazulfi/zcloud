@@ -178,7 +178,7 @@ async function loadModelDetail() {
     }
 
     plans.value = model.value
-      ? checkoutResponse.data.plans.filter((plan) => plan.for_sale && plan.product_name === model.value?.name)
+      ? checkoutResponse.data.plans.filter((plan) => plan.product_name === model.value?.name)
       : []
   } catch (error: unknown) {
     if (isUnauthorized(error)) {

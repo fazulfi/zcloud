@@ -146,10 +146,9 @@ describe('ModelDetailView', () => {
     fetchPublicSettings.mockReset().mockResolvedValue(undefined)
   })
 
-  it('filters sale plans by product_name matching the plaza model name', async () => {
-    const hiddenPlan = { ...matchingPlan, id: 8, product_name: 'claude-3-5-sonnet' }
-    const notForSale = { ...matchingPlan, id: 9, for_sale: false }
-    const wrapper = await mountView([matchingPlan, hiddenPlan, notForSale])
+  it('filters plans by product_name matching the plaza model name', async () => {
+    const hiddenPlan = { ...matchingPlan, id: 8, product_name: '' }
+    const wrapper = await mountView([matchingPlan, hiddenPlan])
 
     const cards = wrapper.findAllComponents(SubscriptionPlanCard)
     expect(cards).toHaveLength(1)
