@@ -219,16 +219,34 @@
               </p>
             </div>
 
-            <!-- No limits configured - Unlimited badge -->
+            <!-- No limits configured - Unlimited badge / Token balance -->
             <div
               v-if="
                 !subscription.group?.daily_limit_usd &&
                 !subscription.group?.weekly_limit_usd &&
                 !subscription.group?.monthly_limit_usd
               "
-              class="flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 py-6 dark:from-emerald-900/20 dark:to-teal-900/20"
+              :class="
+                hasTokenBalances
+                  ? 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20'
+                  : 'bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20'
+              "
+              class="flex items-center justify-center rounded-xl py-6"
             >
-              <div class="flex items-center gap-3">
+              <div v-if="hasTokenBalances" class="flex items-center justify-between gap-3 px-4">
+                <div>
+                  <p class="text-sm font-medium text-blue-700 dark:text-blue-300">
+                    {{ t('userSubscriptions.tokenBalance') }}
+                  </p>
+                  <p class="text-xs text-blue-600/70 dark:text-blue-400/70">
+                    {{ t('userSubscriptions.tokenBalanceDesc', { models: balanceModelNames }) }}
+                  </p>
+                </div>
+                <span class="text-2xl font-semibold text-blue-700 dark:text-blue-300">
+                  {{ formatTokenBalance(totalBalance) }}
+                </span>
+              </div>
+              <div v-else class="flex items-center gap-3">
                 <span class="text-4xl text-emerald-600 dark:text-emerald-400">∞</span>
                 <div>
                   <p class="text-sm font-medium text-emerald-700 dark:text-emerald-300">
@@ -256,7 +274,8 @@ import subscriptionsAPI from '@/api/subscriptions'
 import type { UserSubscription } from '@/types'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import Icon from '@/components/icons/Icon.vue'
-import { formatDateTimeToMinute } from '@/utils/format'
+import { formatDateTimeToMinute, formatTokenBalance } from '@/utils/format'
+import { useModelBalances } from '@/composables/useModelBalances'
 import { hasPeakRate, formatPeakRateWindow, serverTimezoneLabel } from '@/utils/peak-rate'
 import { platformBorderClass, platformBadgeClass, platformButtonClass, platformLabel } from '@/utils/platformColors'
 import {
@@ -282,6 +301,7 @@ const appStore = useAppStore()
 
 const subscriptions = ref<UserSubscription[]>([])
 const loading = ref(true)
+const { totalBalance, hasTokenBalances, balanceModelNames, loadModelBalances } = useModelBalances()
 
 function subscriptionHasPeakRate(subscription: UserSubscription): boolean {
   return hasPeakRate(subscription.group)
@@ -390,5 +410,6 @@ function formatResetTime(windowStart: string | null, windowHours: number): strin
 
 onMounted(() => {
   loadSubscriptions()
+  loadModelBalances()
 })
 </script>

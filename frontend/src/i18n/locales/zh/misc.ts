@@ -14,7 +14,8 @@ export default {
     expiresTomorrow: '明天到期',
     viewAll: '查看全部订阅',
     noSubscriptions: '暂无有效订阅',
-    unlimited: '无限制'
+    unlimited: '无限制',
+    tokenBalance: 'Token 余额'
   },
 
   // Version Badge
@@ -113,6 +114,8 @@ export default {
     noExpiration: '无到期时间',
     unlimited: '无限制',
     unlimitedDesc: '该订阅无用量限制',
+    tokenBalance: 'Token 余额',
+    tokenBalanceDesc: '已购模型 Token：{models}',
     daily: '每日',
     weekly: '每周',
     monthly: '每月',

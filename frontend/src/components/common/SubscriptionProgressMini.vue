@@ -61,12 +61,25 @@
             <div class="space-y-1.5">
               <!-- Unlimited subscription badge -->
               <div
-                v-if="isUnlimited(subscription)"
+                v-if="isUnlimited(subscription) && !hasTokenBalances"
                 class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 px-2.5 py-1.5 dark:from-emerald-900/20 dark:to-teal-900/20"
               >
                 <span class="text-lg text-emerald-600 dark:text-emerald-400">∞</span>
                 <span class="text-xs font-medium text-emerald-700 dark:text-emerald-300">
                   {{ t('subscriptionProgress.unlimited') }}
+                </span>
+              </div>
+
+              <!-- Token balance summary for token-plan subscriptions -->
+              <div
+                v-else-if="isUnlimited(subscription)"
+                class="flex items-center justify-between gap-2 rounded-lg bg-blue-50 px-2.5 py-1.5 dark:bg-blue-900/20"
+              >
+                <span class="text-xs font-medium text-blue-700 dark:text-blue-300">
+                  {{ t('subscriptionProgress.tokenBalance') }}
+                </span>
+                <span class="text-xs font-semibold text-blue-700 dark:text-blue-300">
+                  {{ formatTokenBalance(totalBalance) }}
                 </span>
               </div>
 
@@ -183,6 +196,8 @@ import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import { useSubscriptionStore } from '@/stores'
 import type { UserSubscription } from '@/types'
+import { useModelBalances } from '@/composables/useModelBalances'
+import { formatTokenBalance } from '@/utils/format'
 
 const { t } = useI18n()
 
@@ -190,6 +205,7 @@ const subscriptionStore = useSubscriptionStore()
 
 const containerRef = ref<HTMLElement | null>(null)
 const tooltipOpen = ref(false)
+const { totalBalance, hasTokenBalances, loadModelBalances } = useModelBalances()
 
 // Use store data instead of local state
 const activeSubscriptions = computed(() => subscriptionStore.activeSubscriptions)
@@ -299,6 +315,7 @@ onMounted(() => {
   subscriptionStore.fetchActiveSubscriptions().catch((error) => {
     console.error('Failed to load subscriptions in SubscriptionProgressMini:', error)
   })
+  loadModelBalances()
 })
 
 onBeforeUnmount(() => {

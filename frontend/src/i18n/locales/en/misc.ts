@@ -14,7 +14,8 @@ export default {
     expiresTomorrow: 'Expires tomorrow',
     viewAll: 'View all subscriptions',
     noSubscriptions: 'No active subscriptions',
-    unlimited: 'Unlimited'
+    unlimited: 'Unlimited',
+    tokenBalance: 'Token balance'
   },
 
   // Version Badge
@@ -115,6 +116,8 @@ export default {
     noExpiration: 'No expiration',
     unlimited: 'Unlimited',
     unlimitedDesc: 'No usage limits on this subscription',
+    tokenBalance: 'Token balance',
+    tokenBalanceDesc: 'Purchased model tokens: {models}',
     daily: 'Daily',
     weekly: 'Weekly',
     monthly: 'Monthly',
