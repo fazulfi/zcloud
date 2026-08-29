@@ -51,11 +51,12 @@
       </p>
     </header>
 
-    <!-- 模型价格表:整行(含 hover 底色/分区底色)顶到卡片边缘,左右留白由表格首列/末列的 padding 提供 -->
-    <div>
-      <PlazaModelPricingTable
-        v-if="group.models.length > 0"
-        :models="group.models"
+    <div v-if="group.models.length > 0" class="grid gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
+      <PlazaModelCard
+        v-for="{ model, period, key } in rows"
+        :key="key"
+        :model="model"
+        :period="period"
         :platform="group.platform"
         :rate-multiplier="group.rate_multiplier"
         :user-rate-multiplier="group.user_rate_multiplier ?? null"
@@ -64,10 +65,10 @@
         :peak-window="peakWindow"
         :peak-rate-multiplier="group.peak_rate_multiplier"
       />
-      <p v-else class="px-5 py-4 text-center text-sm text-gray-400 dark:text-dark-500">
-        {{ t('modelPlaza.detail.noModels') }}
-      </p>
     </div>
+    <p v-else class="px-5 py-4 text-center text-sm text-gray-400 dark:text-dark-500">
+      {{ t('modelPlaza.detail.noModels') }}
+    </p>
   </section>
 </template>
 
@@ -76,8 +77,9 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import GroupBadge from '@/components/common/GroupBadge.vue'
-import PlazaModelPricingTable from './PlazaModelPricingTable.vue'
-import type { ModelPlazaGroup } from '@/api/modelPlaza'
+import PlazaModelCard from './PlazaModelCard.vue'
+import { BILLING_MODE_TOKEN, type BillingMode } from '@/constants/channel'
+import type { ModelPlazaGroup, PlazaModel, PlazaTimePricingPeriod } from '@/api/modelPlaza'
 import type { GroupPlatform, SubscriptionType } from '@/types'
 import { platformBorderStrongClass } from '@/utils/platformColors'
 import { hasPeakRate, formatPeakRateWindow, serverTimezoneLabel } from '@/utils/peak-rate'
@@ -111,6 +113,35 @@ const peakNote = computed(() => {
  * 分组关闭了长上下文阶梯、但组内有模型官方带阶梯时提示:实付列只展示基础档,
  * 官方阶梯仅供参考。字段缺失(旧后端)不提示。
  */
+interface PlazaRow {
+  model: PlazaModel
+  period: PlazaTimePricingPeriod | null
+  key: string
+}
+
+function billingMode(m: PlazaModel): BillingMode {
+  return (m.pricing?.billing_mode || BILLING_MODE_TOKEN) as BillingMode
+}
+
+const rows = computed<PlazaRow[]>(() => {
+  const sorted = [...props.group.models].sort((a, b) => {
+    const ta = billingMode(a) === BILLING_MODE_TOKEN
+    const tb = billingMode(b) === BILLING_MODE_TOKEN
+    if (ta !== tb) return ta ? -1 : 1
+    const pa = a.official_pricing?.output_price ?? null
+    const pb = b.official_pricing?.output_price ?? null
+    if (pa != null && pb != null && pa !== pb) return pb - pa
+    if (pa != null && pb == null) return -1
+    if (pa == null && pb != null) return 1
+    return b.name.localeCompare(a.name)
+  })
+  return sorted.flatMap((model) => {
+    const base: PlazaRow = { model, period: null, key: `${model.platform}:${model.name}` }
+    const periods = model.time_pricing?.periods ?? []
+    return [base, ...periods.map((period, index) => ({ model, period, key: `${model.platform}:${model.name}:${index}` }))]
+  })
+})
+
 const longContextNote = computed(() => {
   if (props.group.long_context_pricing_enabled !== false) return ''
   const hasOfficialLadder = props.group.models.some(

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import PlazaGroupSection from '../PlazaGroupSection.vue'
-import PlazaModelPricingTable from '../PlazaModelPricingTable.vue'
+import PlazaModelCard from '../PlazaModelCard.vue'
 import type { ModelPlazaGroup, PlazaModel } from '@/api/modelPlaza'
 
 vi.mock('vue-i18n', async () => {
@@ -81,7 +81,7 @@ function mountSection(g: ModelPlazaGroup) {
       stubs: {
         GroupBadge: true,
         Icon: true,
-        PlazaModelPricingTable: true
+        PlazaModelCard: true
       }
     }
   })
@@ -126,14 +126,14 @@ describe('PlazaGroupSection 高峰配置传递', () => {
         peak_rate_multiplier: 1.5
       })
     )
-    const table = wrapper.findComponent(PlazaModelPricingTable)
+    const card = wrapper.findComponent(PlazaModelCard)
     // appStore mock 无 server_utc_offset,窗口描述不带时区标注
-    expect(table.props('peakWindow')).toBe('14:00-18:00 ×1.5')
-    expect(table.props('peakRateMultiplier')).toBe(1.5)
+    expect(card.props('peakWindow')).toBe('14:00-18:00 ×1.5')
+    expect(card.props('peakRateMultiplier')).toBe(1.5)
   })
 
   it('分组未启用高峰时窗口描述为空串', () => {
     const wrapper = mountSection(group())
-    expect(wrapper.findComponent(PlazaModelPricingTable).props('peakWindow')).toBe('')
+    expect(wrapper.findComponent(PlazaModelCard).props('peakWindow')).toBe('')
   })
 })
