@@ -33,22 +33,30 @@
       {{ t('modelPlaza.loadFailed') }}
     </div>
     <template v-else>
-      <!-- 筛选区:平台 → 分组 → 倍率 -->
-      <PlazaFilterBar
-        :platforms="platforms"
-        :groups="groupOptions"
-        :rates="rates"
-        :platform="selectedPlatform"
-        :group-id="selectedGroupId"
-        :rate="selectedRate"
-        :search="searchQuery"
-        @update:platform="selectedPlatform = $event"
-        @update:group-id="selectedGroupId = $event"
-        @update:rate="selectedRate = $event"
-        @update:search="searchQuery = $event"
-      />
+      <!-- 搜索框:纯前端按模型名过滤 -->
+      <div class="relative w-full sm:w-72">
+        <Icon
+          name="search"
+          size="sm"
+          class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-dark-500"
+        />
+        <input
+          v-model="searchQuery"
+          type="text"
+          :placeholder="t('modelPlaza.filters.searchPlaceholder')"
+          class="input rounded-lg py-1.5 pl-9 pr-9"
+        />
+        <button
+          v-if="searchQuery"
+          type="button"
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 dark:text-dark-500 dark:hover:text-gray-300"
+          @click="searchQuery = ''"
+        >
+          <Icon name="x" size="xs" class="h-3.5 w-3.5" />
+        </button>
+      </div>
 
-      <!-- 分组分节的模型清单(默认按生效倍率升序) -->
+      <!-- 分组分节的模型清单 -->
       <div v-if="filteredGroups.length > 0" class="space-y-5">
         <PlazaGroupSection v-for="g in filteredGroups" :key="g.id" :group="g" />
       </div>
@@ -63,12 +71,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import Icon from '@/components/icons/Icon.vue'
-import PlazaFilterBar from './PlazaFilterBar.vue'
 import PlazaGroupSection from './PlazaGroupSection.vue'
 import type { ModelPlazaGroup, ModelPlazaResponse } from '@/api/modelPlaza'
 import { useAuthStore } from '@/stores/auth'
@@ -85,9 +92,6 @@ const { t } = useI18n()
 const authStore = useAuthStore()
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
-const selectedPlatform = ref<string>('all')
-const selectedGroupId = ref<number | 'all'>('all')
-const selectedRate = ref<number | 'all'>('all')
 const searchQuery = ref('')
 
 const searchActive = computed(() => searchQuery.value.trim() !== '')
@@ -103,42 +107,8 @@ function effectiveRate(g: ModelPlazaGroup): number {
   return g.user_rate_multiplier ?? g.rate_multiplier
 }
 
-const platforms = computed(() =>
-  [...new Set((props.response?.groups ?? []).map((g) => g.platform).filter(Boolean))].sort()
-)
-
-const groupOptions = computed(() =>
-  (props.response?.groups ?? []).map((g) => ({
-    id: g.id,
-    name: g.name,
-    platform: g.platform,
-    rate: effectiveRate(g)
-  }))
-)
-
-/** 全量生效倍率;当前组合下不可用的项由 FilterBar 置灰而非隐藏。 */
-const rates = computed(() =>
-  [...new Set((props.response?.groups ?? []).map(effectiveRate))].sort((a, b) => a - b)
-)
-
-/** 数据刷新后选中的倍率可能不复存在,重置为全部。 */
-watch(rates, (list) => {
-  if (selectedRate.value !== 'all' && !list.includes(selectedRate.value)) {
-    selectedRate.value = 'all'
-  }
-})
-
 const filteredGroups = computed(() => {
   let groups = props.response?.groups ?? []
-  if (selectedPlatform.value !== 'all') {
-    groups = groups.filter((g) => g.platform === selectedPlatform.value)
-  }
-  if (selectedGroupId.value !== 'all') {
-    groups = groups.filter((g) => g.id === selectedGroupId.value)
-  }
-  if (selectedRate.value !== 'all') {
-    groups = groups.filter((g) => effectiveRate(g) === selectedRate.value)
-  }
   // 模型名搜索:分组内只留命中的模型,整组无命中则隐藏该分组。
   const q = searchQuery.value.trim().toLowerCase()
   if (q) {

@@ -607,12 +607,7 @@ export default {
     noSearchResult: '没有匹配的模型',
     anonymousHint: '登录后可查看你的专属分组与专属倍率',
     filters: {
-      platformLabel: '平台',
-      groupLabel: '分组',
-      rateLabel: '倍率',
-      modelLabel: '模型',
-      searchPlaceholder: '搜索模型名称',
-      all: '全部'
+      searchPlaceholder: '搜索模型名称'
     },
     badges: {
       exclusive: '专属分组',

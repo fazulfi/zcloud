@@ -602,12 +602,7 @@ export default {
     noSearchResult: 'No matching models',
     anonymousHint: 'Sign in to see your exclusive groups and personal rates',
     filters: {
-      platformLabel: 'Platform',
-      groupLabel: 'Group',
-      rateLabel: 'Rate',
-      modelLabel: 'Model',
-      searchPlaceholder: 'Search models',
-      all: 'All'
+      searchPlaceholder: 'Search models'
     },
     badges: {
       exclusive: 'Exclusive',
