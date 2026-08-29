@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -122,9 +123,10 @@ func (h *PaymentHandler) GetCheckoutInfo(c *gin.Context) {
 	plans, _ := h.configService.ListPlansForSale(ctx)
 	groupInfo := h.configService.GetGroupInfoMap(ctx, plans)
 	planList := make([]checkoutPlan, 0, len(plans))
+	tokensPerDollarByModel := make(map[string]int64)
 	for _, p := range plans {
 		gi := groupInfo[p.GroupID]
-		planList = append(planList, checkoutPlan{
+		plan := checkoutPlan{
 			ID: int64(p.ID), GroupID: p.GroupID,
 			GroupPlatform: gi.Platform, GroupName: gi.Name,
 			RateMultiplier:  gi.RateMultiplier,
@@ -137,7 +139,25 @@ func (h *PaymentHandler) GetCheckoutInfo(c *gin.Context) {
 			Currency:     p.Currency,
 			ValidityDays: p.ValidityDays, ValidityUnit: p.ValidityUnit, Features: parseFeatures(p.Features),
 			ProductName: p.ProductName,
-		})
+		}
+		if p.ModelID != nil {
+			plan.ModelID = *p.ModelID
+		}
+		if plan.ModelID != "" {
+			tokensPerDollar, ok := tokensPerDollarByModel[plan.ModelID]
+			if !ok {
+				tokensPerDollar, err = h.configService.GetLatestTokensPerDollar(ctx, plan.ModelID)
+				if err != nil {
+					response.ErrorFrom(c, err)
+					return
+				}
+				tokensPerDollarByModel[plan.ModelID] = tokensPerDollar
+			}
+			if tokensPerDollar > 0 {
+				plan.Tokens = int64(math.Floor((plan.Price / 2) * float64(tokensPerDollar)))
+			}
+		}
+		planList = append(planList, plan)
 	}
 
 	response.Success(c, checkoutInfoResponse{
@@ -187,6 +207,8 @@ type checkoutPlan struct {
 	WeeklyLimitUSD     *float64 `json:"weekly_limit_usd"`
 	MonthlyLimitUSD    *float64 `json:"monthly_limit_usd"`
 	ModelScopes        []string `json:"supported_model_scopes"`
+	ModelID            string   `json:"model_id,omitempty"`
+	Tokens             int64    `json:"tokens,omitempty"`
 	Name               string   `json:"name"`
 	Description        string   `json:"description"`
 	Price              float64  `json:"price"`

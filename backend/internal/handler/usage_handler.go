@@ -50,12 +50,25 @@ type CustomerModelBalance struct {
 
 // ModelBalances returns only the authenticated user's public model balances.
 func (h *UsageHandler) ModelBalances(c *gin.Context) {
-	_, ok := middleware2.GetAuthSubjectFromContext(c)
+	subject, ok := middleware2.GetAuthSubjectFromContext(c)
 	if !ok {
 		response.Unauthorized(c, "User not authenticated")
 		return
 	}
-	response.Success(c, []CustomerModelBalance{})
+	if h.modelBalanceRepo == nil {
+		response.InternalError(c, "model balance repository not available")
+		return
+	}
+	balances, err := h.modelBalanceRepo.ListByUser(c.Request.Context(), subject.UserID)
+	if err != nil {
+		response.ErrorFrom(c, err)
+		return
+	}
+	result := make([]CustomerModelBalance, 0, len(balances))
+	for _, mb := range balances {
+		result = append(result, CustomerModelBalance{Model: mb.ModelName, TokensPurchased: mb.TokensPurchased, TokensConsumed: mb.TokensConsumed, Balance: mb.Balance, UsagePercent: mb.UsagePercent, Status: mb.Status})
+	}
+	response.Success(c, result)
 }
 
 // ExportUsage exports the authenticated user's customer-safe usage records.
@@ -130,10 +143,11 @@ type userGroupStat struct {
 
 // UsageHandler handles usage-related requests
 type UsageHandler struct {
-	usageService   *service.UsageService
-	apiKeyService  *service.APIKeyService
-	opsService     *service.OpsService
-	settingService *service.SettingService
+	usageService     *service.UsageService
+	apiKeyService    *service.APIKeyService
+	opsService       *service.OpsService
+	settingService   *service.SettingService
+	modelBalanceRepo service.ModelBalanceRepository
 }
 
 // NewUsageHandler creates a new UsageHandler
@@ -142,12 +156,14 @@ func NewUsageHandler(
 	apiKeyService *service.APIKeyService,
 	opsService *service.OpsService,
 	settingService *service.SettingService,
+	modelBalanceRepo service.ModelBalanceRepository,
 ) *UsageHandler {
 	return &UsageHandler{
-		usageService:   usageService,
-		apiKeyService:  apiKeyService,
-		opsService:     opsService,
-		settingService: settingService,
+		usageService:     usageService,
+		apiKeyService:    apiKeyService,
+		opsService:       opsService,
+		settingService:   settingService,
+		modelBalanceRepo: modelBalanceRepo,
 	}
 }
 

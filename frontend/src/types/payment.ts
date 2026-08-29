@@ -113,6 +113,9 @@ export interface SubscriptionPlan {
   group_id: number
   group_platform?: string
   group_name?: string
+  model_id?: string
+  product_name?: string
+  tokens?: number
   rate_multiplier?: number
   peak_rate_enabled?: boolean
   peak_start?: string

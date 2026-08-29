@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect"
 
 	dbent "github.com/Wei-Shaw/sub2api/ent"
+	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/paymentauditlog"
 	"github.com/Wei-Shaw/sub2api/ent/paymentorder"
 	"github.com/Wei-Shaw/sub2api/internal/payment"
@@ -49,6 +50,15 @@ func (s *PaymentService) HandlePaymentNotification(ctx context.Context, n *payme
 			return s.confirmPayment(ctx, oid, n.TradeNo, n.Amount, pk, n.Metadata)
 		}
 		if dbent.IsNotFound(err) {
+			if strings.TrimSpace(n.TradeNo) != "" {
+				tradeOrder, tradeErr := s.entClient.PaymentOrder.Query().Where(paymentorder.PaymentTradeNo(n.TradeNo)).Only(ctx)
+				if tradeErr == nil {
+					return s.confirmPayment(ctx, tradeOrder.ID, n.TradeNo, n.Amount, pk, n.Metadata)
+				}
+				if !dbent.IsNotFound(tradeErr) {
+					return fmt.Errorf("lookup order failed for payment_trade_no %s: %w", n.TradeNo, tradeErr)
+				}
+			}
 			return fmt.Errorf("%w: out_trade_no=%s", ErrOrderNotFound, n.OrderID)
 		}
 		return fmt.Errorf("lookup order failed for out_trade_no %s: %w", n.OrderID, err)
@@ -505,10 +515,73 @@ func (s *PaymentService) doSub(ctx context.Context, o *dbent.PaymentOrder, lease
 	if err := s.ensurePaymentSubscriptionAssigned(ctx, o, gid, days); err != nil {
 		return err
 	}
+	if err := s.creditSubscriptionModelTokens(ctx, o, gid); err != nil {
+		return err
+	}
 	if err := s.applyAffiliateRebateForOrder(ctx, o); err != nil {
 		return err
 	}
 	return s.markCompleted(ctx, o, lease, "SUBSCRIPTION_SUCCESS")
+}
+
+func (s *PaymentService) creditSubscriptionModelTokens(ctx context.Context, o *dbent.PaymentOrder, groupID int64) error {
+	if s.configService == nil || s.modelBalanceRepo == nil || o.PlanID == nil {
+		return nil
+	}
+	if s.hasAuditLog(ctx, o.ID, "MODEL_TOKENS_CREDITED") {
+		return nil
+	}
+	plan, err := s.configService.GetPlan(ctx, *o.PlanID)
+	if err != nil {
+		return fmt.Errorf("get subscription plan for token credit: %w", err)
+	}
+	if plan.ModelID == nil {
+		return nil
+	}
+	pricing, err := s.entClient.ModelPricing.Query().
+		Where(modelpricing.ModelIDEQ(*plan.ModelID)).
+		Order(dbent.Desc(modelpricing.FieldVersion)).
+		Limit(1).Only(ctx)
+	if err != nil {
+		return fmt.Errorf("get model pricing for token credit: %w", err)
+	}
+	if pricing.TokensPerDollar == nil {
+		return fmt.Errorf("model pricing has no tokens_per_dollar for model %s", *plan.ModelID)
+	}
+	planTokens := int64(math.Floor((plan.Price / 2) * float64(*pricing.TokensPerDollar)))
+	tx, err := s.entClient.Tx(ctx)
+	if err != nil {
+		return fmt.Errorf("begin model token credit tx: %w", err)
+	}
+	defer func() { _ = tx.Rollback() }()
+	txCtx := dbent.NewTxContext(ctx, tx)
+	if err := s.modelBalanceRepo.CreditTokens(txCtx, o.UserID, *plan.ModelID, planTokens); err != nil {
+		return fmt.Errorf("credit model tokens: %w", err)
+	}
+	sub, err := s.subscriptionSvc.userSubRepo.GetByUserIDAndGroupID(txCtx, o.UserID, groupID)
+	if err != nil {
+		return fmt.Errorf("get assigned subscription for token credit: %w", err)
+	}
+	if _, err := tx.Client().UserSubscription.UpdateOneID(sub.ID).
+		SetModelID(*plan.ModelID).
+		AddPurchasedTokens(planTokens).
+		SetPlanNameSnapshot(plan.Name).
+		Save(txCtx); err != nil {
+		return fmt.Errorf("update assigned subscription token fields: %w", err)
+	}
+	detail, _ := json.Marshal(map[string]any{"tokens": planTokens, "modelID": *plan.ModelID})
+	if _, err := tx.Client().PaymentAuditLog.Create().
+		SetOrderID(strconv.FormatInt(o.ID, 10)).
+		SetAction("MODEL_TOKENS_CREDITED").
+		SetDetail(string(detail)).
+		SetOperator("system").
+		Save(txCtx); err != nil {
+		return fmt.Errorf("record model token credit audit: %w", err)
+	}
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit model token credit tx: %w", err)
+	}
+	return nil
 }
 
 func (s *PaymentService) ensurePaymentSubscriptionAssigned(ctx context.Context, o *dbent.PaymentOrder, groupID int64, days int) error {

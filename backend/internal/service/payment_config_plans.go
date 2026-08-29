@@ -7,6 +7,8 @@ import (
 
 	dbent "github.com/Wei-Shaw/sub2api/ent"
 	"github.com/Wei-Shaw/sub2api/ent/group"
+	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
+	"github.com/Wei-Shaw/sub2api/ent/modelpricing"
 	"github.com/Wei-Shaw/sub2api/ent/subscriptionplan"
 	"github.com/Wei-Shaw/sub2api/internal/payment"
 	infraerrors "github.com/Wei-Shaw/sub2api/internal/pkg/errors"
@@ -23,6 +25,17 @@ func normalizePlanCurrency(raw string) (string, error) {
 		return "", infraerrors.BadRequest("PLAN_CURRENCY_INVALID", "currency must be a 3-letter ISO currency code")
 	}
 	return currency, nil
+}
+
+func (s *PaymentConfigService) validatePlanModelID(ctx context.Context, modelID string) error {
+	modelID = strings.TrimSpace(modelID)
+	if modelID == "" {
+		return nil
+	}
+	if _, err := s.entClient.ModelCatalog.Query().Where(modelcatalog.IDEQ(modelID)).Only(ctx); err != nil {
+		return infraerrors.BadRequest("PLAN_MODEL_NOT_FOUND", "model not found")
+	}
+	return nil
 }
 
 // validatePlanRequired checks that all required fields for a plan are provided.
@@ -132,12 +145,34 @@ func (s *PaymentConfigService) ListPlansForSale(ctx context.Context) ([]*dbent.S
 	return s.entClient.SubscriptionPlan.Query().Where(subscriptionplan.ForSaleEQ(true)).Order(subscriptionplan.BySortOrder()).All(ctx)
 }
 
+// GetLatestTokensPerDollar returns the latest token conversion rate for a model.
+func (s *PaymentConfigService) GetLatestTokensPerDollar(ctx context.Context, modelID string) (int64, error) {
+	pricing, err := s.entClient.ModelPricing.Query().
+		Where(modelpricing.ModelIDEQ(modelID)).
+		Order(dbent.Desc(modelpricing.FieldVersion)).
+		Limit(1).
+		Only(ctx)
+	if dbent.IsNotFound(err) {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	if pricing.TokensPerDollar == nil {
+		return 0, nil
+	}
+	return *pricing.TokensPerDollar, nil
+}
+
 func (s *PaymentConfigService) CreatePlan(ctx context.Context, req CreatePlanRequest) (*dbent.SubscriptionPlan, error) {
 	if err := validatePlanRequired(req.Name, req.GroupID, req.Price, req.ValidityDays, req.ValidityUnit, req.OriginalPrice); err != nil {
 		return nil, err
 	}
 	currency, err := normalizePlanCurrency(req.Currency)
 	if err != nil {
+		return nil, err
+	}
+	if err := s.validatePlanModelID(ctx, req.ModelID); err != nil {
 		return nil, err
 	}
 	b := s.entClient.SubscriptionPlan.Create().
@@ -148,6 +183,9 @@ func (s *PaymentConfigService) CreatePlan(ctx context.Context, req CreatePlanReq
 	if req.OriginalPrice != nil {
 		b.SetOriginalPrice(*req.OriginalPrice)
 	}
+	if modelID := strings.TrimSpace(req.ModelID); modelID != "" {
+		b.SetModelID(modelID)
+	}
 	return b.Save(ctx)
 }
 
@@ -157,6 +195,11 @@ func (s *PaymentConfigService) CreatePlan(ctx context.Context, req CreatePlanReq
 func (s *PaymentConfigService) UpdatePlan(ctx context.Context, id int64, req UpdatePlanRequest) (*dbent.SubscriptionPlan, error) {
 	if err := validatePlanPatch(req); err != nil {
 		return nil, err
+	}
+	if req.ModelID != nil {
+		if err := s.validatePlanModelID(ctx, *req.ModelID); err != nil {
+			return nil, err
+		}
 	}
 	u := s.entClient.SubscriptionPlan.UpdateOneID(id)
 	if req.GroupID != nil {
@@ -198,6 +241,13 @@ func (s *PaymentConfigService) UpdatePlan(ctx context.Context, id int64, req Upd
 	}
 	if req.SortOrder != nil {
 		u.SetSortOrder(*req.SortOrder)
+	}
+	if req.ModelID != nil {
+		if modelID := strings.TrimSpace(*req.ModelID); modelID != "" {
+			u.SetModelID(modelID)
+		} else {
+			u.ClearModelID()
+		}
 	}
 	return u.Save(ctx)
 }

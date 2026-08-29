@@ -175,6 +175,7 @@ type CreatePlanRequest struct {
 	ProductName   string   `json:"product_name"`
 	ForSale       bool     `json:"for_sale"`
 	SortOrder     int      `json:"sort_order"`
+	ModelID       string   `json:"model_id,omitempty"`
 }
 
 type UpdatePlanRequest struct {
@@ -190,6 +191,7 @@ type UpdatePlanRequest struct {
 	ProductName   *string  `json:"product_name"`
 	ForSale       *bool    `json:"for_sale"`
 	SortOrder     *int     `json:"sort_order"`
+	ModelID       *string  `json:"model_id,omitempty"`
 }
 
 // PaymentConfigService manages payment configuration and CRUD for

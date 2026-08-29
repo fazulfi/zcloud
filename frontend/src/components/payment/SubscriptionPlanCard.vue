@@ -65,9 +65,9 @@
           <span class="text-gray-400 dark:text-dark-500">{{ t('payment.planCard.monthlyLimit') }}</span>
           <span class="font-medium text-gray-700 dark:text-gray-300">${{ plan.monthly_limit_usd }}</span>
         </div>
-        <div v-if="plan.daily_limit_usd == null && plan.weekly_limit_usd == null && plan.monthly_limit_usd == null" class="flex items-center justify-between">
-          <span class="text-gray-400 dark:text-dark-500">{{ t('payment.planCard.quota') }}</span>
-          <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('payment.planCard.unlimited') }}</span>
+        <div v-if="showTokenQuota" class="flex items-center justify-between">
+          <span class="text-gray-400 dark:text-dark-500">{{ t('payment.planCard.tokenQuota') }}</span>
+          <span class="font-medium text-gray-700 dark:text-gray-300">{{ formattedTokens }}</span>
         </div>
         <div v-if="modelScopeLabels.length > 0" class="col-span-2 flex items-center justify-between">
           <span class="text-gray-400 dark:text-dark-500">{{ t('payment.planCard.models') }}</span>
@@ -152,6 +152,20 @@ const discountText = computed(() => {
 const rateDisplay = computed(() => {
   const rate = props.plan.rate_multiplier ?? 1
   return `×${Number(rate.toPrecision(10))}`
+})
+
+const showTokenQuota = computed(() =>
+  props.plan.daily_limit_usd == null
+  && props.plan.weekly_limit_usd == null
+  && props.plan.monthly_limit_usd == null
+  && (props.plan.tokens ?? 0) > 0
+)
+
+const formattedTokens = computed(() => {
+  const tokens = Math.max(0, Math.floor(props.plan.tokens ?? 0))
+  if (tokens >= 1_000_000) return `${Math.floor(tokens / 100_000) / 10}M`
+  if (tokens >= 1_000) return `${Math.floor(tokens / 100) / 10}K`
+  return tokens.toLocaleString()
 })
 
 const appStore = useAppStore()

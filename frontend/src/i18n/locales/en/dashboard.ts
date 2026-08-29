@@ -16,7 +16,7 @@ export default {
       emptyTitle: 'No model tokens yet',
       emptyDescription: 'Pick a plan to unlock a model — each plan adds a dedicated token balance that never expires.',
       buyPlan: 'Buy plan',
-      topUp: 'Top up',
+      buyMoreTokens: 'Buy more tokens',
       useModel: 'Use model',
       tokensRemaining: 'Tokens remaining',
       purchased: 'Purchased:',

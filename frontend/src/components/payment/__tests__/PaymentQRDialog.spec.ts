@@ -73,6 +73,40 @@ describe('PaymentQRDialog currency display', () => {
     vi.useRealTimers()
   })
 
+  it('verifies pending qris orders during polling', async () => {
+    const pendingOrder = { ...paidOrder, payment_type: 'qris', status: 'PENDING' as const }
+    const verifiedOrder = { ...pendingOrder, status: 'COMPLETED' as const }
+    pollOrderStatus.mockResolvedValue(pendingOrder)
+    verifyOrder.mockResolvedValue({ data: verifiedOrder })
+
+    const wrapper = mount(PaymentQRDialog, {
+      props: {
+        show: false,
+        orderId: 42,
+        qrCode: 'qris-code',
+        expiresAt: '2099-01-01T10:30:00Z',
+        paymentType: 'qris',
+      },
+      global: {
+        stubs: {
+          BaseDialog: {
+            props: ['show'],
+            template: '<div v-if="show"><slot /><slot name="footer" /></div>',
+          },
+          Icon: true,
+        },
+      },
+    })
+
+    await wrapper.setProps({ show: true })
+    await flushPromises()
+    await vi.advanceTimersByTimeAsync(3000)
+    await flushPromises()
+
+    expect(verifyOrder).toHaveBeenCalledWith(pendingOrder.out_trade_no)
+    expect(wrapper.emitted('success')).toHaveLength(1)
+  })
+
   it('uses order currency for pay_amount and USD for credited amount', async () => {
     const wrapper = mount(PaymentQRDialog, {
       props: {

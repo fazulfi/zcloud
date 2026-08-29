@@ -28,6 +28,20 @@ func (_c *SubscriptionPlanCreate) SetGroupID(v int64) *SubscriptionPlanCreate {
 	return _c
 }
 
+// SetModelID sets the "model_id" field.
+func (_c *SubscriptionPlanCreate) SetModelID(v string) *SubscriptionPlanCreate {
+	_c.mutation.SetModelID(v)
+	return _c
+}
+
+// SetNillableModelID sets the "model_id" field if the given value is not nil.
+func (_c *SubscriptionPlanCreate) SetNillableModelID(v *string) *SubscriptionPlanCreate {
+	if v != nil {
+		_c.SetModelID(*v)
+	}
+	return _c
+}
+
 // SetName sets the "name" field.
 func (_c *SubscriptionPlanCreate) SetName(v string) *SubscriptionPlanCreate {
 	_c.mutation.SetName(v)
@@ -363,6 +377,10 @@ func (_c *SubscriptionPlanCreate) createSpec() (*SubscriptionPlan, *sqlgraph.Cre
 		_spec.SetField(subscriptionplan.FieldGroupID, field.TypeInt64, value)
 		_node.GroupID = value
 	}
+	if value, ok := _c.mutation.ModelID(); ok {
+		_spec.SetField(subscriptionplan.FieldModelID, field.TypeString, value)
+		_node.ModelID = &value
+	}
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(subscriptionplan.FieldName, field.TypeString, value)
 		_node.Name = value
@@ -482,6 +500,24 @@ func (u *SubscriptionPlanUpsert) UpdateGroupID() *SubscriptionPlanUpsert {
 // AddGroupID adds v to the "group_id" field.
 func (u *SubscriptionPlanUpsert) AddGroupID(v int64) *SubscriptionPlanUpsert {
 	u.Add(subscriptionplan.FieldGroupID, v)
+	return u
+}
+
+// SetModelID sets the "model_id" field.
+func (u *SubscriptionPlanUpsert) SetModelID(v string) *SubscriptionPlanUpsert {
+	u.Set(subscriptionplan.FieldModelID, v)
+	return u
+}
+
+// UpdateModelID sets the "model_id" field to the value that was provided on create.
+func (u *SubscriptionPlanUpsert) UpdateModelID() *SubscriptionPlanUpsert {
+	u.SetExcluded(subscriptionplan.FieldModelID)
+	return u
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (u *SubscriptionPlanUpsert) ClearModelID() *SubscriptionPlanUpsert {
+	u.SetNull(subscriptionplan.FieldModelID)
 	return u
 }
 
@@ -722,6 +758,27 @@ func (u *SubscriptionPlanUpsertOne) AddGroupID(v int64) *SubscriptionPlanUpsertO
 func (u *SubscriptionPlanUpsertOne) UpdateGroupID() *SubscriptionPlanUpsertOne {
 	return u.Update(func(s *SubscriptionPlanUpsert) {
 		s.UpdateGroupID()
+	})
+}
+
+// SetModelID sets the "model_id" field.
+func (u *SubscriptionPlanUpsertOne) SetModelID(v string) *SubscriptionPlanUpsertOne {
+	return u.Update(func(s *SubscriptionPlanUpsert) {
+		s.SetModelID(v)
+	})
+}
+
+// UpdateModelID sets the "model_id" field to the value that was provided on create.
+func (u *SubscriptionPlanUpsertOne) UpdateModelID() *SubscriptionPlanUpsertOne {
+	return u.Update(func(s *SubscriptionPlanUpsert) {
+		s.UpdateModelID()
+	})
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (u *SubscriptionPlanUpsertOne) ClearModelID() *SubscriptionPlanUpsertOne {
+	return u.Update(func(s *SubscriptionPlanUpsert) {
+		s.ClearModelID()
 	})
 }
 
@@ -1157,6 +1214,27 @@ func (u *SubscriptionPlanUpsertBulk) AddGroupID(v int64) *SubscriptionPlanUpsert
 func (u *SubscriptionPlanUpsertBulk) UpdateGroupID() *SubscriptionPlanUpsertBulk {
 	return u.Update(func(s *SubscriptionPlanUpsert) {
 		s.UpdateGroupID()
+	})
+}
+
+// SetModelID sets the "model_id" field.
+func (u *SubscriptionPlanUpsertBulk) SetModelID(v string) *SubscriptionPlanUpsertBulk {
+	return u.Update(func(s *SubscriptionPlanUpsert) {
+		s.SetModelID(v)
+	})
+}
+
+// UpdateModelID sets the "model_id" field to the value that was provided on create.
+func (u *SubscriptionPlanUpsertBulk) UpdateModelID() *SubscriptionPlanUpsertBulk {
+	return u.Update(func(s *SubscriptionPlanUpsert) {
+		s.UpdateModelID()
+	})
+}
+
+// ClearModelID clears the value of the "model_id" field.
+func (u *SubscriptionPlanUpsertBulk) ClearModelID() *SubscriptionPlanUpsertBulk {
+	return u.Update(func(s *SubscriptionPlanUpsert) {
+		s.ClearModelID()
 	})
 }
 

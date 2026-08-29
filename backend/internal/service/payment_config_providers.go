@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -116,6 +117,7 @@ var providerSensitiveConfigFields = map[string]map[string]struct{}{
 	payment.TypeWxpay:     {"privatekey": {}, "apiv3key": {}, "publickey": {}},
 	payment.TypeStripe:    {"secretkey": {}, "webhooksecret": {}},
 	payment.TypeAirwallex: {"apikey": {}, "webhooksecret": {}},
+	"gomerch":             {"apikey": {}, "webhooksecret": {}},
 }
 
 // providerPendingOrderProtectedConfigFields lists config keys that cannot be
@@ -128,6 +130,7 @@ var providerPendingOrderProtectedConfigFields = map[string]map[string]struct{}{
 	payment.TypeWxpay:     {"privatekey": {}, "apiv3key": {}, "publickey": {}, "appid": {}, "mpappid": {}, "mchid": {}, "publickeyid": {}, "certserial": {}},
 	payment.TypeStripe:    {"secretkey": {}, "webhooksecret": {}, "currency": {}},
 	payment.TypeAirwallex: {"clientid": {}, "apikey": {}, "webhooksecret": {}, "apibase": {}, "accountid": {}, "currency": {}},
+	"gomerch":             {"apikey": {}, "webhooksecret": {}, "apibase": {}, "currency": {}, "idrrate": {}},
 }
 
 func isSensitiveProviderConfigField(providerKey, fieldName string) bool {
@@ -178,7 +181,7 @@ func (s *PaymentConfigService) countPendingOrdersByPlan(ctx context.Context, pla
 }
 
 var validProviderKeys = map[string]bool{
-	payment.TypeEasyPay: true, payment.TypeAlipay: true, payment.TypeWxpay: true, payment.TypeStripe: true, payment.TypeAirwallex: true,
+	payment.TypeEasyPay: true, payment.TypeAlipay: true, payment.TypeWxpay: true, payment.TypeStripe: true, payment.TypeAirwallex: true, "gomerch": true,
 }
 
 func (s *PaymentConfigService) CreateProviderInstance(ctx context.Context, req CreateProviderInstanceRequest) (*dbent.PaymentProviderInstance, error) {
@@ -186,10 +189,16 @@ func (s *PaymentConfigService) CreateProviderInstance(ctx context.Context, req C
 	if err := validateProviderRequest(req.ProviderKey, req.Name, typesStr); err != nil {
 		return nil, err
 	}
+	if req.ProviderKey == "gomerch" && req.Config == nil {
+		req.Config = map[string]string{}
+	}
 	if req.ProviderKey == payment.TypeEasyPay {
 		if err := validateEasyPayCustomMethods(req.Config, typesStr); err != nil {
 			return nil, err
 		}
+	}
+	if err := normalizeAndValidateGomerchConfig(req.ProviderKey, req.Config); err != nil {
+		return nil, err
 	}
 	if err := s.validateVisibleMethodEnablementConflicts(ctx, 0, req.ProviderKey, typesStr, req.Enabled); err != nil {
 		return nil, err
@@ -210,6 +219,26 @@ func (s *PaymentConfigService) CreateProviderInstance(ctx context.Context, req C
 		SetSortOrder(req.SortOrder).SetLimits(req.Limits).SetRefundEnabled(req.RefundEnabled).
 		SetAllowUserRefund(allowUserRefund).
 		Save(ctx)
+}
+
+func normalizeAndValidateGomerchConfig(providerKey string, config map[string]string) error {
+	if providerKey != "gomerch" {
+		return nil
+	}
+	if config == nil {
+		return nil
+	}
+	config["currency"] = "IDR"
+	rate := strings.TrimSpace(config["idrRate"])
+	if rate == "" {
+		rate = "16000"
+		config["idrRate"] = rate
+	}
+	parsed, err := strconv.ParseFloat(rate, 64)
+	if err != nil || math.IsNaN(parsed) || math.IsInf(parsed, 0) || parsed < 1 || parsed > 1000000 {
+		return infraerrors.BadRequest("VALIDATION_ERROR", "gomerch idrRate must be a number between 1 and 1000000")
+	}
+	return nil
 }
 
 func validateProviderRequest(providerKey, name, supportedTypes string) error {
@@ -357,6 +386,9 @@ func (s *PaymentConfigService) UpdateProviderInstance(ctx context.Context, id in
 		if err := validateEasyPayCustomMethods(configToValidate, nextSupportedTypes); err != nil {
 			return nil, err
 		}
+	}
+	if err := normalizeAndValidateGomerchConfig(current.ProviderKey, configToValidate); err != nil {
+		return nil, err
 	}
 	// Validate merged config when the instance will end up enabled.
 	// This surfaces provider-level errors (e.g. wxpay missing certSerial) at save time,

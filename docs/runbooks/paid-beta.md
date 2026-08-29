@@ -1,6 +1,6 @@
 # Paid-beta operational runbook
 
-> Domain of record: `zrouter.dev`. Staging: `zrouter.82.25.62.204.sslip.io`. Owner: release operator. Never put credentials in this document or in Git.
+> Access: tailnet-only `http://ggl-vps.tail05ac84.ts.net:18080`. Domain `zrouter.dev` is parked at Hostinger and NOT used. Owner: release operator. Never put credentials in this document or in Git.
 
 ## Scope and success criteria
 
@@ -9,8 +9,8 @@ This runbook covers the first paid-beta release of zrouter: a pinned image, veri
 ## Pre-launch checklist
 
 - [ ] Confirm the release commit, immutable image tag, image digest, and migration list. Migrations 001–230 remain unchanged; new migrations start at 231 and are forward-only.
-- [ ] DNS/TLS: `zrouter.dev`, `api.zrouter.dev`, and `app.zrouter.dev` resolve to the intended edge; staging resolves to `zrouter.82.25.62.204.sslip.io`; certificates renew successfully; nginx/Caddy has SSE `proxy_buffering off`.
-- [ ] SMTP: verify `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM=support@zrouter.dev`, SPF, DKIM, and DMARC. Send and receive a support test message.
+- [ ] Tailnet: node `ggl-vps` reachable at `100.100.17.99` / `ggl-vps.tail05ac84.ts.net` from all admin devices; `http://ggl-vps.tail05ac84.ts.net:18080` serves the app; no public DNS/TLS required.
+- [ ] SMTP: verify `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM=admin@ggl-vps.tail05ac84.ts.net`, SPF, DKIM, and DMARC. Send and receive a support test message.
 - [ ] Secrets: rotate and store `JWT_SECRET`, `TOTP_ENCRYPTION_KEY`, `API_KEY_SECRET`, database/Redis credentials, supplier and Tron keys, wallet credentials, Telegram token, SMTP credentials, and webhook signing secret. Confirm `.env.zcloud` is mode 600 and absent from Git.
 - [ ] Staging sign-off: deploy the candidate to `/opt/zcloud`, run `curl -fsS http://localhost:18080/health`, `/health/live`, `/health/ready`, login, model listing, a small gateway request, billing/usage read, wallet deposit observation, and an email test.
 - [ ] Backup: confirm the latest PostgreSQL logical backup, Redis snapshot, off-host copy, rotation, and restore-drill record. PG RPO is ≤15 minutes when WAL/PITR is available; RTO is ≤60 minutes.
@@ -32,7 +32,7 @@ This runbook covers the first paid-beta release of zrouter: a pinned image, veri
 - [ ] Supplier latency/error rate and request cost stay within baseline; no elevated 5xx/timeouts.
 - [ ] Wallet deposit/confirmation and balance changes occur once; billing ledger, usage, and displayed balance agree.
 - [ ] No duplicate wallet credit, negative balance, or billing drift; compare ledger to supplier usage.
-- [ ] Support email reaches `support@zrouter.dev` and replies thread correctly.
+- [ ] Support email reaches `admin@ggl-vps.tail05ac84.ts.net` and replies thread correctly.
 - [ ] Watch logs, gateway latency p95/p99, readiness, DB pool, Redis errors, queue/backlog, supplier errors, payment confirmations, and security events for the observation window.
 
 ## Monitoring and alert response
@@ -59,7 +59,7 @@ Run `deploy/backup.sh` on the host from `/opt/zcloud`; it writes timestamped Pos
 
 ## Support flow
 
-Customer reports go to **support@zrouter.dev**. Support records customer, UTC timestamp, plan, request/correlation ID, endpoint, release version, symptoms, and screenshots/log excerpts without secrets. Acknowledge within the paid-beta SLA, classify billing/wallet/security incidents as urgent, and hand off to on-call with the incident template. Never request API keys, passwords, wallet private keys, or SMTP credentials by email.
+Customer reports go to **admin@ggl-vps.tail05ac84.ts.net**. Support records customer, UTC timestamp, plan, request/correlation ID, endpoint, release version, symptoms, and screenshots/log excerpts without secrets. Acknowledge within the paid-beta SLA, classify billing/wallet/security incidents as urgent, and hand off to on-call with the incident template. Never request API keys, passwords, wallet private keys, or SMTP credentials by email.
 
 ## Post-launch checklist
 

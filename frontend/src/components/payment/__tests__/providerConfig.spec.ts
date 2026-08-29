@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
+  METHOD_ORDER,
   PAYMENT_CURRENCY_OPTIONS,
+  PROVIDER_CALLBACK_PATHS,
   PROVIDER_CONFIG_FIELDS,
+  PROVIDER_SUPPORTED_TYPES,
+  WEBHOOK_PATHS,
   isBuiltInAlipayMethod,
   isBuiltInWxpayMethod,
   parseEasyPayCustomMethods,
@@ -12,6 +16,21 @@ function findField(providerKey: string, key: string) {
   const fields = PROVIDER_CONFIG_FIELDS[providerKey] || []
   return fields.find(field => field.key === key)
 }
+
+describe('GoMerch provider configuration', () => {
+  it('supports QRIS and exposes its callback paths and fields', () => {
+    expect(PROVIDER_SUPPORTED_TYPES.gomerch).toEqual(['qris'])
+    expect(METHOD_ORDER).toContain('qris')
+    expect(WEBHOOK_PATHS.gomerch).toBe('/api/v1/payment/webhook/gomerch')
+    expect(PROVIDER_CALLBACK_PATHS.gomerch).toEqual({ notifyUrl: WEBHOOK_PATHS.gomerch })
+    expect(findField('gomerch', 'apiKey')).toMatchObject({ sensitive: true })
+    expect(findField('gomerch', 'apiKey')?.optional).toBeUndefined()
+    expect(findField('gomerch', 'webhookSecret')).toMatchObject({ sensitive: true, optional: true })
+    expect(findField('gomerch', 'apiBase')).toMatchObject({ defaultValue: 'https://v1-api.pay-gomerch.web.id' })
+    expect(findField('gomerch', 'currency')).toMatchObject({ defaultValue: 'IDR', options: PAYMENT_CURRENCY_OPTIONS })
+    expect(findField('gomerch', 'idrRate')).toMatchObject({ defaultValue: '16000' })
+  })
+})
 
 describe('PROVIDER_CONFIG_FIELDS.wxpay', () => {
   it('keeps admin form validation aligned with backend-required credentials', () => {

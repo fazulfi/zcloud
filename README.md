@@ -222,7 +222,7 @@ Nginx drops headers containing underscores by default (e.g. `session_id`), which
 
 ### Vercel frontend + VPS backend
 
-The frontend is a static Vite application deployed from `frontend/` to Vercel (`app.zrouter.dev`). The backend remains on the VPS at `api.zrouter.dev`; staging uses `zrouter.82.25.62.204.sslip.io`. Configure `VITE_API_BASE_URL` and `VITE_WS_BASE_URL` in Vercel as documented in [`docs/runbooks/deployment.md`](docs/runbooks/deployment.md). The frontend calls the API directly with CORS, so no Vercel API rewrites are required; allow both frontend origins in backend `CORS_ALLOWED_ORIGINS`.
+The frontend is a static Vite application embedded into the backend binary (`-tags embed`) and served from the same container. Access is tailnet-only: `http://ggl-vps.tail05ac84.ts.net:18080` (or `http://100.100.17.99:18080`). Configure `VITE_API_BASE_URL` and `VITE_WS_BASE_URL` in `frontend/.env.production` as documented in [`docs/runbooks/deployment.md`](docs/runbooks/deployment.md). The frontend calls the API directly with CORS; keep `CORS_ALLOWED_ORIGINS` on the tailnet origin.
 
 ### Method 1: Script Installation (Recommended)
 

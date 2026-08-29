@@ -84,8 +84,17 @@ func (s *PaymentService) CreateOrder(ctx context.Context, req CreateOrderRequest
 	if sel != nil {
 		selectedCurrency = paymentProviderConfigCurrency(sel.ProviderKey, sel.Config)
 	}
-	if selectedCurrency != methodCurrency {
-		payAmountStr, payAmount, err = calculateCreateOrderPayAmountForOrderType(limitAmount, feeRate, selectedCurrency, req.OrderType, cfg.SubscriptionUSDToCNYRate)
+	needsGomerchConversion := sel != nil && sel.ProviderKey == payment.TypeGomerch && req.OrderType == payment.OrderTypeSubscription && s.gomerchIDRRate(sel) > 0
+	if needsGomerchConversion || selectedCurrency != methodCurrency {
+		if needsGomerchConversion {
+			paymentAmount := decimal.NewFromFloat(limitAmount).
+				Mul(decimal.NewFromFloat(s.gomerchIDRRate(sel))).
+				Round(int32(payment.CurrencyMaxFractionDigits(selectedCurrency))).
+				InexactFloat64()
+			payAmountStr, payAmount, err = calculateCreateOrderPayAmount(paymentAmount, feeRate, selectedCurrency)
+		} else {
+			payAmountStr, payAmount, err = calculateCreateOrderPayAmountForOrderType(limitAmount, feeRate, selectedCurrency, req.OrderType, cfg.SubscriptionUSDToCNYRate)
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -624,6 +633,17 @@ func (s *PaymentService) validateSelectedCreateOrderInstance(ctx context.Context
 		return infraerrors.TooManyRequests("NO_AVAILABLE_INSTANCE", "selected payment instance is not compatible with the current WeChat OAuth app")
 	}
 	return nil
+}
+
+func (s *PaymentService) gomerchIDRRate(sel *payment.InstanceSelection) float64 {
+	if sel == nil || sel.ProviderKey != payment.TypeGomerch {
+		return 0
+	}
+	rate, err := strconv.ParseFloat(strings.TrimSpace(sel.Config["idrRate"]), 64)
+	if err != nil || rate <= 0 {
+		return 16000
+	}
+	return rate
 }
 
 func calculateCreateOrderPayAmount(limitAmount, feeRate float64, currency string) (string, float64, error) {

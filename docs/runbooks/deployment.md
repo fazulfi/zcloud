@@ -7,13 +7,13 @@
 
 | Env | URL | Host | Notes |
 |---|---|---|---|
-| staging | zrouter.82.25.62.204.sslip.io | 82.25.62.204 (SG) | Port 18080/18443, VPS host PG+Redis, nginx TLS |
-| production | zrouter.dev / api.zrouter.dev / app.zrouter.dev | 82.25.62.204 (SG) | Caddy/nginx TLS, managed PG/Redis or same VPS |
+ current | https://app.zrouter.dev | Cloudflare TLS | nginx vhost → 127.0.0.1:18080; compose-managed PG/Redis |
+| future public | (none — parked at Hostinger) | — | Re-enable ONLY via Tailscale Serve/Funnel; no nginx/Caddy vhosts |
 
 ## Staging deploy (rehearsal)
 
 ```bash
-# On VPS (root@82.25.62.204) or from CI artifact:
+# On VPS (ssh faiz-prod) or from CI artifact:
 cd /opt/zcloud/deploy
 cp .env.zcloud.example .env.zcloud && chmod 600 .env.zcloud
 # edit .env.zcloud: DATABASE_PASSWORD, REDIS_PASSWORD, JWT_SECRET, TOTP_ENCRYPTION_KEY,
@@ -30,7 +30,7 @@ Host nginx site (staging):
 # /etc/nginx/sites-available/zrouter-staging
 server {
     listen 80;
-    server_name zrouter.82.25.62.204.sslip.io;
+    server_name api.zrouter.dev app.zrouter.dev;
     underscores_in_headers on;              # required: sticky-session underscore headers
     client_max_body_size 256m;
     location / {
@@ -60,14 +60,14 @@ TLS: Caddyfile.zcloud (Caddy handles ACME) OR host nginx + certbot. SSE: keep `p
 
 ## Embedded frontend
 
-The frontend is built as a static Vite bundle and embedded into the backend binary (`-tags embed`, `//go:embed all:dist` in `backend/internal/web`). One container serves both API and SPA from `127.0.0.1:18080`, so `app.zrouter.dev` and `api.zrouter.dev` both point at the same zrouter service (nginx/Caddy reverse proxy).
+The frontend is built as a static Vite bundle and embedded into the backend binary (`-tags embed`, `//go:embed all:dist` in `backend/internal/web`). One container serves both API and SPA from `127.0.0.1:18080`, served at `https://app.zrouter.dev` (Cloudflare TLS → nginx → 18080).
 
 1. Build the frontend: `cd frontend && pnpm install --frozen-lockfile && pnpm build` (uses `frontend/.env.production` → `VITE_API_BASE_URL=https://api.zrouter.dev/api/v1`, `VITE_WS_BASE_URL=wss://api.zrouter.dev`).
 2. The Dockerfile copies `frontend/dist` into `backend/internal/web/dist` and builds with `-tags embed` — no separate frontend deploy step.
-3. Configure backend `CORS_ALLOWED_ORIGINS` as `https://app.zrouter.dev,https://api.zrouter.dev,https://zrouter.82.25.62.204.sslip.io` (or the equivalent `cors.allowed_origins` YAML list). This deployment uses direct browser API calls with CORS; API rewrites are intentionally not configured.
+3. Configure backend `CORS_ALLOWED_ORIGINS` as `https://app.zrouter.dev,https://api.zrouter.dev,http://localhost:18080` (or the equivalent `cors.allowed_origins` YAML list). This deployment uses direct browser API calls with CORS; API rewrites are intentionally not configured.
 4. SPA fallback: `frontend/vercel.json` is retained for local/legacy static hosting; when embedded, the backend serves SPA routes directly.
 
-OAuth provider settings must use backend callbacks: production Google callback `https://api.zrouter.dev/api/v1/auth/oauth/google/callback` and staging callback `https://zrouter.82.25.62.204.sslip.io/api/v1/auth/oauth/google/callback`. The frontend starts Google OAuth at `/auth/oauth/google/start` under the configured API base (therefore `https://api.zrouter.dev/api/v1/auth/oauth/google/start` in production). The callback UI routes are `/auth/callback` and its alias `/auth/oauth/callback`; keep the backend frontend redirect setting at `/auth/oauth/callback`.
+OAuth provider settings must use backend callbacks on the domain: `https://api.zrouter.dev/api/v1/auth/oauth/google/callback` (and github equivalent). The frontend starts Google OAuth at `/auth/oauth/google/start` under the configured API base (`https://api.zrouter.dev/api/v1/auth/oauth/google/start`). The callback UI routes are `/auth/callback` and its alias `/auth/oauth/callback`; keep the backend frontend redirect setting at `/auth/oauth/callback`.
 
 ## Migration policy
 

@@ -1,5 +1,5 @@
-# zcloud Caddy reverse proxy (production)
-# Staging uses host nginx → localhost:18080 (see docs/runbooks/deployment.md)
+# zcloud Caddy reverse proxy (production) — reference config; host nginx serves in practice
+# Access: https://app.zrouter.dev (SPA) / https://api.zrouter.dev (API) — TLS at Cloudflare
 # SSE note: Caddy does not buffer by default → safe for streaming relays.
 
 {

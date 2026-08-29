@@ -7,7 +7,7 @@
           <h2 class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">{{ t('dashboard.catalog.title') }}</h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('dashboard.catalog.description') }}</p>
         </div>
-        <RouterLink to="/purchase" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+        <RouterLink to="/model-plaza" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
           {{ t('dashboard.catalog.browsePlans') }} <span aria-hidden="true">→</span>
         </RouterLink>
       </div>
@@ -19,7 +19,7 @@
       </div>
       <h3 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">{{ t('dashboard.catalog.emptyTitle') }}</h3>
       <p class="mx-auto mt-1 max-w-md text-sm text-gray-500 dark:text-gray-400">{{ t('dashboard.catalog.emptyDescription') }}</p>
-      <RouterLink to="/purchase" class="mt-5 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+      <RouterLink to="/model-plaza" class="mt-5 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
         {{ t('dashboard.catalog.buyPlan') }}
       </RouterLink>
     </div>
@@ -51,8 +51,8 @@
           </div>
         </div>
         <div class="mt-5 flex flex-wrap gap-2">
-          <RouterLink :to="purchaseLink(balance.model)" :class="balance.status === 'active' ? 'border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-dark-500 dark:text-gray-200 dark:hover:bg-dark-700' : 'bg-blue-600 text-white hover:bg-blue-700'" class="inline-flex flex-1 items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold transition">
-            {{ balance.status === 'active' ? t('dashboard.catalog.topUp') : t('dashboard.catalog.buyPlan') }}
+          <RouterLink :to="`/model-plaza/model/${encodeURIComponent(balance.model)}`" :class="balance.status === 'active' ? 'border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-dark-500 dark:text-gray-200 dark:hover:bg-dark-700' : 'bg-blue-600 text-white hover:bg-blue-700'" class="inline-flex flex-1 items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold transition">
+            {{ balance.status === 'active' ? t('dashboard.catalog.buyMoreTokens') : t('dashboard.catalog.buyPlan') }}
           </RouterLink>
           <RouterLink v-if="balance.status === 'active'" to="/keys" class="inline-flex flex-1 items-center justify-center rounded-lg border border-blue-200 px-3 py-2 text-xs font-semibold text-blue-600 transition hover:bg-blue-50 dark:border-blue-900 dark:text-blue-400 dark:hover:bg-blue-950/30">
             {{ t('dashboard.catalog.useModel') }}
@@ -78,7 +78,6 @@ const formatTokens = (value: number): string => {
   return tokens.toLocaleString()
 }
 const usagePercent = (value: number): number => Math.min(100, Math.max(0, Math.floor(value || 0)))
-const purchaseLink = (model: string) => ({ path: '/purchase', query: { tab: 'subscription', model } })
 const statusLabel = (status: ModelBalance['status']) => t(`dashboard.catalog.status.${status === 'not_purchased' ? 'notPurchased' : status}`)
 const statusClass = (status: ModelBalance['status']) => status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : status === 'blocked' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-gray-100 text-gray-600 dark:bg-dark-600 dark:text-gray-300'
 </script>

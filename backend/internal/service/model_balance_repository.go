@@ -8,8 +8,10 @@ type CustomerModelBalanceRepository interface {
 }
 
 type ModelBalanceRepository interface {
+	ListByUser(ctx context.Context, userID int64) ([]ModelBalance, error)
 	GetByUserAndModel(ctx context.Context, userID int64, modelID string) (*ModelBalance, error)
 	SetBlocked(ctx context.Context, userID int64, modelID string, blocked bool) error
+	CreditTokens(ctx context.Context, userID int64, modelID string, tokens int64) error
 }
 
 // ModelBalance is the service representation of a model balance row.

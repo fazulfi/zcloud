@@ -58,17 +58,6 @@ export default {
     dockerRecreate: '重新创建容器'
   },
 
-  // Recharge / Subscription Page
-  purchase: {
-    title: '充值/订阅',
-    description: '通过内嵌页面完成充值/订阅',
-    openInNewTab: '新窗口打开',
-    notEnabledTitle: '该功能未开启',
-    notEnabledDesc: '管理员暂未开启充值/订阅入口，请联系管理员。',
-    notConfiguredTitle: '充值/订阅链接未配置',
-    notConfiguredDesc: '管理员已开启入口，但尚未配置充值/订阅链接，请联系管理员。'
-  },
-
   // Custom Page (iframe embed)
   customPage: {
     title: '自定义页面',
@@ -405,9 +394,9 @@ export default {
     rechargeAccount: '充值账户',
     activeSubscription: '当前订阅',
     noActiveSubscription: '暂无有效订阅',
-    tabTopUp: '充值',
-    tabSubscribe: '订阅',
     noPlans: '暂无可用订阅套餐',
+    backToCatalog: '返回目录',
+    noPlansForModel: '该模型暂无可用套餐',
     notAvailable: '充值功能暂未开放',
     confirmSubscription: '确认订阅',
     confirmCancel: '确定要取消此订单吗？',
@@ -487,6 +476,7 @@ export default {
       weeklyLimit: '周限额',
       monthlyLimit: '月限额',
       quota: '配额',
+      tokenQuota: '令牌',
       unlimited: '无限制',
       models: '模型',
     },

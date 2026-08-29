@@ -16,7 +16,7 @@ export default {
       emptyTitle: '还没有模型 Token',
       emptyDescription: '选择一个套餐即可解锁模型——每个套餐都会添加永不过期的专属 Token 余额。',
       buyPlan: '购买套餐',
-      topUp: '充值',
+      buyMoreTokens: '购买更多令牌',
       useModel: '使用模型',
       tokensRemaining: '剩余 Token',
       purchased: '已购：',

@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
+
 	dbent "github.com/Wei-Shaw/sub2api/ent"
 	"github.com/Wei-Shaw/sub2api/ent/modelbalance"
 	"github.com/Wei-Shaw/sub2api/ent/modelcatalog"
@@ -77,6 +79,31 @@ func (r *modelBalanceRepository) SetBlocked(ctx context.Context, userID int64, m
 		SetStatus(status).
 		Save(ctx)
 	return err
+}
+
+func (r *modelBalanceRepository) CreditTokens(ctx context.Context, userID int64, modelID string, tokens int64) error {
+	if r == nil || r.client == nil {
+		return errors.New("model balance repository client is nil")
+	}
+	client := clientFromContext(ctx, r.client)
+	return client.ModelBalance.Create().
+		SetID(uuid.NewString()).
+		SetUserID(userID).
+		SetModelID(modelID).
+		SetTokensPurchased(tokens).
+		SetTokensConsumed(0).
+		SetBalance(tokens).
+		SetUsagePercent(0).
+		SetStatus("active").
+		SetVersion(1).
+		OnConflictColumns(modelbalance.FieldUserID, modelbalance.FieldModelID).
+		Update(func(u *dbent.ModelBalanceUpsert) {
+			u.AddTokensPurchased(tokens).
+				AddBalance(tokens).
+				SetStatus("active").
+				AddVersion(1)
+		}).
+		Exec(ctx)
 }
 
 var _ service.ModelBalanceRepository = (*modelBalanceRepository)(nil)

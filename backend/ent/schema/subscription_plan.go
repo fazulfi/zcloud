@@ -31,6 +31,10 @@ func (SubscriptionPlan) Annotations() []schema.Annotation {
 func (SubscriptionPlan) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("group_id"),
+		field.String("model_id").
+			SchemaType(map[string]string{dialect.Postgres: "uuid"}).
+			Optional().
+			Nillable(),
 		field.String("name").
 			MaxLen(100).
 			NotEmpty(),

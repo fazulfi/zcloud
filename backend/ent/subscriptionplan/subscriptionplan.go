@@ -15,6 +15,8 @@ const (
 	FieldID = "id"
 	// FieldGroupID holds the string denoting the group_id field in the database.
 	FieldGroupID = "group_id"
+	// FieldModelID holds the string denoting the model_id field in the database.
+	FieldModelID = "model_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldDescription holds the string denoting the description field in the database.
@@ -49,6 +51,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldGroupID,
+	FieldModelID,
 	FieldName,
 	FieldDescription,
 	FieldPrice,
@@ -118,6 +121,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByGroupID orders the results by the group_id field.
 func ByGroupID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGroupID, opts...).ToFunc()
+}
+
+// ByModelID orders the results by the model_id field.
+func ByModelID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldModelID, opts...).ToFunc()
 }
 
 // ByName orders the results by the name field.

@@ -59,6 +59,11 @@ func GroupID(v int64) predicate.SubscriptionPlan {
 	return predicate.SubscriptionPlan(sql.FieldEQ(FieldGroupID, v))
 }
 
+// ModelID applies equality check predicate on the "model_id" field. It's identical to ModelIDEQ.
+func ModelID(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldEQ(FieldModelID, v))
+}
+
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
 func Name(v string) predicate.SubscriptionPlan {
 	return predicate.SubscriptionPlan(sql.FieldEQ(FieldName, v))
@@ -162,6 +167,81 @@ func GroupIDLT(v int64) predicate.SubscriptionPlan {
 // GroupIDLTE applies the LTE predicate on the "group_id" field.
 func GroupIDLTE(v int64) predicate.SubscriptionPlan {
 	return predicate.SubscriptionPlan(sql.FieldLTE(FieldGroupID, v))
+}
+
+// ModelIDEQ applies the EQ predicate on the "model_id" field.
+func ModelIDEQ(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldEQ(FieldModelID, v))
+}
+
+// ModelIDNEQ applies the NEQ predicate on the "model_id" field.
+func ModelIDNEQ(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldNEQ(FieldModelID, v))
+}
+
+// ModelIDIn applies the In predicate on the "model_id" field.
+func ModelIDIn(vs ...string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldIn(FieldModelID, vs...))
+}
+
+// ModelIDNotIn applies the NotIn predicate on the "model_id" field.
+func ModelIDNotIn(vs ...string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldNotIn(FieldModelID, vs...))
+}
+
+// ModelIDGT applies the GT predicate on the "model_id" field.
+func ModelIDGT(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldGT(FieldModelID, v))
+}
+
+// ModelIDGTE applies the GTE predicate on the "model_id" field.
+func ModelIDGTE(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldGTE(FieldModelID, v))
+}
+
+// ModelIDLT applies the LT predicate on the "model_id" field.
+func ModelIDLT(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldLT(FieldModelID, v))
+}
+
+// ModelIDLTE applies the LTE predicate on the "model_id" field.
+func ModelIDLTE(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldLTE(FieldModelID, v))
+}
+
+// ModelIDContains applies the Contains predicate on the "model_id" field.
+func ModelIDContains(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldContains(FieldModelID, v))
+}
+
+// ModelIDHasPrefix applies the HasPrefix predicate on the "model_id" field.
+func ModelIDHasPrefix(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldHasPrefix(FieldModelID, v))
+}
+
+// ModelIDHasSuffix applies the HasSuffix predicate on the "model_id" field.
+func ModelIDHasSuffix(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldHasSuffix(FieldModelID, v))
+}
+
+// ModelIDIsNil applies the IsNil predicate on the "model_id" field.
+func ModelIDIsNil() predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldIsNull(FieldModelID))
+}
+
+// ModelIDNotNil applies the NotNil predicate on the "model_id" field.
+func ModelIDNotNil() predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldNotNull(FieldModelID))
+}
+
+// ModelIDEqualFold applies the EqualFold predicate on the "model_id" field.
+func ModelIDEqualFold(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldEqualFold(FieldModelID, v))
+}
+
+// ModelIDContainsFold applies the ContainsFold predicate on the "model_id" field.
+func ModelIDContainsFold(v string) predicate.SubscriptionPlan {
+	return predicate.SubscriptionPlan(sql.FieldContainsFold(FieldModelID, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.

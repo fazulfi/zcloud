@@ -19,6 +19,7 @@ const PAYMENT_CURRENCY_SYMBOLS: Record<string, string> = {
   THB: '฿',
   PHP: '₱',
   INR: '₹',
+  IDR: 'Rp',
 }
 
 export function normalizePaymentCurrency(currency?: string | null): string {
@@ -44,7 +45,7 @@ function paymentCurrencyFractionDigits(currency: string): number {
 
 export function formatPaymentAmount(amount: number, currency?: string | null, locale?: string): string {
   const normalized = normalizePaymentCurrency(currency)
-  const fractionDigits = paymentCurrencyFractionDigits(normalized)
+  const fractionDigits = normalized === 'IDR' ? 0 : paymentCurrencyFractionDigits(normalized)
   try {
     return new Intl.NumberFormat(locale || undefined, {
       style: 'currency',

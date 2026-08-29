@@ -26,6 +26,7 @@ var paymentCurrencyAmountUnits = map[string]paymentCurrencyAmountUnit{
 	"CLP": zeroDecimalAmountUnit,
 	"DJF": zeroDecimalAmountUnit,
 	"GNF": zeroDecimalAmountUnit,
+	"IDR": zeroDecimalAmountUnit,
 	"JPY": zeroDecimalAmountUnit,
 	"KMF": zeroDecimalAmountUnit,
 	"KRW": zeroDecimalAmountUnit,

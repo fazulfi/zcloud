@@ -194,6 +194,15 @@ const routes: RouteRecordRaw[] = [
       titleKey: 'modelPlaza.title'
     }
   },
+  {
+    path: '/model-plaza/model/:name',
+    name: 'ModelDetail',
+    component: () => import('@/views/user/ModelDetailView.vue'),
+    meta: {
+      requiresAuth: false,
+      titleKey: 'nav.modelPlaza'
+    }
+  },
 
   // ==================== User Routes ====================
   {
@@ -318,16 +327,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/purchase',
-    name: 'PurchaseSubscription',
-    component: () => import('@/views/user/PaymentView.vue'),
-    meta: {
-      requiresAuth: true,
-      requiresAdmin: false,
-      title: 'Purchase Subscription',
-      titleKey: 'nav.buySubscription',
-      descriptionKey: 'purchase.description',
-      requiresPayment: true
-    }
+    redirect: '/model-plaza'
   },
   {
     path: '/orders',
@@ -772,7 +772,7 @@ let authInitialized = false
 const navigationLoading = useNavigationLoadingState()
 // 延迟初始化预加载，传入 router 实例
 let routePrefetch: ReturnType<typeof useRoutePrefetch> | null = null
-const BACKEND_MODE_ALLOWED_PATHS = ['/login', '/key-usage', '/setup', '/payment/result', '/payment/airwallex', '/legal']
+const BACKEND_MODE_ALLOWED_PATHS = ['/login', '/key-usage', '/setup', '/payment/result', '/payment/airwallex', '/legal', '/model-plaza']
 const BACKEND_MODE_CALLBACK_PATHS = [
   '/auth/callback',
   '/auth/linuxdo/callback',
@@ -852,7 +852,7 @@ router.beforeEach(async (to, _from, next) => {
       return
     }
     // Model Plaza:公开路由但受「启用开关 + 可选强制登录」双重控制(后端同口径 fail-closed)
-    if (to.path === '/model-plaza') {
+    if (to.path === '/model-plaza' || to.path.startsWith('/model-plaza/')) {
       if (!appStore.publicSettingsLoaded) {
         try {
           await appStore.fetchPublicSettings()
@@ -872,13 +872,11 @@ router.beforeEach(async (to, _from, next) => {
         )
         return
       }
-      if (plazaSettings?.model_plaza_require_auth === true && !authStore.isAuthenticated) {
+      if (
+        !authStore.isAuthenticated &&
+        (plazaSettings?.model_plaza_require_auth === true || appStore.backendModeEnabled)
+      ) {
         next({ path: '/login', query: { redirect: to.fullPath } })
-        return
-      }
-      // Backend mode:登录的非管理员也不可见(匿名由下方公共拦截处理,广场不在白名单)
-      if (appStore.backendModeEnabled && authStore.isAuthenticated && !authStore.isAdmin) {
-        next('/login')
         return
       }
     }

@@ -245,6 +245,13 @@ func TestIsSensitiveProviderConfigField(t *testing.T) {
 		{payment.TypeAirwallex, "currency", false},
 
 		// Unknown provider: never sensitive
+		// GoMerch
+		{"gomerch", "apiKey", true},
+		{"gomerch", "webhookSecret", true},
+		{"gomerch", "apiBase", false},
+		{"gomerch", "currency", false},
+
+		// Unknown provider: never sensitive
 		{"unknown", "secretKey", false},
 	}
 
@@ -256,6 +263,28 @@ func TestIsSensitiveProviderConfigField(t *testing.T) {
 			got := isSensitiveProviderConfigField(tc.providerKey, tc.field)
 			assert.Equal(t, tc.wantSen, got, "isSensitiveProviderConfigField(%q, %q)", tc.providerKey, tc.field)
 		})
+	}
+}
+
+func TestGomerchProviderConfiguration(t *testing.T) {
+	t.Parallel()
+
+	assert.True(t, validProviderKeys["gomerch"])
+	assert.True(t, isSensitiveProviderConfigField("gomerch", "apikey"))
+	assert.True(t, isSensitiveProviderConfigField("gomerch", "webhooksecret"))
+	assert.True(t, hasPendingOrderProtectedConfigChange("gomerch", map[string]string{"apiBase": "a"}, map[string]string{"apiBase": "b"}))
+	assert.True(t, hasPendingOrderProtectedConfigChange("gomerch", map[string]string{"currency": "CNY"}, map[string]string{"currency": "IDR"}))
+	assert.True(t, hasPendingOrderProtectedConfigChange("gomerch", map[string]string{"idrRate": "16000"}, map[string]string{"idrRate": "17000"}))
+
+	config := map[string]string{}
+	require.NoError(t, normalizeAndValidateGomerchConfig("gomerch", config))
+	assert.Equal(t, "IDR", config["currency"])
+	assert.Equal(t, "16000", config["idrRate"])
+
+	for _, rate := range []string{"0", "1000001", "not-a-number"} {
+		err := normalizeAndValidateGomerchConfig("gomerch", map[string]string{"idrRate": rate})
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "idrRate must be a number between 1 and 1000000")
 	}
 }
 

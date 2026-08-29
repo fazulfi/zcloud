@@ -19,6 +19,12 @@ func (r *fakeModelBalanceRepository) GetByUserAndModel(context.Context, int64, s
 func (r *fakeModelBalanceRepository) SetBlocked(context.Context, int64, string, bool) error {
 	return nil
 }
+func (r *fakeModelBalanceRepository) ListByUser(context.Context, int64) ([]ModelBalance, error) {
+	return nil, nil
+}
+func (r *fakeModelBalanceRepository) CreditTokens(context.Context, int64, string, int64) error {
+	return nil
+}
 
 func TestCheckModelAdmission(t *testing.T) {
 	cases := []struct {

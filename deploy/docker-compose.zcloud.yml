@@ -1,12 +1,12 @@
 # zcloud production docker compose (fork build)
 
-# Staging (MVP): zcloud.82.25.62.204.sslip.io → nginx host :18080/:18443
-# Production:   zrouter.dev / api.zrouter.dev / app.zrouter.dev (TLS via Caddy/nginx)
+# Production: zrouter.dev / api.zrouter.dev / app.zrouter.dev (TLS at Cloudflare, origin nginx)
+# Access:        https://app.zrouter.dev (SPA) / https://api.zrouter.dev (API)
 
 # Stack: zrouter (stateless, built from fork, NOT weishaw/sub2api:latest)
-#        postgres   — pinned, named volume, private network (VPS host PG reuse for staging)
-#        redis      — pinned, password, private network (VPS host Redis reuse for staging)
-#        caddy/nginx— TLS reverse proxy, SSE buffering off (host nginx for staging)
+#        postgres   — pinned, named volume, private docker network (compose-managed)
+#        redis      — pinned, password, private docker network (compose-managed)
+#        caddy/nginx— TLS reverse proxy, SSE buffering off (host nginx; Cloudflare TLS)
 
 # Usage:
 #   cp deploy/.env.zcloud.example deploy/.env.zcloud && chmod 600 deploy/.env.zcloud
@@ -46,13 +46,13 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "-T", "5", "-O", "/dev/null", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "-q", "-T", "5", "-O", "/dev/null", "http://localhost:${SERVER_PORT:-18080}/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-  # Staging only: isolated PG/Redis. Production may point DATABASE_HOST/REDIS_HOST
+  # Compose-managed PG/Redis on private network; DATABASE_HOST/REDIS_HOST may point at external instances
   # at managed instances; keep these services on the private network.
   postgres:
     image: postgres:18-alpine

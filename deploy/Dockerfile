@@ -8,37 +8,18 @@
 
 ARG GOLANG_IMAGE=golang:1.27.0-alpine
 ARG ALPINE_IMAGE=alpine:3.20
-ARG NODE_IMAGE=node:20-alpine
 ARG GOPROXY=https://goproxy.cn,direct
 ARG GOSUMDB=sum.golang.google.cn
 
 # -----------------------------------------------------------------------------
-# Stage 1: Frontend Builder (Vue/Vite). Builds the SPA that gets embedded into
-# the Go binary via -tags embed (see internal/web/embed_on.go).
-# FRONTEND_MODE selects the Vite mode -> frontend/.env.<mode> is loaded by Vite:
-#   - production: VITE_API_BASE_URL=https://api.zrouter.dev/api/v1 (.env.production)
-#   - staging:    VITE_API_BASE_URL=https://zrouter.82.25.62.204.sslip.io/api/v1 (.env.staging)
-# If unset, Vite defaults to production.
+# Stage 1: Frontend (prebuilt dist). The SPA is built on the host (pnpm build)
+# with the target Vite mode (per environment) so VITE_API_BASE_URL matches
+# the environment, then embedded into the Go binary via -tags embed.
 # -----------------------------------------------------------------------------
-FROM ${NODE_IMAGE} AS frontend-builder
-
-ARG FRONTEND_MODE=production
+FROM ${ALPINE_IMAGE} AS frontend-builder
 
 WORKDIR /app/frontend
-
-COPY frontend/package.json frontend/pnpm-lock.yaml ./
-COPY frontend/.env* ./
-
-RUN corepack enable && pnpm install --frozen-lockfile
-
-COPY frontend/ ./
-
-# docs/legal/*.md are imported at build time by the admin-compliance gate
-# (LegalDocumentView.vue `?raw` imports resolve to ../../../../docs/legal/),
-# so they must be present at /app/docs/legal in this stage.
-COPY docs/legal/ /app/docs/legal/
-
-RUN pnpm run build --mode ${FRONTEND_MODE}
+COPY frontend/dist ./dist
 
 # -----------------------------------------------------------------------------
 # Stage 2: Backend Builder
@@ -69,7 +50,7 @@ COPY backend/ ./
 
 # Copy prebuilt frontend for -tags embed (//go:embed all:dist in internal/web)
 # Built in Stage 1 (frontend-builder) with FRONTEND_MODE so the SPA's
-# VITE_API_BASE_URL matches the target environment (staging vs production).
+# VITE_API_BASE_URL matches the target environment (per environment).
 COPY --from=frontend-builder /app/frontend/dist ./internal/web/dist
 
 # Build the backend binary (BuildType=release for CI builds).
