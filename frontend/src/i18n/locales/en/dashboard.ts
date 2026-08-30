@@ -633,7 +633,6 @@ export default {
         '; prices in this row exclude the peak-hour rate — where this period overlaps the peak hours {window}, the overlapping portion is additionally multiplied by ×{multiplier}',
       timePricingWeekdays: 'Weekdays',
       timePricingRateHint: 'Effective rate {rate} × period multiplier {multiplier}',
-      paidPrice: 'Your Price (Discounted)',
       officialPrice: 'Official Price',
       rate: 'Rate',
       buy: 'Buy',

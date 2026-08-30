@@ -22,18 +22,59 @@
       </header>
 
       <div class="mt-5 space-y-3 text-xs tabular-nums">
-        <section class="rounded-lg border border-[color:color-mix(in_srgb,var(--plaza-accent)_18%,transparent)] bg-[color:color-mix(in_srgb,var(--plaza-accent)_7%,transparent)] p-3">
-          <div class="mb-2 flex items-center justify-between gap-2"><h3 class="font-semibold uppercase tracking-wider" :style="{ color: platformAccentColor(platform ?? '') }">{{ t('modelPlaza.table.paidPrice') }}</h3><span class="text-[10px] text-gray-500 dark:text-dark-400">{{ t('modelPlaza.table.unitPerMillion') }}</span></div>
-          <template v-if="billingMode(model) === BILLING_MODE_TOKEN">
-            <div class="grid grid-cols-3 gap-2 text-gray-900 dark:text-gray-50"><div><p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.input') }}</p><template v-if="tokenIntervals(model).length"><p v-for="iv in tokenIntervals(model)" :key="iv.min_tokens" class="leading-5"><span class="mr-1 font-sans font-normal text-gray-400 dark:text-dark-500" :title="tierHint(model)">{{ tierLabel(iv) }}</span>{{ paidPerMillion(iv.input_price) }}</p></template><p v-else>{{ paidPerMillion(model.pricing?.input_price) }}</p></div><div><p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.output') }}</p><template v-if="tokenIntervals(model).length"><p v-for="iv in tokenIntervals(model)" :key="iv.min_tokens" class="leading-5">{{ paidPerMillion(iv.output_price) }}</p></template><p v-else>{{ paidPerMillion(model.pricing?.output_price) }}</p></div><div><p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.cache') }}</p><template v-if="hasTierCachePricing(tokenIntervals(model))"><p v-for="iv in tokenIntervals(model)" :key="iv.min_tokens" class="leading-5" :title="tierHint(model)"><template v-if="iv.cache_write_price != null || iv.cache_read_price != null"><span class="font-sans text-gray-400">{{ t('modelPlaza.table.cacheWriteShort') }}</span> {{ paidPerMillion(iv.cache_write_price) }} <span class="font-sans text-gray-400">{{ t('modelPlaza.table.cacheReadShort') }}</span> {{ paidPerMillion(iv.cache_read_price) }}</template><span v-else>-</span></p></template><div v-else-if="hasCachePricing(model)" class="space-y-0.5"><p>{{ t('modelPlaza.table.cacheWrite') }} {{ paidPerMillion(model.pricing?.cache_write_price) }}</p><p>{{ t('modelPlaza.table.cacheRead') }} {{ paidPerMillion(model.pricing?.cache_read_price) }}</p></div><span v-else>-</span></div></div>
-          </template>
-          <div v-else class="flex flex-wrap gap-1.5"><span v-for="iv in requestIntervals(model)" :key="iv.min_tokens" class="rounded-md bg-gray-100 px-2 py-1 font-mono text-gray-800 dark:bg-dark-700 dark:text-gray-200"><span class="mr-1 font-sans text-gray-400">{{ tierLabel(iv) }}</span>{{ paidRequestPrice(iv.per_request_price) }}<span class="ml-1 font-sans text-gray-400">{{ perUnitSuffix(model) }}</span></span><span v-if="!requestIntervals(model).length && model.pricing?.per_request_price != null" class="font-mono font-semibold text-gray-900 dark:text-gray-50">{{ paidRequestPrice(model.pricing.per_request_price) }} <span class="font-sans text-gray-400">{{ perUnitSuffix(model) }}</span></span><span v-if="!requestIntervals(model).length && model.pricing?.per_request_price == null">-</span></div>
+        <section class="rounded-lg border border-gray-100 bg-gray-50/70 p-3 dark:border-dark-700 dark:bg-dark-900/30">
+          <div class="mb-2 flex items-center justify-between gap-2">
+            <h3 class="font-semibold uppercase tracking-wider text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.officialPrice') }}</h3>
+            <span class="text-[10px] text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.unitPerMillion') }}</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-gray-500 dark:text-dark-400">
+            <div>
+              <p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.input') }}</p>
+              <template v-if="officialIntervals(model).length">
+                <p v-for="iv in officialIntervals(model)" :key="iv.min_tokens" class="leading-5">
+                  <span class="mr-1 font-sans text-gray-400" :title="t('modelPlaza.table.tierHint')">{{ tierLabel(iv) }}</span>{{ official(iv.input_price) }}
+                </p>
+              </template>
+              <p v-else>{{ official(model.official_pricing?.input_price) }}</p>
+            </div>
+            <div>
+              <p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.output') }}</p>
+              <template v-if="officialIntervals(model).length">
+                <p v-for="iv in officialIntervals(model)" :key="iv.min_tokens" class="leading-5">{{ official(iv.output_price) }}</p>
+              </template>
+              <p v-else>{{ official(model.official_pricing?.output_price) }}</p>
+            </div>
+            <div>
+              <p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.cache') }}</p>
+              <template v-if="hasTierCachePricing(officialIntervals(model))">
+                <p v-for="iv in officialIntervals(model)" :key="iv.min_tokens" class="leading-5">
+                  <template v-if="iv.cache_write_price != null || iv.cache_read_price != null">{{ t('modelPlaza.table.cacheWriteShort') }} {{ official(iv.cache_write_price) }} {{ t('modelPlaza.table.cacheReadShort') }} {{ official(iv.cache_read_price) }}</template>
+                  <span v-else>-</span>
+                </p>
+              </template>
+              <div v-else-if="model.official_pricing && hasOfficialCache(model.official_pricing)" class="space-y-0.5">
+                <p>{{ t('modelPlaza.table.cacheWrite') }} {{ official(model.official_pricing.cache_write_price) }}<template v-if="model.official_pricing.cache_write_1h_price != null"> <span class="font-sans text-gray-400">{{ t('modelPlaza.table.perHour') }}</span> {{ official(model.official_pricing.cache_write_1h_price) }}</template></p>
+                <p>{{ t('modelPlaza.table.cacheRead') }} {{ official(model.official_pricing.cache_read_price) }}</p>
+              </div>
+              <span v-else>-</span>
+            </div>
+          </div>
         </section>
-
-        <section class="rounded-lg border border-gray-100 bg-gray-50/70 p-3 dark:border-dark-700 dark:bg-dark-900/30"><div class="mb-2 flex items-center justify-between gap-2"><h3 class="font-semibold uppercase tracking-wider text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.officialPrice') }}</h3><span class="text-[10px] text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.unitPerMillion') }}</span></div><div class="grid grid-cols-3 gap-2 text-gray-500 dark:text-dark-400"><div><p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.input') }}</p><template v-if="officialIntervals(model).length"><p v-for="iv in officialIntervals(model)" :key="iv.min_tokens" class="leading-5"><span class="mr-1 font-sans text-gray-400" :title="t('modelPlaza.table.tierHint')">{{ tierLabel(iv) }}</span>{{ official(iv.input_price) }}</p></template><p v-else>{{ official(model.official_pricing?.input_price) }}</p></div><div><p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.output') }}</p><template v-if="officialIntervals(model).length"><p v-for="iv in officialIntervals(model)" :key="iv.min_tokens" class="leading-5">{{ official(iv.output_price) }}</p></template><p v-else>{{ official(model.official_pricing?.output_price) }}</p></div><div><p class="mb-1 text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.cache') }}</p><template v-if="hasTierCachePricing(officialIntervals(model))"><p v-for="iv in officialIntervals(model)" :key="iv.min_tokens" class="leading-5"><template v-if="iv.cache_write_price != null || iv.cache_read_price != null">{{ t('modelPlaza.table.cacheWriteShort') }} {{ official(iv.cache_write_price) }} {{ t('modelPlaza.table.cacheReadShort') }} {{ official(iv.cache_read_price) }}</template><span v-else>-</span></p></template><div v-else-if="model.official_pricing && hasOfficialCache(model.official_pricing)" class="space-y-0.5"><p>{{ t('modelPlaza.table.cacheWrite') }} {{ official(model.official_pricing.cache_write_price) }}<template v-if="model.official_pricing.cache_write_1h_price != null"> (1h {{ official(model.official_pricing.cache_write_1h_price) }})</template></p><p>{{ t('modelPlaza.table.cacheRead') }} {{ official(model.official_pricing.cache_read_price) }}</p></div><span v-else>-</span></div></div></section>
       </div>
 
-      <footer class="mt-auto flex items-center justify-between gap-3 border-t border-gray-100 pt-4 dark:border-dark-700"><div class="font-mono text-xs"><span v-if="period" class="font-bold text-primary-600 dark:text-primary-400" :title="t('modelPlaza.table.timePricingRateHint', { rate: effectiveRate, multiplier: period.multiplier })">{{ periodRate(period) }}x</span><span v-else-if="usesIndependentImageRate(model)" class="font-bold text-gray-700 dark:text-gray-300">{{ requestRate(model) }}x</span><template v-else-if="hasCustomRate"><span class="mr-1 text-gray-400 line-through dark:text-dark-500">{{ rateMultiplier }}x</span><span class="font-bold text-primary-600 dark:text-primary-400">{{ effectiveRate }}x</span></template><span v-else class="font-bold text-gray-700 dark:text-gray-300">{{ effectiveRate }}x</span><span class="ml-1 text-gray-400">{{ t('modelPlaza.table.rate') }}</span></div><button type="button" :class="['inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-[.97]', platformButtonClass(platform ?? '')]" @click="goToModel(model.name)">{{ t('modelPlaza.table.buy') }}</button></footer>
+      <footer class="mt-auto flex items-center justify-between gap-3 border-t border-gray-100 pt-4 dark:border-dark-700">
+        <div class="font-mono text-xs">
+          <span v-if="period" class="font-bold text-primary-600 dark:text-primary-400" :title="t('modelPlaza.table.timePricingRateHint', { rate: effectiveRate, multiplier: period.multiplier })">{{ periodRate(period) }}x</span>
+          <span v-else-if="usesIndependentImageRate(model)" class="font-bold text-gray-700 dark:text-gray-300">{{ requestRate(model) }}x</span>
+          <template v-else-if="hasCustomRate">
+            <span class="mr-1 text-gray-400 line-through dark:text-dark-500">{{ rateMultiplier }}x</span>
+            <span class="font-bold text-primary-600 dark:text-primary-400">{{ effectiveRate }}x</span>
+          </template>
+          <span v-else class="font-bold text-gray-700 dark:text-gray-300">{{ effectiveRate }}x</span>
+          <span class="ml-1 text-gray-400">{{ t('modelPlaza.table.rate') }}</span>
+        </div>
+        <button type="button" :class="['inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-[.97]', platformButtonClass(platform ?? '')]" @click="goToModel(model.name)">{{ t('modelPlaza.table.buy') }}</button>
+      </footer>
     </div>
   </article>
 </template>
@@ -56,20 +97,13 @@ function goToModel(name: string): void { void router.push(`/model-plaza/model/${
 function billingMode(m: PlazaModel): BillingMode { return (m.pricing?.billing_mode || BILLING_MODE_TOKEN) as BillingMode }
 function billingModeLabel(m: PlazaModel): string { return billingMode(m) === BILLING_MODE_IMAGE ? t('modelPlaza.table.perImage') : t('modelPlaza.table.perRequest') }
 function periodRate(p: PlazaTimePricingPeriod): number { return Math.round(effectiveRate.value * p.multiplier * 1000) / 1000 }
-function paidPerMillion(value: number | null | undefined): string { if (value == null) return '-'; return formatScaled(value * (props.period ? periodRate(props.period) : effectiveRate.value), PER_MILLION, MIN_DECIMALS) }
 function usesIndependentImageRate(m: PlazaModel): boolean { return billingMode(m) === BILLING_MODE_IMAGE && props.imageRateIndependent === true }
 function requestRate(m: PlazaModel): number { return usesIndependentImageRate(m) ? (props.imageRateMultiplier ?? 1) : effectiveRate.value }
-function paidRequestPrice(value: number | null | undefined): string { return value == null ? '-' : formatScaled(value * requestRate(props.model), 1, MIN_DECIMALS) }
 function official(value: number | null | undefined): string { return value == null ? '-' : formatScaled(value, PER_MILLION, MIN_DECIMALS) }
-function perUnitSuffix(m: PlazaModel): string { return billingMode(m) === BILLING_MODE_IMAGE ? t('modelPlaza.table.perUnitImage') : t('modelPlaza.table.perUnitRequest') }
-function hasCachePricing(m: PlazaModel): boolean { return m.pricing?.cache_write_price != null || m.pricing?.cache_read_price != null }
 function hasOfficialCache(o: NonNullable<PlazaModel['official_pricing']>): boolean { return o.cache_write_price != null || o.cache_read_price != null || o.cache_write_1h_price != null }
 function sortByContext(i: UserPricingInterval[]): UserPricingInterval[] { return [...i].sort((a, b) => a.min_tokens - b.min_tokens) }
-function tokenIntervals(m: PlazaModel): UserPricingInterval[] { return sortByContext(m.pricing?.intervals ?? []) }
 function officialIntervals(m: PlazaModel): UserPricingInterval[] { return sortByContext(m.official_pricing?.intervals ?? []) }
-function requestIntervals(m: PlazaModel): UserPricingInterval[] { return (m.pricing?.intervals ?? []).filter((iv) => iv.per_request_price != null) }
 function hasTierCachePricing(i: UserPricingInterval[]): boolean { return i.some((iv) => iv.cache_write_price != null || iv.cache_read_price != null) }
-function tierHint(m: PlazaModel): string { return m.long_context_basis === 'marginal' ? t('modelPlaza.table.tierHintMarginal') : t('modelPlaza.table.tierHint') }
 function tierLabel(iv: UserPricingInterval): string { if (iv.tier_label) return iv.tier_label; const max = iv.max_tokens; return max == null ? `>${formatTokenCount(iv.min_tokens)}` : `≤${formatTokenCount(max)}` }
 function formatTokenCount(n: number): string { if (n >= 1_000_000) return `${trimZero(n / 1_000_000)}M`; if (n >= 1_000) return `${trimZero(n / 1_000)}K`; return String(n) }
 function trimZero(n: number): string { return String(Math.round(n * 100) / 100) }
